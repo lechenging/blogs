@@ -14,9 +14,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
-                    }
+                    fontFamily: { sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'] }
                 }
             }
         }
@@ -58,9 +56,8 @@
         <div id="home-view" class="space-y-10">
             <div class="border-b border-zinc-100 pb-8">
                 <h1 class="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">无服务器数字花园</h1>
-                <p class="text-zinc-500 text-sm mt-2 leading-relaxed">动态闭环渲染，基于 Cloudflare Pages + R2 + D1 强力驱动。</p>
+                <p class="text-zinc-500 text-sm mt-2 leading-relaxed">动态闭环系统，基于 Cloudflare Pages + R2 + D1 强力驱动。</p>
             </div>
-
             <div class="space-y-6">
                 <h2 class="text-xs font-bold uppercase tracking-widest text-zinc-400">最新发布</h2>
                 <div id="posts-list-container" class="grid gap-6"></div>
@@ -76,26 +73,43 @@
                 <span id="post-date"></span>
                 <span id="post-views-count">阅读量: 加载中...</span>
             </div>
-            <article id="post-content" class="prose prose-zinc prose-indigo max-w-none 
-                prose-headings:font-bold prose-headings:tracking-tight
-                prose-img:rounded-xl prose-img:shadow-md prose-img:mx-auto prose-img:border prose-img:border-zinc-100
-                prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-zinc-800 prose-pre:rounded-xl prose-pre:p-0">
-            </article>
+            <article id="post-content" class="prose prose-zinc prose-indigo max-w-none prose-img:rounded-xl prose-img:shadow-md prose-img:mx-auto prose-img:border prose-img:border-zinc-100 prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-zinc-800 prose-pre:rounded-xl prose-pre:p-0"></article>
         </div>
 
         <!-- 视图三：后台管理端 -->
-        <div id="admin-view" class="hidden space-y-8">
-            <div class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm flex flex-col sm:flex-row items-end gap-4">
-                <div class="flex-grow w-full">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">管理员密码</label>
-                    <input type="password" id="admin-pass" onchange="unlockAdmin()" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="验证后台密码">
+        <div id="admin-view" class="hidden">
+            <!-- 1. 独立登录视窗 -->
+            <div id="admin-login-card" class="max-w-md mx-auto bg-white p-8 rounded-2xl border border-zinc-200/60 shadow-md space-y-6 my-12">
+                <div class="text-center">
+                    <h2 class="text-xl font-bold text-zinc-900">管理后台登录</h2>
+                    <p class="text-xs text-zinc-400 mt-1">请输入 D1 数据库中配置的管理密码解锁系统</p>
                 </div>
-                <button onclick="unlockAdmin()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 h-10 rounded-lg text-sm font-semibold transition-all shadow-sm w-full sm:w-auto">
-                    解锁后台
-                </button>
+                <div class="space-y-4">
+                    <input type="password" id="admin-pass" class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="请输入密码 (默认: admin123)">
+                    <button onclick="verifyAndLogin()" class="w-full bg-zinc-900 hover:bg-zinc-800 text-white py-2.5 rounded-lg text-sm font-semibold transition-all">
+                        确认解锁
+                    </button>
+                </div>
             </div>
 
-            <div id="admin-panel" class="hidden space-y-8">
+            <!-- 2. 完全解锁后的控制台 -->
+            <div id="admin-panel" class="hidden space-y-8 animate-fade-in">
+                <!-- 顶层快捷操作与密码修改 -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-xl border border-zinc-100 shadow-sm">
+                    <div>
+                        <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">身份认证成功</span>
+                        <h3 class="text-base font-bold text-zinc-900 mt-2">欢迎进入 blogs.nyc.mn 系统</h3>
+                    </div>
+                    <div class="flex gap-3 w-full md:w-auto">
+                        <button onclick="showChangePasswordModal()" class="border border-zinc-200 hover:bg-zinc-50 text-zinc-600 px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors">
+                            修改密码
+                        </button>
+                        <button onclick="logoutAdmin()" class="bg-red-50 text-red-600 hover:bg-red-100 px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors">
+                            登出后台
+                        </button>
+                    </div>
+                </div>
+
                 <!-- 文章列表与管理 -->
                 <div class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm">
                     <div class="flex justify-between items-center mb-6">
@@ -120,29 +134,25 @@
 
                 <!-- 编辑器工作区 -->
                 <div id="editor-zone" class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm space-y-4">
-                    <h3 id="editor-title" class="text-base font-bold text-zinc-900 border-b border-zinc-100 pb-3 tracking-tight">撰写教程</h3>
-                    
+                    <h3 id="editor-title" class="text-base font-bold text-zinc-900 border-b border-zinc-100 pb-3 tracking-tight">撰写新教程</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章唯一 ID (不可修改)</label>
-                            <input type="text" id="admin-id" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: r2-database-guide">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章唯一 ID (用作 R2 存储文件名)</label>
+                            <input type="text" id="admin-id" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: advanced-markdown">
                         </div>
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章标题</label>
                             <input type="text" id="admin-title" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
                         </div>
                     </div>
-
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">简短摘要</label>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章摘要</label>
                         <input type="text" id="admin-summary" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
                     </div>
-
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">正文 (支持工具栏直接排版 & 图片拖入粘贴自动传 R2)</label>
                         <textarea id="admin-content"></textarea>
                     </div>
-
                     <div class="flex justify-end gap-3 pt-4 border-t border-zinc-100">
                         <button onclick="cancelEdit()" class="border border-zinc-200 hover:bg-zinc-50 text-zinc-600 px-5 py-2 rounded-lg text-sm font-medium transition-colors">
                             取消
@@ -157,12 +167,23 @@
 
     </main>
 
-    <!-- 页脚 -->
+    <!-- 修改密码弹窗 -->
+    <div id="password-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-2xl w-80 shadow-lg space-y-4">
+            <h3 class="text-base font-bold text-zinc-900">修改后台管理密码</h3>
+            <input type="password" id="new-password" class="w-full border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-indigo-500" placeholder="请输入新密码">
+            <div class="flex justify-end gap-2">
+                <button onclick="closePasswordModal()" class="text-zinc-500 text-xs hover:underline px-3 py-1">取消</button>
+                <button onclick="submitChangePassword()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-4 py-1.5 rounded-lg transition-all">确定修改</button>
+            </div>
+        </div>
+    </div>
+
     <footer class="bg-white border-t border-zinc-100 py-10 mt-auto text-xs text-zinc-400 tracking-wide">
         <div class="max-w-4xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center space-x-2">
                 <span class="w-2 h-2 bg-emerald-500 rounded-full inline-block"></span>
-                <span>blogs.nyc.mn • R2 & D1 闭环系统</span>
+                <span>blogs.nyc.mn • D1 & R2 4.0 动态闭环系统</span>
             </div>
             <div class="text-[11px] text-zinc-400">
                 Powered by <a href="https://pages.cloudflare.com" target="_blank" class="hover:underline text-indigo-500">Cloudflare Pages</a>
@@ -172,8 +193,7 @@
 
     <script>
         let easyMDEInstance = null;
-        let isEditing = false;
-        let R2_DOMAIN = ""; // 会在解锁后台或初始化时自动根据当前页面或固定值推算
+        let R2_DOMAIN = "";
 
         marked.setOptions({
             highlight: function(code, lang) {
@@ -195,6 +215,70 @@
                 loadPost(postId);
             } else {
                 showHomeView();
+            }
+        }
+
+        // 验证并登录
+        async function verifyAndLogin() {
+            const password = document.getElementById('admin-pass').value;
+            if (!password) { alert('密码不可为空'); return; }
+
+            try {
+                const res = await fetch('./api/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: "login", password })
+                });
+
+                if (res.ok) {
+                    sessionStorage.setItem('admin_password', password);
+                    document.getElementById('admin-login-card').classList.add('hidden');
+                    document.getElementById('admin-panel').classList.remove('hidden');
+                    await refreshAdminTable();
+                    initEasyMDE();
+                } else {
+                    alert('密码验证失败，请核对。');
+                }
+            } catch (err) {
+                alert('登录验证出错: ' + err.message);
+            }
+        }
+
+        function getActivePassword() {
+            return sessionStorage.getItem('admin_password');
+        }
+
+        function logoutAdmin() {
+            sessionStorage.removeItem('admin_password');
+            document.getElementById('admin-pass').value = '';
+            document.getElementById('admin-panel').classList.add('hidden');
+            document.getElementById('admin-login-card').classList.remove('hidden');
+        }
+
+        function showChangePasswordModal() { document.getElementById('password-modal').classList.remove('hidden'); }
+        function closePasswordModal() { document.getElementById('password-modal').classList.add('hidden'); }
+
+        async function submitChangePassword() {
+            const password = getActivePassword();
+            const newPassword = document.getElementById('new-password').value.trim();
+            if (!newPassword) { alert('新密码不可为空'); return; }
+
+            try {
+                const res = await fetch('./api/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: "change_password", password, newPassword })
+                });
+
+                if (res.ok) {
+                    alert('管理密码已成功保存至 D1 数据库，并立刻生效。请使用新密码重新登录！');
+                    closePasswordModal();
+                    logoutAdmin();
+                } else {
+                    alert('修改失败');
+                }
+            } catch (err) {
+                alert('修改失败: ' + err.message);
             }
         }
 
@@ -236,9 +320,7 @@
         }
 
         async function uploadImageViaEditor(file) {
-            const password = document.getElementById('admin-pass').value;
-            if (!password) { alert('提示：请先输入管理员密码'); return; }
-
+            const password = getActivePassword();
             const formData = new FormData();
             formData.append('image', file);
 
@@ -257,7 +339,6 @@
                 if (!res.ok) throw new Error(await res.text());
                 const data = await res.json();
 
-                // 获取并缓存 R2 域名，供读取文章时使用
                 const urlObj = new URL(data.url);
                 R2_DOMAIN = urlObj.origin; 
 
@@ -269,7 +350,6 @@
             }
         }
 
-        // 1. 获取主页文章列表（直接向 D1 查询）
         async function showHomeView() {
             document.getElementById('home-view').classList.remove('hidden');
             document.getElementById('post-view').classList.add('hidden');
@@ -299,11 +379,10 @@
                     `;
                 });
             } catch (err) {
-                container.innerHTML = `<p class="text-red-500 text-sm">读取数据库失败，请确保 D1 绑定和数据表已成功创建。</p>`;
+                container.innerHTML = `<p class="text-red-500 text-sm">读取数据库失败，请确认数据库状态和后端接口配置。</p>`;
             }
         }
 
-        // 2. 加载文章正文（直接向 R2 拉取 Markdown 文件）
         async function loadPost(postId) {
             document.getElementById('home-view').classList.add('hidden');
             document.getElementById('admin-view').classList.add('hidden');
@@ -313,7 +392,6 @@
             postContent.innerHTML = '<p class="text-zinc-400 text-sm">正在加载...</p>';
 
             try {
-                // 如果本地尚未缓存 R2_DOMAIN，先通过一个临时上传配置或默认推算
                 const r2Base = R2_DOMAIN || `https://images.blogs.nyc.mn`;
                 const response = await fetch(`${r2Base}/posts/${postId}.md?_t=` + Date.now());
                 
@@ -321,7 +399,6 @@
                 const text = await response.text();
                 postContent.innerHTML = marked.parse(text);
 
-                // 计数并获取最新阅读量
                 fetch(`./api/views?id=${postId}`, { method: 'POST' })
                     .then(r => r.json())
                     .then(data => {
@@ -333,7 +410,7 @@
                 addCopyButtons();
                 document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
             } catch (err) {
-                postContent.innerHTML = '<p class="text-red-500 text-sm">无法从 R2 载入文章，请确认该文章已正常发布且 R2 域名配置无误。</p>';
+                postContent.innerHTML = '<p class="text-red-500 text-sm">无法从 R2 载入文章，请确保该文章已正常发布且 R2 跨域策略配置成功。</p>';
             }
         }
 
@@ -341,14 +418,18 @@
             document.getElementById('home-view').classList.add('hidden');
             document.getElementById('post-view').classList.add('hidden');
             document.getElementById('admin-view').classList.remove('hidden');
-        }
-
-        async function unlockAdmin() {
-            const password = document.getElementById('admin-pass').value;
-            if (!password) { alert('密码不可为空'); return; }
-            await refreshAdminTable();
-            document.getElementById('admin-panel').classList.remove('hidden');
-            initEasyMDE();
+            
+            // 每次进入后台，检查是否已经登录过
+            const password = getActivePassword();
+            if (password) {
+                document.getElementById('admin-login-card').classList.add('hidden');
+                document.getElementById('admin-panel').classList.remove('hidden');
+                refreshAdminTable();
+                initEasyMDE();
+            } else {
+                document.getElementById('admin-login-card').classList.remove('hidden');
+                document.getElementById('admin-panel').classList.add('hidden');
+            }
         }
 
         async function refreshAdminTable() {
@@ -378,7 +459,7 @@
                     `;
                 });
             } catch (err) {
-                tbody.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-red-500 text-xs">拉取列表失败，请核对密码。</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-red-500 text-xs">列表加载失败，请检查登录。</td></tr>';
             }
         }
 
@@ -394,9 +475,8 @@
             document.getElementById('editor-zone').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 瞬间发布：调用 POST /api/posts 直接写入 D1 + R2
         async function publishPost() {
-            const password = document.getElementById('admin-pass').value;
+            const password = getActivePassword();
             const id = document.getElementById('admin-id').value.trim();
             const title = document.getElementById('admin-title').value.trim();
             const summary = document.getElementById('admin-summary').value.trim();
@@ -422,7 +502,7 @@
                 });
 
                 if (!res.ok) throw new Error(await res.text());
-                alert('文章发布成功！已瞬间写入 D1 数据库与 R2 存储。');
+                alert('文章发布成功！');
                 
                 await refreshAdminTable();
                 startNewPost();
@@ -433,7 +513,6 @@
             }
         }
 
-        // 编辑载入：直接从 R2 读取 Markdown 文档进行编辑
         async function editPost(id, title, summary) {
             isEditing = true;
             document.getElementById('editor-title').innerText = `编辑教程: ${title}`;
@@ -461,10 +540,9 @@
             }
         }
 
-        // 删除：直接调用 D1 和 R2 物理清除，立刻生效
         async function deletePost(id) {
-            const password = document.getElementById('admin-pass').value;
-            if (!confirm(`确定要从 D1 数据库和 R2 存储桶中物理删除该文章 [${id}] 吗？\n删除后不可恢复。`)) return;
+            const password = getActivePassword();
+            if (!confirm(`警告：该操作将同时清除 D1 中的该文章记录，以及物理清除 R2 存储桶中该文章内插入的所有图片，是否继续？`)) return;
 
             try {
                 const res = await fetch('./api/delete', {
@@ -474,7 +552,7 @@
                 });
 
                 if (!res.ok) throw new Error(await res.text());
-                alert('已成功从 D1 和 R2 中删除该文章，主页已同步更新！');
+                alert('文章和关联图片已完全物理销毁！');
                 await refreshAdminTable();
             } catch (err) {
                 alert('删除失败: ' + err.message);

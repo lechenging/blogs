@@ -282,7 +282,6 @@
         window.addEventListener('load', async () => {
             const password = getActivePassword();
             if (password) {
-                // 如果本地有登录态缓存，直接跳过登录验证并渲染分栏面板
                 document.getElementById('admin-login-view').classList.add('hidden');
                 document.getElementById('admin-main-view').classList.remove('hidden');
                 await loadSiteConfig();
@@ -294,12 +293,10 @@
             }
         });
 
-        // 左右侧边栏导航 Tab 切换控制器
         function switchTab(tabId) {
             document.querySelectorAll('.admin-panel-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(tabId).classList.remove('hidden');
 
-            // 高亮当前选中的左侧菜单选项
             document.querySelectorAll('nav button').forEach(btn => {
                 btn.classList.remove('bg-indigo-600', 'text-white');
                 btn.classList.add('text-slate-300', 'hover:bg-slate-800', 'hover:text-white');
@@ -353,21 +350,20 @@
             document.getElementById('admin-login-view').classList.remove('hidden');
         }
 
+        // 【安全净化】：去除所有前台不存在 DOM 的赋值操作，避免控制台报错阻断逻辑
         async function loadSiteConfig() {
             try {
                 const res = await fetch('./api/config?_t=' + Date.now());
                 if (!res.ok) throw new Error();
                 const data = await res.json();
                 
-                const title = data.site_title || "Blogs.nyc.mn";
-                const subtitle = data.site_subtitle || "无服务器数字花园";
                 activeCategories = JSON.parse(data.site_categories || '["技术","教程","随笔","思考"]');
                 activeSeriesList = JSON.parse(data.site_series || '["科学上网","谷歌系列","NAS系列"]');
                 const rawNavLinks = JSON.parse(data.site_nav_links || '[{"name": "订阅转换", "url": "https://sub.blogs.nyc.mn"}]');
                 globalLayoutMode = data.site_layout_mode || "standard";
 
-                document.getElementById('config-title').value = title;
-                document.getElementById('config-subtitle').value = subtitle;
+                document.getElementById('config-title').value = data.site_title || "Blogs.nyc.mn";
+                document.getElementById('config-subtitle').value = data.site_subtitle || "无服务器数字花园";
                 document.getElementById('config-categories').value = activeCategories.join(', ');
                 document.getElementById('config-series').value = activeSeriesList.join(', ');
                 document.getElementById('config-nav-links').value = rawNavLinks.map(item => `${item.name}, ${item.url}`).join('\n');
@@ -591,13 +587,17 @@
             }
         }
 
+        // 【黄金修复】：在拉取列表时，主动附加安全验证头 (Authorization)，使隐藏/草稿文章得以在管理后台列表正常展现！
         async function refreshAdminTable() {
             const tbody = document.getElementById('admin-posts-table');
             if (!tbody) return;
             tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-zinc-400 text-xs">正在读取数据库...</td></tr>';
             
             try {
-                const response = await fetch('./api/posts?_t=' + Date.now());
+                const password = getActivePassword(); // 调取本地密码会话
+                const response = await fetch('./api/posts?_t=' + Date.now(), {
+                    headers: { 'Authorization': password } // 核心修复：附加授权请求头
+                });
                 const posts = await response.json();
                 window.allPosts = posts.results || posts;
                 renderAdminTableRows(window.allPosts);
@@ -682,7 +682,6 @@
             document.getElementById('editor-title').innerText = '撰写新教程';
             document.getElementById('publish-btn').innerText = '直接发布（瞬间生效）';
             
-            // 切换回编辑器面板
             switchTab('panel-editor');
         }
 
@@ -727,7 +726,7 @@
                 
                 await refreshAdminTable();
                 startNewPost();
-                switchTab('panel-posts'); // 发布成功后，自动切回列表观察
+                switchTab('panel-posts'); 
             } catch (err) {
                 alert('【发布失败】详细错误信息:\n' + err.message);
                 const btn = document.getElementById('publish-btn');
@@ -767,7 +766,6 @@
                 if (!vditorInstance) { alert('编辑器异常，请刷新页面。'); return; }
                 vditorInstance.setValue('正在从 R2 提取正文内容...');
 
-                // 瞬间切到编辑器面板，展现丝滑跳转
                 switchTab('panel-editor');
 
                 const r2Base = R2_DOMAIN || `https://images.blogs.nyc.mn`;
@@ -808,3 +806,4 @@
     </script>
 </body>
 </html>
+```

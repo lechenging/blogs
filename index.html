@@ -432,6 +432,28 @@
             select.innerHTML += `<option value="默认系列">默认系列</option>`;
         }
 
+        // 【黄金安全机制】：专为 Select 下拉菜单设计的安全赋值器，防崩溃、防空数据、防旧文章字段不兼容
+        function setSelectValue(id, val) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            
+            let exists = false;
+            for (let i = 0; i < el.options.length; i++) {
+                if (el.options[i].value === val) {
+                    exists = true;
+                    break;
+                }
+            }
+            // 如果旧数据的字段不存在于当前选项中，动态为下拉菜单添加该临时选项，确保系统绝对不发生 TypeError 崩溃
+            if (!exists && val) {
+                const opt = document.createElement('option');
+                opt.value = val;
+                opt.text = val;
+                el.add(opt);
+            }
+            el.value = val;
+        }
+
         async function filterByCategory(cat) {
             currentFilterCategory = cat;
             currentPageNum = 1;
@@ -855,7 +877,6 @@
             }
         }
 
-        // 【安全黄金修复】：表格只传递下标 index，完美加载已有内容
         async function refreshAdminTable() {
             const tbody = document.getElementById('admin-posts-table');
             if (!tbody) return;
@@ -881,7 +902,6 @@
                             <td class="py-3.5"><span class="bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded text-xs font-semibold">${post.series || '默认'} ➔ ${post.category || '未分类'}</span></td>
                             <td class="py-3.5 text-xs text-zinc-400">${post.views}</td>
                             <td class="py-3.5 text-right space-x-3">
-                                <!-- 传递当前行的下标 index -->
                                 <button onclick="editPost(${index})" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs transition-colors">编辑</button>
                                 <button onclick="deletePost('${post.id}')" class="text-red-600 hover:text-red-800 font-semibold text-xs transition-colors">删除</button>
                             </td>
@@ -901,7 +921,6 @@
             document.getElementById('admin-summary').value = '';
             document.getElementById('admin-cover').value = '';
             
-            // 安全防崩：默认选中后台配置的一级和二级首项
             if (activeSeriesList.length > 0) {
                 document.getElementById('admin-series').value = activeSeriesList[0];
             } else {
@@ -924,33 +943,33 @@
             document.getElementById('editor-zone').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 【安全修复】：防空保护，防止 Vditor 尚未完全加载时点击按钮抛错导致“点击发布无反应”
+        // 【超级防御：全局 try-catch + 弹窗报错】确保提交绝对不发生静默失效！如果有错会直接弹窗告诉您原因。
         async function publishPost() {
-            const password = getActivePassword();
-            const id = document.getElementById('admin-id').value.trim();
-            const title = document.getElementById('admin-title').value.trim();
-            const summary = document.getElementById('admin-summary').value.trim();
-            const cover = document.getElementById('admin-cover').value.trim();
-            const series = document.getElementById('admin-series').value;
-            const layout_mode = document.getElementById('admin-layout-mode').value;
-            const category = document.getElementById('admin-category').value;
-            const btn = document.getElementById('publish-btn');
-
-            if (!vditorInstance) {
-                alert('系统检测到 Vditor 文本编辑器正在从云端加载中，请稍等 2 秒再试。');
-                return;
-            }
-            const content = vditorInstance.getValue();
-
-            if (!id || !title || !content) {
-                alert('请填写文章 ID、标题和正文内容');
-                return;
-            }
-
-            btn.innerText = '正在同步至 D1 + R2...';
-            btn.disabled = true;
-
             try {
+                const password = getActivePassword();
+                const id = document.getElementById('admin-id').value.trim();
+                const title = document.getElementById('admin-title').value.trim();
+                const summary = document.getElementById('admin-summary').value.trim();
+                const cover = document.getElementById('admin-cover').value.trim();
+                const series = document.getElementById('admin-series').value || '默认系列';
+                const layout_mode = document.getElementById('admin-layout-mode').value || 'standard';
+                const category = document.getElementById('admin-category').value || '未分类';
+
+                if (!vditorInstance) {
+                    alert('系统检测到 Vditor 编辑器正在从云端加载中，请稍等 2 秒再试。');
+                    return;
+                }
+                const content = vditorInstance.getValue();
+
+                if (!id || !title || !content) {
+                    alert('请完整填写文章 ID、标题和正文内容！');
+                    return;
+                }
+
+                const btn = document.getElementById('publish-btn');
+                btn.innerText = '正在发布到 D1 与 R2...';
+                btn.disabled = true;
+
                 const res = await fetch('./api/posts', {
                     method: 'POST',
                     headers: { 'Authorization': password, 'Content-Type': 'application/json' },
@@ -961,59 +980,67 @@
                 });
 
                 if (!res.ok) throw new Error(await res.text());
-                alert('文章发布成功！');
+                alert('文章发布成功！新文章已经瞬间写入 D1 数据库与 R2 存储！');
                 
                 await refreshAdminTable();
-                await fetchNavMeta(); // 同步更新顶栏导航
+                await fetchNavMeta(); 
                 startNewPost();
-            } catch (err) {
-                alert('发布失败: ' + err.message);
-            } finally {
+                
                 btn.disabled = false;
                 btn.innerText = '直接发布（瞬间生效）';
+
+            } catch (err) {
+                // 如果是数据库没有成功升级（缺少 layout_mode 或 series 字段），这里会直接弹出提示原因！
+                alert('【发布失败】详细错误信息:\n' + err.message + '\n\n如果是 no such column 错误，说明您之前没有在 D1 中成功执行 ALTER 升级语句。请前往 D1 控制台补充执行。');
+                const btn = document.getElementById('publish-btn');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerText = '直接发布（瞬间生效）';
+                }
             }
         }
 
-        // 【安全黄金修复】：直接根据 window.allPosts 索引解包，100% 解决历史文章无法修改的 Bug
+        // 【黄金修复】：通过 index 读取，且使用 setSelectValue 进行下拉菜单安全赋默认值
         async function editPost(index) {
-            if (!window.allPosts || !window.allPosts[index]) {
-                alert('系统找不到该行的数据，请刷新列表重试。');
-                return;
-            }
-            const post = window.allPosts[index];
-
-            isEditing = true;
-            document.getElementById('editor-title').innerText = `编辑教程: ${post.title}`;
-            document.getElementById('publish-btn').innerText = '保存更新';
-            
-            const adminIdInput = document.getElementById('admin-id');
-            adminIdInput.value = post.id;
-            adminIdInput.disabled = true;
-            
-            document.getElementById('admin-title').value = post.title || '';
-            document.getElementById('admin-summary').value = post.summary || '';
-            document.getElementById('admin-cover').value = post.cover || '';
-            
-            // 填充大系列
-            document.getElementById('admin-series').value = post.series || '默认系列';
-            document.getElementById('admin-layout-mode').value = post.layout_mode || 'standard';
-            document.getElementById('admin-category').value = post.category || '未分类';
-
-            if (!vditorInstance) {
-                alert('编辑器异常，请刷新页面。');
-                return;
-            }
-            vditorInstance.setValue('正在从 R2 提取正文内容...');
-
             try {
+                if (!window.allPosts || !window.allPosts[index]) {
+                    alert('系统找不到该行的数据，请刷新列表重试。');
+                    return;
+                }
+                const post = window.allPosts[index];
+
+                isEditing = true;
+                document.getElementById('editor-title').innerText = `编辑教程: ${post.title || ''}`;
+                document.getElementById('publish-btn').innerText = '保存更新';
+                
+                const adminIdInput = document.getElementById('admin-id');
+                adminIdInput.value = post.id || '';
+                adminIdInput.disabled = true;
+                
+                document.getElementById('admin-title').value = post.title || '';
+                document.getElementById('admin-summary').value = post.summary || '';
+                document.getElementById('admin-cover').value = post.cover || '';
+                
+                // 使用安全赋值器：即使旧文章中没有 series 或 layout_mode，也绝对不报错，自动赋安全初始值
+                setSelectValue('admin-series', post.series || '默认系列');
+                setSelectValue('admin-layout-mode', post.layout_mode || 'standard');
+                setSelectValue('admin-category', post.category || '未分类');
+
+                if (!vditorInstance) {
+                    alert('编辑器尚未加载完毕，请稍等。');
+                    return;
+                }
+                vditorInstance.setValue('正在从 R2 提取正文内容...');
+
                 const r2Base = R2_DOMAIN || `https://images.blogs.nyc.mn`;
                 const res = await fetch(`${r2Base}/posts/${post.id}.md?_t=` + Date.now());
                 if (!res.ok) throw new Error();
                 const text = await res.text();
                 vditorInstance.setValue(text);
                 document.getElementById('editor-zone').scrollIntoView({ behavior: 'smooth' });
+
             } catch (e) {
-                alert('从 R2 读取正文失败，请检查网络和跨域 CORS 策略。');
+                alert('从 R2 读取正文失败，请确认跨域 CORS 策略已经正常设置。');
                 vditorInstance.setValue('');
             }
         }

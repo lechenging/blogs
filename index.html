@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>blogs.nyc.mn </title>
+    <title>blogs.nyc.mn - 数字花园</title>
     <!-- Tailwind CSS 与 官方排版插件 -->
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <!-- Highlight.js 代码高亮 -->
@@ -362,13 +362,13 @@
                         ? `<img src="${post.cover}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 rounded-t-2xl" alt="${post.title}">`
                         : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)} flex items-center justify-center text-white/10 font-bold text-3xl select-none rounded-t-2xl">BLOGS</div>`;
 
-                    // 【核心升级】：如果是 standard 显示 2 行摘要；如果是 simple，隐藏摘要，并且主标题文字提升为最多显示 2 行 (line-clamp-2) 填充空白！
                     const summaryHtml = (globalLayoutMode !== 'simple')
                         ? `<p class="text-zinc-500 text-xs leading-relaxed line-clamp-2">${post.summary}</p>`
                         : '';
 
+                    // 【核心配置】：精简模式下，标题最多扩展显示至 3 行 (line-clamp-3) 填补空白
                     const titleClass = (globalLayoutMode === 'simple')
-                        ? "text-sm font-bold text-zinc-900 line-clamp-2 group-hover:text-amber-500 transition-colors" // 提升为最多两行
+                        ? "text-sm font-bold text-zinc-900 line-clamp-3 group-hover:text-amber-500 transition-colors" 
                         : "text-sm font-bold text-zinc-900 line-clamp-1 group-hover:text-amber-500 transition-colors";
 
                     container.innerHTML += `
@@ -380,7 +380,8 @@
                                 </a>
                                 <div class="p-5 space-y-2">
                                     <h3 class="${titleClass}">
-                                        <a href="#/post/${post.id}">${post.title}</a>
+                                        <!-- 【Hover 气泡提示】：如果 3 行依然显示不全，鼠标悬停时会自动浮现 HTML 原生 Tooltip 框展示 100% 完整无删减的标题 -->
+                                        <a href="#/post/${post.id}" title="${post.title}">${post.title}</a>
                                     </h3>
                                     ${summaryHtml}
                                 </div>
@@ -466,7 +467,7 @@
                 posts.forEach((post, index) => {
                     const thumbHtml = post.cover 
                         ? `<img src="${post.cover}" class="w-full h-full object-cover rounded-md animate-fade-in" alt="">`
-                        : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)}"></div>`;
+                        : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)} rounded-md"></div>`;
 
                     container.innerHTML += `
                         <a href="#/post/${post.id}" class="flex items-center gap-3 p-1.5 hover:bg-zinc-50 rounded-lg transition-colors group animate-fade-in">

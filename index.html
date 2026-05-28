@@ -163,7 +163,7 @@
                     </div>
                 </div>
 
-                <!-- 站点配置 (已补回先前漏掉的 config-layout-mode，刚好凑成美观的 4 列对齐网格) -->
+                <!-- 站点配置 -->
                 <div class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm space-y-4">
                     <h3 class="text-base font-bold text-zinc-900 border-b border-zinc-100 pb-3 tracking-tight">自定义站点全局配置与大系列文案</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
@@ -172,11 +172,11 @@
                             <input type="text" id="config-title" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">全局大系列导航栏列表（用英文逗号隔开）</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">全局大系列导航栏（逗号隔开）</label>
                             <input type="text" id="config-series" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: 科学上网, 谷歌系列, NAS系列">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">二级子分类标签列表（用英文逗号隔开）</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">二级子分类标签（逗号隔开）</label>
                             <input type="text" id="config-categories" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: 技术, 随笔, 教程">
                         </div>
                         <div>
@@ -204,21 +204,50 @@
                     </div>
                 </div>
 
-                <!-- 文章管理 -->
-                <div class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm">
-                    <div class="flex justify-between items-center mb-6">
+                <!-- 文章管理 (新增组合式快速检索过滤条) -->
+                <div class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm space-y-6">
+                    <div class="flex justify-between items-center border-b border-zinc-100 pb-3">
                         <h3 class="text-base font-bold text-zinc-900 tracking-tight">文章列表管理</h3>
                         <button onclick="startNewPost()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-semibold transition-all shadow-sm">
                             + 撰写新教程
                         </button>
                     </div>
+                    
+                    <!-- 【管理端多功能组合过滤条】：本地秒级即时筛选，不消耗 D1 读额度 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-zinc-50 p-4 rounded-xl border border-zinc-100">
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">🔍 标题检索</label>
+                            <input type="text" id="admin-filter-q" oninput="filterAdminTable()" class="w-full border border-zinc-200 rounded-lg px-3 py-1.5 text-xs focus:outline-indigo-500 bg-white" placeholder="输入文章标题关键词...">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">📂 筛选系列</label>
+                            <select id="admin-filter-series" onchange="filterAdminTable()" class="w-full border border-zinc-200 rounded-lg px-3 py-1.5 text-xs focus:outline-indigo-500 bg-white">
+                                <option value="">全部系列</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">🏷️ 筛选二级分类</label>
+                            <select id="admin-filter-category" onchange="filterAdminTable()" class="w-full border border-zinc-200 rounded-lg px-3 py-1.5 text-xs focus:outline-indigo-500 bg-white">
+                                <option value="">全部子分类</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">🔒 筛选发布状态</label>
+                            <select id="admin-filter-status" onchange="filterAdminTable()" class="w-full border border-zinc-200 rounded-lg px-3 py-1.5 text-xs focus:outline-indigo-500 bg-white">
+                                <option value="">全部状态</option>
+                                <option value="publish">公开 (Publish)</option>
+                                <option value="draft">隐藏 (Draft)</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm text-zinc-600">
                             <thead>
                                 <tr class="border-b border-zinc-100 text-[11px] font-bold uppercase tracking-wider text-zinc-400">
                                     <th class="py-3">文章标题</th>
-                                    <th class="py-3">所属系列 ➔ 二级分类</th>
-                                    <th class="py-3">阅读量</th>
+                                    <th class="py-3">所属大系列 ➔ 子分类</th>
+                                    <th class="py-3">权重 ➔ 阅读 ➔ 状态</th>
                                     <th class="py-3 text-right">操作</th>
                                 </tr>
                             </thead>
@@ -227,10 +256,11 @@
                     </div>
                 </div>
 
-                <!-- 编辑器工作区 -->
+                <!-- 编辑器工作区 (新增排序权重与发布状态选项) -->
                 <div id="editor-zone" class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm space-y-4">
                     <h3 id="editor-title" class="text-base font-bold text-zinc-900 border-b border-zinc-100 pb-3 tracking-tight">撰写新教程</h3>
                     
+                    <!-- 第一行：ID 与 标题 -->
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="md:col-span-1">
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">唯一 ID (不可修改)</label>
@@ -242,7 +272,8 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- 第二行：一二级分类选择与状态、权重配置 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">所属大系列导航</label>
                             <select id="admin-series" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all bg-white">
@@ -253,8 +284,20 @@
                             <select id="admin-category" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all bg-white">
                             </select>
                         </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">排序权重 (数字越大越靠前)</label>
+                            <input type="number" id="admin-weight" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="默认: 0">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">发布展示状态</label>
+                            <select id="admin-status" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all bg-white">
+                                <option value="publish">🟢 公开发布 (Publish)</option>
+                                <option value="draft">🔴 隐藏草稿 (Draft - 仅供秘密链接预览)</option>
+                            </select>
+                        </div>
                     </div>
 
+                    <!-- 第三行：摘要与【R2一键上传封装封面图】 -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="sm:col-span-2">
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章摘要</label>
@@ -275,6 +318,7 @@
                         <div id="vditor-container" class="w-full"></div>
                     </div>
                     
+                    <!-- 粘性固底操作按钮栏 -->
                     <div class="sticky bottom-0 bg-white/95 backdrop-blur-sm py-4 border-t border-zinc-100 z-40 flex justify-end gap-3">
                         <button onclick="cancelEdit()" class="border border-zinc-200 hover:bg-zinc-50 text-zinc-600 px-5 py-2 rounded-lg text-sm font-medium transition-colors">
                             取消
@@ -306,7 +350,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center space-x-2">
                 <span class="w-2 h-2 bg-amber-500 rounded-full inline-block"></span>
-                <span>blogs.nyc.mn • 奶油门户 6.5 终极自适应版</span>
+                <span>blogs.nyc.mn • 奶油门户 7.0 旗舰版</span>
             </div>
             <div class="text-[11px] text-zinc-400">
                 Powered by <a href="https://pages.cloudflare.com" target="_blank" class="hover:underline text-amber-500">Cloudflare Pages</a>
@@ -383,12 +427,12 @@
                 document.getElementById('config-series').value = activeSeriesList.join(', ');
                 document.getElementById('config-nav-links').value = rawNavLinks.map(item => `${item.name}, ${item.url}`).join('\n');
                 
-                // 【黄金修复】：之前这里因漏了 config-layout-mode 的 HTML 元素，导致赋值时抛错阻断了页面标题加载
                 setSelectValue('config-layout-mode', globalLayoutMode);
 
                 renderCategoryFilters();
                 fillCategorySelect();
                 fillSeriesSelect();
+                fillAdminFilterSelects(); // 填充后台管理筛选器的下拉框
 
             } catch (err) {
                 console.error("加载全局配置出错:", err);
@@ -476,6 +520,24 @@
                 select.innerHTML += `<option value="${series}">${series}</option>`;
             });
             select.innerHTML += `<option value="默认系列">默认系列</option>`;
+        }
+
+        // 填充后台列表筛选框
+        function fillAdminFilterSelects() {
+            const sSelect = document.getElementById('admin-filter-series');
+            if (sSelect) {
+                sSelect.innerHTML = '<option value="">全部大系列</option>';
+                activeSeriesList.forEach(s => {
+                    sSelect.innerHTML += `<option value="${s}">${s}</option>`;
+                });
+            }
+            const cSelect = document.getElementById('admin-filter-category');
+            if (cSelect) {
+                cSelect.innerHTML = '<option value="">全部子分类</option>';
+                activeCategories.forEach(c => {
+                    cSelect.innerHTML += `<option value="${c}">${c}</option>`;
+                });
+            }
         }
 
         // 安全节点值获取器
@@ -587,6 +649,7 @@
             await fetchPopularPosts();
         }
 
+        // 4 列奶油栅格卡片核心渲染器 (现在使用【全局排版变量 globalLayoutMode】对所有卡片实现全局排版对齐)
         async function fetchPostsAndRender(page = 1) {
             currentPageNum = page;
             const container = document.getElementById('posts-list-container');
@@ -971,38 +1034,89 @@
             }
         }
 
+        // 获取完整的文章数据并备份至全局，供前端搜索过滤
         async function refreshAdminTable() {
             const tbody = document.getElementById('admin-posts-table');
             if (!tbody) return;
             tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-zinc-400 text-xs">正在读取数据库...</td></tr>';
             
             try {
+                // 后台不分页，拉取全部数据进行本地快速筛选
                 const response = await fetch('./api/posts?_t=' + Date.now());
                 const posts = await response.json();
+                
+                // 统一数据层级
                 window.allPosts = posts.results || posts;
-                tbody.innerHTML = '';
+                
+                // 渲染表格
+                renderAdminTableRows(window.allPosts);
 
-                if (window.allPosts.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-zinc-400 text-xs">暂无文章</td></tr>';
-                    return;
-                }
-
-                window.allPosts.forEach((post, index) => {
-                    tbody.innerHTML += `
-                        <tr class="border-b border-zinc-100 hover:bg-zinc-50/50 transition-colors">
-                            <td class="py-3.5 font-semibold text-zinc-900">${post.title}</td>
-                            <td class="py-3.5"><span class="bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded text-xs font-semibold">${post.series || '默认'} ➔ ${post.category || '未分类'}</span></td>
-                            <td class="py-3.5 text-xs text-zinc-400">${post.views}</td>
-                            <td class="py-3.5 text-right space-x-3">
-                                <button onclick="editPost(${index})" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs transition-colors">编辑</button>
-                                <button onclick="deletePost('${post.id}')" class="text-red-600 hover:text-red-800 font-semibold text-xs transition-colors">删除</button>
-                            </td>
-                        </tr>
-                    `;
-                });
             } catch (err) {
                 tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-red-500 text-xs">列表加载失败。</td></tr>';
             }
+        }
+
+        // 渲染后台表格行的子程序
+        function renderAdminTableRows(postsArray) {
+            const tbody = document.getElementById('admin-posts-table');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (postsArray.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-zinc-400 text-xs">无符合筛选条件的文章</td></tr>';
+                return;
+            }
+
+            postsArray.forEach((post) => {
+                // 找到该文章在全局 window.allPosts 数组中真正的原始索引，防止过滤后索引错乱
+                const originalIndex = window.allPosts.findIndex(p => p.id === post.id);
+
+                // 文章发布状态标签美化
+                const statusBadge = post.status === 'draft' 
+                    ? `<span class="bg-red-50 text-red-600 px-2 py-0.5 rounded text-[10px] font-bold">隐藏 (Draft)</span>`
+                    : `<span class="bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded text-[10px] font-bold">公开 (Publish)</span>`;
+
+                tbody.innerHTML += `
+                    <tr class="border-b border-zinc-100 hover:bg-zinc-50/50 transition-colors">
+                        <td class="py-3.5 font-semibold text-zinc-900">${post.title}</td>
+                        <td class="py-3.5"><span class="bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded text-xs font-semibold">${post.series || '默认'} ➔ ${post.category || '未分类'}</span></td>
+                        <td class="py-3.5 text-xs text-zinc-400">
+                            <span class="font-bold text-amber-600">⚓ ${post.weight || 0}</span> • 
+                            <span>👁️ ${post.views}</span> • 
+                            ${statusBadge}
+                        </td>
+                        <td class="py-3.5 text-right space-x-3">
+                            <button onclick="editPost(${originalIndex})" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs transition-colors">编辑</button>
+                            <button onclick="deletePost('${post.id}')" class="text-red-600 hover:text-red-800 font-semibold text-xs transition-colors">删除</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // 【高阶管理端过滤算法】：本地即时进行多维组合筛选，丝滑响应且不伤 D1 数据库额度
+        function filterAdminTable() {
+            const query = safeGetValue('admin-filter-q').toLowerCase().trim();
+            const series = safeGetValue('admin-filter-series');
+            const category = safeGetValue('admin-filter-category');
+            const status = safeGetValue('admin-filter-status');
+
+            let filtered = window.allPosts || [];
+
+            if (query) {
+                filtered = filtered.filter(p => p.title.toLowerCase().includes(query));
+            }
+            if (series) {
+                filtered = filtered.filter(p => p.series === series);
+            }
+            if (category) {
+                filtered = filtered.filter(p => p.category === category);
+            }
+            if (status) {
+                filtered = filtered.filter(p => p.status === status);
+            }
+
+            renderAdminTableRows(filtered);
         }
 
         function startNewPost() {
@@ -1019,6 +1133,8 @@
             if (adminSummary) adminSummary.value = '';
             const adminCover = document.getElementById('admin-cover');
             if (adminCover) adminCover.value = '';
+            const adminWeight = document.getElementById('admin-weight');
+            if (adminWeight) adminWeight.value = '0';
             
             const adminSeries = document.getElementById('admin-series');
             if (adminSeries) {
@@ -1028,6 +1144,8 @@
             if (adminCategory) {
                 adminCategory.value = activeCategories[0] || '未分类';
             }
+            const adminStatus = document.getElementById('admin-status');
+            if (adminStatus) adminStatus.value = 'publish';
             
             if (vditorInstance) {
                 vditorInstance.setValue('');
@@ -1042,6 +1160,7 @@
             if (editorZone) editorZone.scrollIntoView({ behavior: 'smooth' });
         }
 
+        // 【全家桶式 try-catch 拦截】：精准抓包报错
         async function publishPost() {
             try {
                 const password = getActivePassword();
@@ -1051,6 +1170,8 @@
                 const cover = safeGetValue('admin-cover').trim();
                 const series = safeGetValue('admin-series') || '默认系列';
                 const category = safeGetValue('admin-category') || '未分类';
+                const status = safeGetValue('admin-status') || 'publish';
+                const weight = parseInt(safeGetValue('admin-weight')) || 0;
 
                 if (!vditorInstance) {
                     alert('系统检测到 Vditor 编辑器正在从云端加载中，请稍等 2 秒再试。');
@@ -1073,7 +1194,7 @@
                     method: 'POST',
                     headers: { 'Authorization': password, 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        id, title, summary, content, category, cover, series,
+                        id, title, summary, content, category, cover, series, status, weight,
                         layout_mode: globalLayoutMode, 
                         date: new Date().toISOString().split('T')[0]
                     })
@@ -1101,6 +1222,7 @@
             }
         }
 
+        // 【黄金修复】：直接通过 safeGetValue 锁定节点，绝无 Null 崩溃
         async function editPost(index) {
             try {
                 if (!window.allPosts || !window.allPosts[index]) {
@@ -1128,9 +1250,12 @@
                 if (adminSummary) adminSummary.value = post.summary || '';
                 const adminCover = document.getElementById('admin-cover');
                 if (adminCover) adminCover.value = post.cover || '';
+                const adminWeight = document.getElementById('admin-weight');
+                if (adminWeight) adminWeight.value = post.weight || 0;
                 
                 setSelectValue('admin-series', post.series || '默认系列');
                 setSelectValue('admin-category', post.category || '未分类');
+                setSelectValue('admin-status', post.status || 'publish');
 
                 if (!vditorInstance) {
                     alert('编辑器尚未加载完毕，请稍等。');

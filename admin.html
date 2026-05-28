@@ -240,7 +240,7 @@
                         </div>
                     </div>
 
-                    <!-- 面板 C：全局配置管理 (100% 垂直单列奶油轻量配置卡) -->
+                    <!-- 面板 C：全局配置管理 (已 100% 重构为纯垂直单列：一行一个，绝对无并排) -->
                     <div id="panel-config" class="admin-panel-content space-y-6 hidden">
                         <div class="border-b border-zinc-100 pb-3">
                             <h2 class="text-xl font-bold text-zinc-900 tracking-tight">自定义站点全局配置与大系列文案</h2>
@@ -283,7 +283,14 @@
                                 </select>
                             </div>
 
-                            <!-- 6. 右上方外链导航配置 -->
+                            <!-- 【新增配置项目 6】：侧边栏“热门推荐文章”的显示数量限制 (支持 1 到 20 范围内的任意数量) -->
+                            <div class="space-y-1.5">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">右侧侧边栏“热门文章”最大推荐展示数量</label>
+                                <input type="number" id="config-popular-limit" min="1" max="20" class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" value="5">
+                                <span class="text-[10px] text-zinc-400 block mt-1">控制首页侧边栏最受欢迎教程的加载条数（如输入 5 则显示前 5 热门文章）。</span>
+                            </div>
+
+                            <!-- 7. 右上方外链导航配置 -->
                             <div class="space-y-1.5">
                                 <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">右上角外链导航 (格式: 名称, 链接，一行一个)</label>
                                 <textarea id="config-nav-links" rows="4" class="w-full border border-zinc-200 rounded-xl p-4 text-[16px] md:text-xs font-mono focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="订阅转换, https://sub.blogs.nyc.mn&#10;IP查询, https://ip.blogs.nyc.mn"></textarea>
@@ -293,7 +300,7 @@
                             </div>
 
                             <div class="flex justify-end pt-4 border-t border-zinc-100">
-                                <button onclick="saveSiteConfig()" id="save-config-btn" class="bg-zinc-900 hover:bg-zinc-800 text-white px-6 py-2.5 rounded-lg text-xs font-semibold transition-all shadow-sm">
+                                <button onclick="saveSiteConfig()" id="save-config-btn" class="bg-zinc-900 hover:bg-zinc-800 text-white px-5 py-2.5 rounded-lg text-xs font-semibold transition-all shadow-sm">
                                     更新配置（瞬间生效）
                                 </button>
                             </div>
@@ -364,7 +371,7 @@
             }
         }
 
-        // 【黄金修复】：在菜单切换中，修正了 sidebar 选项选中时的高亮样式与 DOM 操作
+        // 修正：在侧边栏选项切换时，高亮类应用奶油高亮气泡样式
         function switchTab(tabId) {
             document.querySelectorAll('.admin-panel-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(tabId).classList.remove('hidden');
@@ -435,7 +442,9 @@
                 activeSeriesList = JSON.parse(data.site_series || '["科学上网","谷歌系列","NAS系列"]');
                 const rawNavLinks = JSON.parse(data.site_nav_links || '[{"name": "订阅转换", "url": "https://sub.blogs.nyc.mn"}]');
                 globalLayoutMode = data.site_layout_mode || "standard";
+                const sitePopularLimit = data.site_popular_limit || "5";
 
+                // 【动态大品牌绑定】：管理面板左侧边栏品牌名称随数据库修改而动态同步变动！
                 document.title = title + " - 后台控制面板";
 
                 const sidebarTitle = document.getElementById('sidebar-site-title');
@@ -450,6 +459,9 @@
                 document.getElementById('config-nav-links').value = rawNavLinks.map(item => `${item.name}, ${item.url}`).join('\n');
                 
                 setSelectValue('config-layout-mode', globalLayoutMode);
+                
+                // 载入热门推荐配置值
+                document.getElementById('config-popular-limit').value = sitePopularLimit;
 
                 fillCategorySelect();
                 fillSeriesSelect();
@@ -549,6 +561,8 @@
             const seriesStr = safeGetValue('config-series').trim();
             const navLinksStr = safeGetValue('config-nav-links').trim(); 
             const site_layout_mode = document.getElementById('config-layout-mode').value;
+            // 获取热门展示限制
+            const site_popular_limit = safeGetValue('config-popular-limit').trim() || "5";
             const btn = document.getElementById('save-config-btn');
 
             if (!title) { alert('主标题不可为空'); return; }
@@ -574,7 +588,8 @@
                         site_categories: categoriesArr,
                         site_series: seriesArr,
                         site_nav_links: navLinksArr,
-                        site_layout_mode
+                        site_layout_mode,
+                        site_popular_limit // 提交保存
                     })
                 });
 

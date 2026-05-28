@@ -113,4 +113,764 @@
                     <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-white p-4 rounded-xl border border-zinc-100 shadow-sm">
                         <div>
                             <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">🔍 标题检索</label>
-                            <input type="text" id="admin-filter-q" oninput="filterAdminTable()" class="w-full border border-zinc-200 rounded-lg px
+                            <input type="text" id="admin-filter-q" oninput="filterAdminTable()" class="w-full border border-zinc-200 rounded-lg px-3 py-1.5 text-[16px] md:text-xs focus:outline-indigo-500 bg-white" placeholder="检索标题关键词...">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">📂 筛选大系列</label>
+                            <select id="admin-filter-series" onchange="filterAdminTable()" class="w-full border border-zinc-200 rounded-lg px-3 py-1.5 text-[16px] md:text-xs focus:outline-indigo-500 bg-white bg-white"></select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">🏷️ 筛选子分类</label>
+                            <select id="admin-filter-category" onchange="filterAdminTable()" class="w-full border border-zinc-200 rounded-lg px-3 py-1.5 text-[16px] md:text-xs focus:outline-indigo-500 bg-white"></select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">🔒 筛选发布状态</label>
+                            <select id="admin-filter-status" onchange="filterAdminTable()" class="w-full border border-zinc-200 rounded-lg px-3 py-1.5 text-[16px] md:text-xs focus:outline-indigo-500 bg-white">
+                                <option value="">全部状态</option>
+                                <option value="publish">公开 (Publish)</option>
+                                <option value="draft">隐藏 (Draft)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 数据表格 -->
+                    <div class="bg-white rounded-xl border border-zinc-100 shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm text-zinc-600">
+                                <thead>
+                                    <tr class="bg-zinc-50 border-b border-zinc-100 text-[11px] font-bold uppercase tracking-wider text-zinc-400">
+                                        <th class="px-6 py-3.5">文章标题</th>
+                                        <th class="px-6 py-3.5">所属系列 ➔ 子分类</th>
+                                        <th class="px-6 py-3.5">权重 ➔ 浏览 ➔ 状态</th>
+                                        <th class="px-6 py-3.5 text-right">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-posts-table" class="divide-y divide-zinc-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 面板 B：撰写文章 -->
+                <div id="panel-editor" class="admin-panel-content space-y-6 hidden">
+                    <div class="border-b border-zinc-100 pb-3">
+                        <h2 id="editor-title" class="text-xl font-bold text-zinc-900 tracking-tight">撰写新教程</h2>
+                        <p class="text-xs text-zinc-400 mt-1">使用 Vditor 所见即所得编辑器进行长文排版创作</p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm space-y-5 relative">
+                        <!-- 第一行 -->
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">唯一 ID (不可修改)</label>
+                                <input type="text" id="admin-id" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all" placeholder="例如: advanced-markdown">
+                            </div>
+                            <div class="sm:col-span-3">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章标题</label>
+                                <input type="text" id="admin-title" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all" placeholder="请输入文章主标题">
+                            </div>
+                        </div>
+
+                        <!-- 第二行 -->
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">所属大系列导航</label>
+                                <select id="admin-series" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none bg-white"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">二级子分类选择</label>
+                                <select id="admin-category" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none bg-white"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">排序权重 (数字越大越靠前)</label>
+                                <input type="number" id="admin-weight" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all" value="0">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">发布显示状态</label>
+                                <select id="admin-status" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none bg-white">
+                                    <option value="publish">🟢 公开发布 (Publish)</option>
+                                    <option value="draft">🔴 隐藏草稿 (Draft - 仅供秘密链接预览)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 第三行 -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章摘要说明</label>
+                                <input type="text" id="admin-summary" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all" placeholder="请输入文章摘要">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">首页特色封面图 URL</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="admin-cover" class="flex-grow border border-zinc-200 rounded-lg px-3.5 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all" placeholder="https://images.blogs.nyc.mn/xxx.png">
+                                    <button onclick="triggerCoverUpload()" class="bg-zinc-800 hover:bg-zinc-900 text-white text-xs px-4 rounded-lg font-bold transition-all shrink-0">上传</button>
+                                </div>
+                                <input type="file" id="cover-file-input" accept="image/*" class="hidden" onchange="handleCoverFileSelected()">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">正文编辑器</label>
+                            <div id="vditor-container" class="w-full"></div>
+                        </div>
+                        
+                        <!-- 悬浮固底操作栏 -->
+                        <div class="sticky bottom-0 bg-white/95 backdrop-blur-sm py-4 border-t border-zinc-100 z-40 flex justify-end gap-3">
+                            <button onclick="cancelEdit()" class="border border-zinc-200 hover:bg-zinc-50 text-zinc-600 px-5 py-2 rounded-lg text-sm font-medium transition-colors">
+                                取消重置
+                            </button>
+                            <button onclick="publishPost()" id="publish-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm">
+                                直接发布（瞬间生效）
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 面板 C：全局配置管理 -->
+                <div id="panel-config" class="admin-panel-content space-y-6 hidden">
+                    <div class="border-b border-zinc-100 pb-3">
+                        <h2 class="text-xl font-bold text-zinc-900 tracking-tight">自定义站点全局配置与大系列文案</h2>
+                        <p class="text-xs text-zinc-400 mt-1">在线管理您的一二级目导航、网站名、右上角工具外链及全局排版</p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-xl border border-zinc-100 shadow-sm space-y-6">
+                        <!-- 1. 网站主标题 -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">网站主标题（Title）</label>
+                            <input type="text" id="config-title" class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all">
+                        </div>
+
+                        <!-- 2. 副标题 / Slogan -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">副标题 / 描述说明（Slogan）</label>
+                            <input type="text" id="config-subtitle" class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all">
+                        </div>
+
+                        <!-- 3. 全局大系列导航 -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">全局大系列导航栏列表（用英文逗号隔开）</label>
+                            <input type="text" id="config-series" class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all">
+                            <span class="text-[10px] text-zinc-400 block mt-1">示例：科学上网, 谷歌系列, NAS系列</span>
+                        </div>
+
+                        <!-- 4. 二级子分类标签 -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">二级子分类标签列表（用英文逗号隔开）</label>
+                            <input type="text" id="config-categories" class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all">
+                            <span class="text-[10px] text-zinc-400 block mt-1">示例：技术, 教程, 随笔, 思考</span>
+                        </div>
+
+                        <!-- 5. 全局卡片排版模式 -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">全局卡片排版模式</label>
+                            <select id="config-layout-mode" class="w-full border border-zinc-200 rounded-lg px-4 h-11 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none bg-white">
+                                <option value="standard">图片 + 标题 + 摘要 (标准样式)</option>
+                                <option value="simple">图片 + 标题 (极简缩略样式)</option>
+                            </select>
+                        </div>
+
+                        <!-- 6. 右上方外链导航配置 -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">右上角外链导航 (格式: 名称, 链接，一行一个)</label>
+                            <textarea id="config-nav-links" rows="4" class="w-full border border-zinc-200 rounded-xl p-4 text-[16px] md:text-xs font-mono focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all" placeholder="订阅转换, https://sub.blogs.nyc.mn&#10;IP查询, https://ip.blogs.nyc.mn"></textarea>
+                            <div class="bg-zinc-50 p-4 rounded-xl border border-zinc-100 text-[11px] text-zinc-400 leading-relaxed mt-1">
+                                <span class="font-bold text-zinc-500">💡 书写说明：</span>每一行代表一个链接，请使用 <strong>英文半角逗号</strong> <code class="bg-white px-1 py-0.5 rounded border border-zinc-200">,</code> 隔开名称和链接。
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end pt-4 border-t border-zinc-100">
+                            <button onclick="saveSiteConfig()" id="save-config-btn" class="bg-zinc-900 hover:bg-zinc-800 text-white px-6 py-2.5 rounded-lg text-xs font-semibold transition-all shadow-sm">
+                                保存更新（瞬间生效）
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- 修改密码弹窗 -->
+    <div id="password-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-2xl w-80 shadow-lg space-y-4">
+            <h3 class="text-base font-bold text-zinc-900">修改后台管理密码</h3>
+            <input type="password" id="new-password" class="w-full border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-indigo-500" placeholder="请输入新密码">
+            <div class="flex justify-end gap-2">
+                <button onclick="closePasswordModal()" class="text-zinc-500 text-xs hover:underline px-3 py-1">取消</button>
+                <button onclick="submitChangePassword()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-4 py-1.5 rounded-lg transition-all">确定修改</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let vditorInstance = null;
+        let R2_DOMAIN = "";
+        let activeCategories = [];       
+        let activeSeriesList = [];       
+        let dbNavMeta = {};              
+        let isEditing = false;
+        let mobileSidebarOpen = false; 
+
+        window.addEventListener('load', async () => {
+            const password = getActivePassword();
+            if (password) {
+                document.getElementById('admin-login-view').classList.add('hidden');
+                document.getElementById('admin-main-view').classList.remove('hidden');
+                await loadSiteConfig();
+                await refreshAdminTable();
+                initVditor();
+            } else {
+                document.getElementById('admin-login-view').classList.remove('hidden');
+                document.getElementById('admin-main-view').classList.add('hidden');
+            }
+        });
+
+        // 旋转重绘自适应监听
+        window.addEventListener('resize', () => {
+            const viewport = document.querySelector('meta[name="viewport"]');
+            if (viewport) {
+                viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0');
+            }
+        });
+
+        function toggleMobileSidebar() {
+            const sidebar = document.querySelector('aside');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (!sidebar || !overlay) return;
+
+            if (mobileSidebarOpen) {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+                mobileSidebarOpen = false;
+            } else {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                mobileSidebarOpen = true;
+            }
+        }
+
+        // 【黄金修复】：在菜单切换逻辑中，更新了高亮气泡的底层 Class 为奶油色温润气泡（bg-amber-500/10）样式！
+        function switchTab(tabId) {
+            document.querySelectorAll('.admin-panel-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 border border-transparent";
+            });
+
+            const activeBtnMap = {
+                'panel-posts': 'menu-btn-posts',
+                'panel-editor': 'menu-btn-editor',
+                'panel-config': 'menu-btn-config'
+            };
+            const activeBtn = document.getElementById(activeBtnMap[tabId]);
+            if (activeBtn) {
+                activeBtn.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-bold tracking-wide transition-all bg-amber-500/10 text-amber-600 border border-amber-500/20 shadow-sm";
+            }
+
+            if (mobileSidebarOpen) {
+                toggleMobileSidebar();
+            }
+        }
+
+        async function verifyAndLogin() {
+            const password = safeGetValue('admin-pass');
+            if (!password) { alert('密码不可为空'); return; }
+
+            try {
+                const res = await fetch('./api/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: "login", password })
+                });
+
+                if (res.ok) {
+                    sessionStorage.setItem('admin_password', password);
+                    document.getElementById('admin-login-view').classList.add('hidden');
+                    document.getElementById('admin-main-view').classList.remove('hidden');
+                    await loadSiteConfig();
+                    await refreshAdminTable();
+                    initVditor();
+                } else {
+                    alert('验证失败');
+                }
+            } catch (err) {
+                alert('登录异常: ' + err.message);
+            }
+        }
+
+        function getActivePassword() { return sessionStorage.getItem('admin_password'); }
+
+        function logoutAdmin() {
+            sessionStorage.removeItem('admin_password');
+            const pInput = document.getElementById('admin-pass');
+            if (pInput) pInput.value = '';
+            document.getElementById('admin-main-view').classList.add('hidden');
+            document.getElementById('admin-login-view').classList.remove('hidden');
+        }
+
+        async function loadSiteConfig() {
+            try {
+                const res = await fetch('./api/config?_t=' + Date.now());
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                
+                const title = data.site_title || "Blogs.nyc.mn";
+                activeCategories = JSON.parse(data.site_categories || '["技术","教程","随笔","思考"]');
+                activeSeriesList = JSON.parse(data.site_series || '["科学上网","谷歌系列","NAS系列"]');
+                const rawNavLinks = JSON.parse(data.site_nav_links || '[{"name": "订阅转换", "url": "https://sub.blogs.nyc.mn"}]');
+                globalLayoutMode = data.site_layout_mode || "standard";
+
+                // 【大品牌动态绑定】：浏览器标签页标题自动与 D1 中的网站标题动态锁定
+                document.title = title + " - 后台控制面板";
+
+                const sidebarTitle = document.getElementById('sidebar-site-title');
+                if (sidebarTitle) {
+                    sidebarTitle.innerText = title + ' 后台';
+                }
+
+                document.getElementById('config-title').value = title;
+                document.getElementById('config-subtitle').value = data.site_subtitle || "无服务器数字花园";
+                document.getElementById('config-categories').value = activeCategories.join(', ');
+                document.getElementById('config-series').value = activeSeriesList.join(', ');
+                document.getElementById('config-nav-links').value = rawNavLinks.map(item => `${item.name}, ${item.url}`).join('\n');
+                
+                setSelectValue('config-layout-mode', globalLayoutMode);
+
+                fillCategorySelect();
+                fillSeriesSelect();
+                fillAdminFilterSelects(); 
+
+            } catch (err) {
+                console.error("加载全局配置出错:", err);
+                activeCategories = ["技术", "教程", "随笔", "思考"];
+                activeSeriesList = ["科学上网", "谷歌系列", "NAS系列"];
+                fillCategorySelect();
+                fillSeriesSelect();
+                fillAdminFilterSelects();
+            }
+        }
+
+        function fillCategorySelect() {
+            const select = document.getElementById('admin-category');
+            if (!select) return;
+            select.innerHTML = '';
+            activeCategories.forEach(cat => {
+                select.innerHTML += `<option value="${cat}">${cat}</option>`;
+            });
+            select.innerHTML += `<option value="未分类">未分类</option>`;
+        }
+
+        function fillSeriesSelect() {
+            const select = document.getElementById('admin-series');
+            if (!select) return;
+            select.innerHTML = '';
+            activeSeriesList.forEach(series => {
+                select.innerHTML += `<option value="${series}">${series}</option>`;
+            });
+            select.innerHTML += `<option value="默认系列">默认系列</option>`;
+        }
+
+        function fillAdminFilterSelects() {
+            const sSelect = document.getElementById('admin-filter-series');
+            if (sSelect) {
+                sSelect.innerHTML = '<option value="">全部大系列</option>';
+                activeSeriesList.forEach(s => {
+                    sSelect.innerHTML += `<option value="${s}">${s}</option>`;
+                });
+            }
+            const cSelect = document.getElementById('admin-filter-category');
+            if (cSelect) {
+                cSelect.innerHTML = '<option value="">全部子分类</option>';
+                activeCategories.forEach(c => {
+                    cSelect.innerHTML += `<option value="${c}">${c}</option>`;
+                });
+            }
+        }
+
+        function safeGetValue(id) {
+            const el = document.getElementById(id);
+            return el ? el.value : "";
+        }
+
+        function setSelectValue(id, val) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            let exists = false;
+            for (let i = 0; i < el.options.length; i++) {
+                if (el.options[i].value === val) { exists = true; break; }
+            }
+            if (!exists && val) {
+                const opt = document.createElement('option');
+                opt.value = opt.text = val;
+                el.add(opt);
+            }
+            el.value = val;
+        }
+
+        function triggerCoverUpload() { document.getElementById('cover-file-input').click(); }
+
+        async function handleCoverFileSelected() {
+            const fileInput = document.getElementById('cover-file-input');
+            if (fileInput.files.length === 0) return;
+            const file = fileInput.files[0];
+            const uploadBtn = document.querySelector('button[onclick="triggerCoverUpload()"]');
+            
+            uploadBtn.innerText = '传中...';
+            uploadBtn.disabled = true;
+
+            const url = await uploadImageViaVditor(file); 
+            if (url) document.getElementById('admin-cover').value = url; 
+            
+            uploadBtn.innerText = '上传';
+            uploadBtn.disabled = false;
+            fileInput.value = ''; 
+        }
+
+        async function saveSiteConfig() {
+            const password = getActivePassword();
+            const title = safeGetValue('config-title').trim();
+            const subtitle = safeGetValue('config-subtitle').trim();
+            const categoriesStr = safeGetValue('config-categories').trim();
+            const seriesStr = safeGetValue('config-series').trim();
+            const navLinksStr = safeGetValue('config-nav-links').trim(); 
+            const site_layout_mode = document.getElementById('config-layout-mode').value;
+            const btn = document.getElementById('save-config-btn');
+
+            if (!title) { alert('主标题不可为空'); return; }
+            const categoriesArr = categoriesStr.split(',').map(c => c.trim()).filter(c => c.length > 0);
+            const seriesArr = seriesStr.split(',').map(c => c.trim()).filter(c => c.length > 0);
+
+            const navLinksArr = navLinksStr.split('\n').map(line => {
+                const parts = line.split(',');
+                const name = parts[0] ? parts[0].trim() : "";
+                const url = parts[1] ? parts[1].trim() : "";
+                return { name, url };
+            }).filter(item => item.name && item.url);
+
+            if (btn) { btn.innerText = '正在提交...'; btn.disabled = true; }
+
+            try {
+                const res = await fetch('./api/config', {
+                    method: 'POST',
+                    headers: { 'Authorization': password, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        site_title: title,
+                        site_subtitle: subtitle,
+                        site_categories: categoriesArr,
+                        site_series: seriesArr,
+                        site_nav_links: navLinksArr,
+                        site_layout_mode
+                    })
+                });
+
+                if (!res.ok) throw new Error();
+                alert('配置修改成功！');
+                await loadSiteConfig();
+            } catch (e) {
+                alert('修改失败');
+            } finally {
+                if (btn) { btn.innerText = '更新配置（瞬间生效）'; btn.disabled = false; }
+            }
+        }
+
+        function showChangePasswordModal() { document.getElementById('password-modal').classList.remove('hidden'); }
+        function closePasswordModal() { document.getElementById('password-modal').classList.add('hidden'); }
+
+        async function submitChangePassword() {
+            const password = getActivePassword();
+            const newPassword = safeGetValue('new-password').trim();
+            if (!newPassword) { alert('新密码不可为空'); return; }
+
+            try {
+                const res = await fetch('./api/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: "change_password", password, newPassword })
+                });
+
+                if (res.ok) {
+                    alert('密码已成功修改！');
+                    closePasswordModal();
+                    logoutAdmin();
+                } else {
+                    alert('修改失败');
+                }
+            } catch (err) {
+                alert('修改出错: ' + err.message);
+            }
+        }
+
+        function initVditor() {
+            if (vditorInstance) return;
+            vditorInstance = new Vditor('vditor-container', {
+                height: 500,
+                mode: 'wysiwyg',
+                placeholder: "撰写教程...支持拖拽粘贴截图自动无感上传至 R2 并排版呈现！",
+                cache: { enable: false },
+                toolbarConfig: { pin: true },
+                toolbar: [
+                    "emoji", "headings", "bold", "italic", "strike", "link", "|",
+                    "list", "ordered-list", "check", "outdent", "indent", "|",
+                    "quote", "line", "code", "inline-code", "insert-after", "insert-before", "|",
+                    "table", "|",
+                    "undo", "redo", "|",
+                    "edit-mode", "html", "preview", "both", "fullscreen"
+                ],
+                upload: {
+                    accept: 'image/*',
+                    handler: async (files) => {
+                        const file = files[0];
+                        const url = await uploadImageViaVditor(file);
+                        if (url) { vditorInstance.insertValue(`![图片描述](${url})`); }
+                        return null;
+                    }
+                }
+            });
+        }
+
+        async function uploadImageViaVditor(file) {
+            const password = getActivePassword();
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                const res = await fetch('./api/upload', {
+                    method: 'POST',
+                    headers: { 'Authorization': password },
+                    body: formData
+                });
+
+                if (!res.ok) throw new Error(await res.text());
+                const data = await res.json();
+
+                const urlObj = new URL(data.url);
+                R2_DOMAIN = urlObj.origin;
+
+                return data.url;
+            } catch (err) {
+                alert('图片同步到 R2 存储桶失败: ' + err.message);
+                return null;
+            }
+        }
+
+        async function refreshAdminTable() {
+            const tbody = document.getElementById('admin-posts-table');
+            if (!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-zinc-400 text-xs">正在读取数据库...</td></tr>';
+            
+            try {
+                const password = getActivePassword(); 
+                const response = await fetch('./api/posts?_t=' + Date.now(), {
+                    headers: { 'Authorization': password } 
+                });
+                const posts = await response.json();
+                window.allPosts = posts.results || posts;
+                renderAdminTableRows(window.allPosts);
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-red-500 text-xs">列表加载失败。</td></tr>';
+            }
+        }
+
+        function renderAdminTableRows(postsArray) {
+            const tbody = document.getElementById('admin-posts-table');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (postsArray.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-zinc-400 text-xs">无符合筛选条件的文章</td></tr>';
+                return;
+            }
+
+            postsArray.forEach((post) => {
+                const originalIndex = window.allPosts.findIndex(p => p.id === post.id);
+                const statusBadge = post.status === 'draft' 
+                    ? `<span class="bg-red-50 text-red-600 px-2 py-0.5 rounded text-[10px] font-bold">隐藏 (Draft)</span>`
+                    : `<span class="bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded text-[10px] font-bold">公开 (Publish)</span>`;
+
+                tbody.innerHTML += `
+                    <tr class="border-b border-zinc-100 hover:bg-zinc-50/50 transition-colors">
+                        <td class="px-6 py-3.5 font-semibold text-zinc-900">${post.title}</td>
+                        <td class="px-6 py-3.5"><span class="bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded text-xs font-semibold">${post.series || '默认'} ➔ ${post.category || '未分类'}</span></td>
+                        <td class="px-6 py-3.5 text-xs text-zinc-400">
+                            <span class="font-bold text-amber-600">⚓ ${post.weight || 0}</span> • 
+                            <span>👁️ ${post.views}</span> • 
+                            ${statusBadge}
+                        </td>
+                        <td class="px-6 py-3.5 text-right space-x-3">
+                            <a href="./index.html#/post/${post.id}" target="_blank" class="text-emerald-600 hover:text-emerald-800 font-semibold text-xs transition-all">查看 ↗</a>
+                            <button onclick="editPost(${originalIndex})" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs transition-all">编辑</button>
+                            <button onclick="deletePost('${post.id}')" class="text-red-600 hover:text-red-800 font-semibold text-xs transition-all">删除</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function filterAdminTable() {
+            const query = safeGetValue('admin-filter-q').toLowerCase().trim();
+            const series = safeGetValue('admin-filter-series');
+            const category = safeGetValue('admin-filter-category');
+            const status = safeGetValue('admin-filter-status');
+
+            let filtered = window.allPosts || [];
+
+            if (query) { filtered = filtered.filter(p => p.title.toLowerCase().includes(query)); }
+            if (series) { filtered = filtered.filter(p => p.series === series); }
+            if (category) { filtered = filtered.filter(p => p.category === category); }
+            if (status) { filtered = filtered.filter(p => p.status === status); }
+
+            renderAdminTableRows(filtered);
+        }
+
+        function startNewPost() {
+            isEditing = false;
+            
+            const adminId = document.getElementById('admin-id');
+            if (adminId) { adminId.disabled = false; adminId.value = ''; }
+            const adminTitle = document.getElementById('admin-title');
+            if (adminTitle) adminTitle.value = '';
+            const adminSummary = document.getElementById('admin-summary');
+            if (adminSummary) adminSummary.value = '';
+            const adminCover = document.getElementById('admin-cover');
+            if (adminCover) adminCover.value = '';
+            const adminWeight = document.getElementById('admin-weight');
+            if (adminWeight) adminWeight.value = '0';
+            
+            const adminSeries = document.getElementById('admin-series');
+            if (adminSeries) { adminSeries.value = activeSeriesList[0] || '默认系列'; }
+            const adminCategory = document.getElementById('admin-category');
+            if (adminCategory) { adminCategory.value = activeCategories[0] || '未分类'; }
+            const adminStatus = document.getElementById('admin-status');
+            if (adminStatus) adminStatus.value = 'publish';
+            
+            if (vditorInstance) { vditorInstance.setValue(''); }
+            
+            document.getElementById('editor-title').innerText = '撰写新教程';
+            document.getElementById('publish-btn').innerText = '直接发布（瞬间生效）';
+            
+            switchTab('panel-editor');
+        }
+
+        async function publishPost() {
+            try {
+                const password = getActivePassword();
+                const id = safeGetValue('admin-id').trim();
+                const title = safeGetValue('admin-title').trim(); 
+                const summary = safeGetValue('admin-summary').trim();
+                const cover = safeGetValue('admin-cover').trim();
+                const series = safeGetValue('admin-series') || '默认系列';
+                const category = safeGetValue('admin-category') || '未分类';
+                const status = safeGetValue('admin-status') || 'publish';
+                const weight = parseInt(safeGetValue('admin-weight')) || 0;
+
+                if (!vditorInstance) {
+                    alert('系统检测到 Vditor 编辑器正在从云端加载中，请稍等 2 秒再试。');
+                    return;
+                }
+                const content = vditorInstance.getValue();
+
+                if (!id || !title || !content) {
+                    alert('请完整填写文章 ID、标题和正文内容！');
+                    return;
+                }
+
+                const btn = document.getElementById('publish-btn');
+                if (btn) { btn.innerText = '正在发布到 D1 与 R2...'; btn.disabled = true; }
+
+                const res = await fetch('./api/posts', {
+                    method: 'POST',
+                    headers: { 'Authorization': password, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id, title, summary, content, category, cover, series, status, weight,
+                        layout_mode: globalLayoutMode, 
+                        date: new Date().toISOString().split('T')[0]
+                    })
+                });
+
+                if (!res.ok) throw new Error(await res.text());
+                alert('文章同步发布成功！');
+                
+                await refreshAdminTable();
+                startNewPost();
+                switchTab('panel-posts'); 
+            } catch (err) {
+                alert('【发布失败】详细错误信息:\n' + err.message);
+                const btn = document.getElementById('publish-btn');
+                if (btn) { btn.disabled = false; btn.innerText = '直接发布（瞬间生效）'; }
+            }
+        }
+
+        async function editPost(index) {
+            try {
+                if (!window.allPosts || !window.allPosts[index]) {
+                    alert('系统找不到该行的数据，请刷新列表重试。');
+                    return;
+                }
+                const post = window.allPosts[index];
+
+                isEditing = true;
+                
+                document.getElementById('editor-title').innerText = `编辑教程: ${post.title || ''}`;
+                document.getElementById('publish-btn').innerText = '保存更新';
+                
+                const adminIdInput = document.getElementById('admin-id');
+                if (adminIdInput) { adminIdInput.value = post.id || ''; adminIdInput.disabled = true; }
+                
+                const adminTitle = document.getElementById('admin-title');
+                if (adminTitle) adminTitle.value = post.title || '';
+                const adminSummary = document.getElementById('admin-summary');
+                if (adminSummary) adminSummary.value = post.summary || '';
+                const adminCover = document.getElementById('admin-cover');
+                if (adminCover) adminCover.value = post.cover || '';
+                const adminWeight = document.getElementById('admin-weight');
+                if (adminWeight) adminWeight.value = post.weight || 0;
+                
+                setSelectValue('admin-series', post.series || '默认系列');
+                setSelectValue('admin-category', post.category || '未分类');
+                setSelectValue('admin-status', post.status || 'publish');
+
+                if (!vditorInstance) { alert('编辑器异常，请刷新页面。'); return; }
+                vditorInstance.setValue('正在从 R2 提取正文内容...');
+
+                switchTab('panel-editor');
+
+                const r2Base = R2_DOMAIN || `https://images.blogs.nyc.mn`;
+                const res = await fetch(`${r2Base}/posts/${post.id}.md?_t=` + Date.now());
+                if (!res.ok) throw new Error();
+                const text = await res.text();
+                vditorInstance.setValue(text);
+
+            } catch (e) {
+                alert('从 R2 读取正文失败，请确认跨域 CORS 策略已经正常设置。');
+                vditorInstance.setValue('');
+            }
+        }
+
+        async function deletePost(id) {
+            const password = getActivePassword();
+            if (!confirm(`警告：该操作将同时清除 D1 中的该文章记录，并物理清除该文章引用的 R2 媒体文件，是否继续？`)) return;
+
+            try {
+                const res = await fetch('./api/delete', {
+                    method: 'POST',
+                    headers: { 'Authorization': password, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+
+                if (!res.ok) throw new Error(await res.text());
+                alert('文章和关联图片已完全物理销毁！');
+                await refreshAdminTable();
+            } catch (err) {
+                alert('删除失败: ' + err.message);
+            }
+        }
+
+        function cancelEdit() {
+            startNewPost();
+            switchTab('panel-posts');
+        }
+    </script>
+</body>
+</html>

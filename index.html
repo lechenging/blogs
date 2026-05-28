@@ -432,7 +432,16 @@
             select.innerHTML += `<option value="默认系列">默认系列</option>`;
         }
 
-        // 【黄金安全机制】：专为 Select 下拉菜单设计的安全赋值器，防崩溃、防空数据、防旧文章字段不兼容
+        // 【安全防空取值器】物理隔绝 Element Null 报错，确保永远不发生 Value Error 阻断运行
+        function safeGetValue(id) {
+            const el = document.getElementById(id);
+            if (!el) {
+                console.warn(`[系统容错警告] 节点 id="${id}" 在当前 DOM 结构中未找到，已自动返回安全空值。`);
+                return "";
+            }
+            return el.value || "";
+        }
+
         function setSelectValue(id, val) {
             const el = document.getElementById(id);
             if (!el) return;
@@ -444,7 +453,6 @@
                     break;
                 }
             }
-            // 如果旧数据的字段不存在于当前选项中，动态为下拉菜单添加该临时选项，确保系统绝对不发生 TypeError 崩溃
             if (!exists && val) {
                 const opt = document.createElement('option');
                 opt.value = val;
@@ -701,7 +709,7 @@
                 addCopyButtons();
                 document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
             } catch (err) {
-                postContent.innerHTML = '<p class="text-red-500 text-sm">无法从 R2 载入文章，请确保跨域策略配置成功。</p>';
+                postContent.innerHTML = '<p class="text-red-500 text-sm">无法从 R2 载入文章，请检查存储桶的公网访问设置以及跨域 CORS 策略设置。</p>';
             }
         }
 
@@ -723,7 +731,7 @@
         }
 
         async function verifyAndLogin() {
-            const password = document.getElementById('admin-pass').value;
+            const password = safeGetValue('admin-pass');
             if (!password) { alert('密码不可为空'); return; }
 
             try {
@@ -751,27 +759,30 @@
 
         function logoutAdmin() {
             sessionStorage.removeItem('admin_password');
-            document.getElementById('admin-pass').value = '';
+            const pInput = document.getElementById('admin-pass');
+            if (pInput) pInput.value = '';
             document.getElementById('admin-panel').classList.add('hidden');
             document.getElementById('admin-login-card').classList.remove('hidden');
         }
 
         async function saveSiteConfig() {
-            const password = getActivePassword();
-            const title = document.getElementById('config-title').value.trim();
-            const subtitle = document.getElementById('config-subtitle').value.trim();
-            const categoriesStr = document.getElementById('config-categories').value.trim();
-            const seriesStr = document.getElementById('config-series').value.trim();
-            const btn = document.getElementById('save-config-btn');
-
-            if (!title) { alert('主标题不可为空'); return; }
-            const categoriesArr = categoriesStr.split(',').map(c => c.trim()).filter(c => c.length > 0);
-            const seriesArr = seriesStr.split(',').map(c => c.trim()).filter(c => c.length > 0);
-
-            btn.innerText = '正在提交...';
-            btn.disabled = true;
-
             try {
+                const password = getActivePassword();
+                const title = safeGetValue('config-title').trim();
+                const subtitle = safeGetValue('config-subtitle').trim();
+                const categoriesStr = safeGetValue('config-categories').trim();
+                const seriesStr = safeGetValue('config-series').trim();
+                const btn = document.getElementById('save-config-btn');
+
+                if (!title) { alert('主标题不可为空'); return; }
+                const categoriesArr = categoriesStr.split(',').map(c => c.trim()).filter(c => c.length > 0);
+                const seriesArr = seriesStr.split(',').map(c => c.trim()).filter(c => c.length > 0);
+
+                if (btn) {
+                    btn.innerText = '正在提交...';
+                    btn.disabled = true;
+                }
+
                 const res = await fetch('./api/config', {
                     method: 'POST',
                     headers: { 'Authorization': password, 'Content-Type': 'application/json' },
@@ -787,11 +798,18 @@
                 alert('配置修改成功！');
                 await loadSiteConfig();
                 await fetchNavMeta(); 
+                
+                if (btn) {
+                    btn.innerText = '更新配置（瞬间生效）';
+                    btn.disabled = false;
+                }
             } catch (e) {
-                alert('修改失败');
-            } finally {
-                btn.innerText = '更新配置（瞬间生效）';
-                btn.disabled = false;
+                alert('全局配置修改失败，详细原因: ' + e.message);
+                const btn = document.getElementById('save-config-btn');
+                if (btn) {
+                    btn.innerText = '更新配置（瞬间生效）';
+                    btn.disabled = false;
+                }
             }
         }
 
@@ -800,7 +818,7 @@
 
         async function submitChangePassword() {
             const password = getActivePassword();
-            const newPassword = document.getElementById('new-password').value.trim();
+            const newPassword = safeGetValue('new-password').trim();
             if (!newPassword) { alert('新密码不可为空'); return; }
 
             try {
@@ -885,8 +903,6 @@
             try {
                 const response = await fetch('./api/posts?_t=' + Date.now());
                 const posts = await response.json();
-                
-                // 将数据赋给全局 window.allPosts 数组
                 window.allPosts = posts.results || posts;
                 tbody.innerHTML = '';
 
@@ -915,45 +931,54 @@
 
         function startNewPost() {
             isEditing = false;
-            document.getElementById('admin-id').disabled = false;
-            document.getElementById('admin-id').value = '';
-            document.getElementById('admin-title').value = '';
-            document.getElementById('admin-summary').value = '';
-            document.getElementById('admin-cover').value = '';
             
-            if (activeSeriesList.length > 0) {
-                document.getElementById('admin-series').value = activeSeriesList[0];
-            } else {
-                document.getElementById('admin-series').value = '默认系列';
+            const adminId = document.getElementById('admin-id');
+            if (adminId) {
+                adminId.disabled = false;
+                adminId.value = '';
             }
-            document.getElementById('admin-layout-mode').value = 'standard';
+            const adminTitle = document.getElementById('admin-title');
+            if (adminTitle) adminTitle.value = '';
+            const adminSummary = document.getElementById('admin-summary');
+            if (adminSummary) adminSummary.value = '';
+            const adminCover = document.getElementById('admin-cover');
+            if (adminCover) adminCover.value = '';
             
-            if (activeCategories.length > 0) {
-                document.getElementById('admin-category').value = activeCategories[0];
-            } else {
-                document.getElementById('admin-category').value = '未分类';
+            const adminSeries = document.getElementById('admin-series');
+            if (adminSeries) {
+                adminSeries.value = activeSeriesList[0] || '默认系列';
+            }
+            const adminLayout = document.getElementById('admin-layout-mode');
+            if (adminLayout) adminLayout.value = 'standard';
+            const adminCategory = document.getElementById('admin-category');
+            if (adminCategory) {
+                adminCategory.value = activeCategories[0] || '未分类';
             }
             
             if (vditorInstance) {
                 vditorInstance.setValue('');
             }
             
-            document.getElementById('editor-title').innerText = '撰写新教程';
-            document.getElementById('publish-btn').innerText = '直接发布（瞬间生效）';
-            document.getElementById('editor-zone').scrollIntoView({ behavior: 'smooth' });
+            const editorTitle = document.getElementById('editor-title');
+            if (editorTitle) editorTitle.innerText = '撰写新教程';
+            const pubBtn = document.getElementById('publish-btn');
+            if (pubBtn) pubBtn.innerText = '直接发布（瞬间生效）';
+            
+            const editorZone = document.getElementById('editor-zone');
+            if (editorZone) editorZone.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 【超级防御：全局 try-catch + 弹窗报错】确保提交绝对不发生静默失效！如果有错会直接弹窗告诉您原因。
+        // 【超级防御】：通过 safeGetValue 进行节点锁定，阻断任何 Null 报错
         async function publishPost() {
             try {
                 const password = getActivePassword();
-                const id = document.getElementById('admin-id').value.trim();
-                const title = document.getElementById('admin-title').value.trim();
-                const summary = document.getElementById('admin-summary').value.trim();
-                const cover = document.getElementById('admin-cover').value.trim();
-                const series = document.getElementById('admin-series').value || '默认系列';
-                const layout_mode = document.getElementById('admin-layout-mode').value || 'standard';
-                const category = document.getElementById('admin-category').value || '未分类';
+                const id = safeGetValue('admin-id').trim();
+                const title = safeGetValue('admin-title').trim();
+                const summary = safeGetValue('admin-summary').trim();
+                const cover = safeGetValue('admin-cover').trim();
+                const series = safeGetValue('admin-series') || '默认系列';
+                const layout_mode = safeGetValue('admin-layout-mode') || 'standard';
+                const category = safeGetValue('admin-category') || '未分类';
 
                 if (!vditorInstance) {
                     alert('系统检测到 Vditor 编辑器正在从云端加载中，请稍等 2 秒再试。');
@@ -967,8 +992,10 @@
                 }
 
                 const btn = document.getElementById('publish-btn');
-                btn.innerText = '正在发布到 D1 与 R2...';
-                btn.disabled = true;
+                if (btn) {
+                    btn.innerText = '正在发布到 D1 与 R2...';
+                    btn.disabled = true;
+                }
 
                 const res = await fetch('./api/posts', {
                     method: 'POST',
@@ -986,11 +1013,12 @@
                 await fetchNavMeta(); 
                 startNewPost();
                 
-                btn.disabled = false;
-                btn.innerText = '直接发布（瞬间生效）';
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerText = '直接发布（瞬间生效）';
+                }
 
             } catch (err) {
-                // 如果是数据库没有成功升级（缺少 layout_mode 或 series 字段），这里会直接弹出提示原因！
                 alert('【发布失败】详细错误信息:\n' + err.message + '\n\n如果是 no such column 错误，说明您之前没有在 D1 中成功执行 ALTER 升级语句。请前往 D1 控制台补充执行。');
                 const btn = document.getElementById('publish-btn');
                 if (btn) {
@@ -1000,7 +1028,7 @@
             }
         }
 
-        // 【黄金修复】：通过 index 读取，且使用 setSelectValue 进行下拉菜单安全赋默认值
+        // 【安全黄金修复】：直接通过 safeGetValue 锁定节点，绝无 Null 崩溃
         async function editPost(index) {
             try {
                 if (!window.allPosts || !window.allPosts[index]) {
@@ -1010,18 +1038,25 @@
                 const post = window.allPosts[index];
 
                 isEditing = true;
-                document.getElementById('editor-title').innerText = `编辑教程: ${post.title || ''}`;
-                document.getElementById('publish-btn').innerText = '保存更新';
+                
+                const editorTitle = document.getElementById('editor-title');
+                if (editorTitle) editorTitle.innerText = `编辑教程: ${post.title || ''}`;
+                const pubBtn = document.getElementById('publish-btn');
+                if (pubBtn) pubBtn.innerText = '保存更新';
                 
                 const adminIdInput = document.getElementById('admin-id');
-                adminIdInput.value = post.id || '';
-                adminIdInput.disabled = true;
+                if (adminIdInput) {
+                    adminIdInput.value = post.id || '';
+                    adminIdInput.disabled = true;
+                }
                 
-                document.getElementById('admin-title').value = post.title || '';
-                document.getElementById('admin-summary').value = post.summary || '';
-                document.getElementById('admin-cover').value = post.cover || '';
+                const adminTitle = document.getElementById('admin-title');
+                if (adminTitle) adminTitle.value = post.title || '';
+                const adminSummary = document.getElementById('admin-summary');
+                if (adminSummary) adminSummary.value = post.summary || '';
+                const adminCover = document.getElementById('admin-cover');
+                if (adminCover) adminCover.value = post.cover || '';
                 
-                // 使用安全赋值器：即使旧文章中没有 series 或 layout_mode，也绝对不报错，自动赋安全初始值
                 setSelectValue('admin-series', post.series || '默认系列');
                 setSelectValue('admin-layout-mode', post.layout_mode || 'standard');
                 setSelectValue('admin-category', post.category || '未分类');
@@ -1037,7 +1072,9 @@
                 if (!res.ok) throw new Error();
                 const text = await res.text();
                 vditorInstance.setValue(text);
-                document.getElementById('editor-zone').scrollIntoView({ behavior: 'smooth' });
+                
+                const editorZone = document.getElementById('editor-zone');
+                if (editorZone) editorZone.scrollIntoView({ behavior: 'smooth' });
 
             } catch (e) {
                 alert('从 R2 读取正文失败，请确认跨域 CORS 策略已经正常设置。');
@@ -1059,7 +1096,7 @@
                 if (!res.ok) throw new Error(await res.text());
                 alert('文章和关联图片已完全物理销毁！');
                 await refreshAdminTable();
-                await fetchNavMeta(); // 同步更新导航
+                await fetchNavMeta(); 
             } catch (err) {
                 alert('删除失败: ' + err.message);
             }

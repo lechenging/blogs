@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>blogs.nyc.mn - 数字花园</title>
-    <!-- Tailwind CSS 与 官方排版插件 -->
+    <title>blogs.nyc.mn - 奶油之家</title>
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-    <!-- Highlight.js 代码高亮 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
-    <!-- Vditor 视觉编辑器 -->
     <link rel="stylesheet" href="https://unpkg.com/vditor/dist/index.css" />
     <script src="https://unpkg.com/vditor/dist/index.min.js"></script>
 
@@ -25,6 +22,7 @@
     </script>
     <style>
         html { scroll-behavior: smooth; }
+        body { background-color: #f7f9fb; }
         .code-block-wrapper { position: relative; }
         .copy-btn {
             position: absolute; top: 10px; right: 10px;
@@ -34,66 +32,97 @@
         }
         .copy-btn:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
         
-        /* Vditor 经典极简皮肤微调 */
         .vditor { border-color: #e4e4e7 !important; border-radius: 12px !important; }
         .vditor-toolbar { border-bottom-color: #f4f4f5 !important; background-color: #fafafa !important; border-radius: 12px 12px 0 0 !important; }
         .vditor-content { background: #fff !important; }
     </style>
 </head>
-<body class="bg-[#fcfcfc] text-zinc-800 min-h-screen flex flex-col antialiased">
+<body class="text-zinc-800 min-h-screen flex flex-col antialiased">
 
-    <!-- 导航栏 (原生 Hash 路由，一键清除过滤) -->
-    <nav class="bg-white/80 backdrop-blur-md border-b border-zinc-100 sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <a href="#/" class="flex items-center space-x-2">
-                <span class="w-3.5 h-3.5 bg-indigo-600 rounded-full flex items-center justify-center animate-pulse"></span>
-                <span id="nav-site-title" class="text-base font-bold tracking-tight text-zinc-900">blogs.nyc.mn</span>
-            </a>
-            <div class="flex items-center space-x-6 text-sm">
-                <a href="#/" class="text-zinc-500 hover:text-indigo-600 font-medium transition-colors">首页</a>
-                <a href="#/admin" class="bg-zinc-900 text-white hover:bg-zinc-800 px-3.5 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all">后台管理</a>
+    <!-- 顶栏 -->
+    <nav class="bg-white border-b border-zinc-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-8">
+                <a href="#/" class="flex items-center space-x-2">
+                    <span class="w-3.5 h-3.5 bg-amber-500 rounded-full flex items-center justify-center animate-pulse"></span>
+                    <span id="nav-site-title" class="text-base font-bold tracking-tight text-zinc-900">blogs.nyc.mn</span>
+                </a>
+                <div class="hidden md:flex space-x-6 text-sm">
+                    <a href="#/" class="text-zinc-600 hover:text-amber-500 font-semibold transition-colors">首页</a>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-6 text-xs font-semibold text-zinc-500">
+                <a href="https://sub.blogs.nyc.mn" target="_blank" class="hover:text-amber-500 transition-colors">订阅转换</a>
+                <a href="https://ip.blogs.nyc.mn" target="_blank" class="hover:text-amber-500 transition-colors">IP查询</a>
+                <a href="https://it.blogs.nyc.mn" target="_blank" class="hover:text-amber-500 transition-colors">It-Tools工具箱</a>
+                <a href="#/admin" class="bg-zinc-900 text-white hover:bg-zinc-800 px-3 py-1.5 rounded-lg font-bold transition-all shadow-sm">后台管理</a>
             </div>
         </div>
     </nav>
 
-    <!-- 主体自适应宽幅容器 -->
-    <main class="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <!-- 主体：奶油卡片宽幅自适应 -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
         
         <!-- 视图一：前台首页 -->
-        <div id="home-view" class="space-y-8">
-            <div class="border-b border-zinc-100 pb-8">
-                <h1 id="site-title-display" class="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl">正在加载...</h1>
-                <p id="site-subtitle-display" class="text-zinc-500 text-sm mt-2 leading-relaxed"></p>
-            </div>
-
-            <!-- 搜索框与分类标签栏 -->
-            <div class="space-y-4">
-                <div class="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-                    <div id="category-filter-container" class="flex flex-wrap gap-2"></div>
-                    <div class="relative w-full sm:w-64 shrink-0">
-                        <input type="text" id="search-input" onkeydown="handleSearch(event)" class="w-full border border-zinc-200 rounded-lg pl-3 pr-10 py-1.5 text-xs focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="输入关键字回车检索...">
-                        <button onclick="triggerSearch()" class="absolute right-2.5 top-2 text-zinc-400 hover:text-zinc-600 text-xs">🔍</button>
+        <div id="home-view" class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            
+            <!-- 左侧 3 栏：分类与4列卡片流 -->
+            <div class="lg:col-span-3 space-y-6 flex flex-col justify-between">
+                <div class="space-y-6">
+                    <!-- 顶部横幅 -->
+                    <div class="bg-white p-6 rounded-2xl border border-zinc-100 shadow-sm">
+                        <h1 id="site-title-display" class="text-2xl font-bold tracking-tight text-zinc-900">正在加载...</h1>
+                        <p id="site-subtitle-display" class="text-zinc-500 text-xs mt-1.5 leading-relaxed"></p>
                     </div>
+
+                    <!-- 分类选择栏 -->
+                    <div id="category-filter-container" class="flex flex-wrap gap-2"></div>
+
+                    <!-- 卡片网格流 (升级为 4 列网格布局，紧凑视觉) -->
+                    <div id="posts-list-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 animate-fade-in"></div>
+                </div>
+
+                <!-- 复刻深色分页组件 -->
+                <div id="pagination-container" class="flex justify-center items-center gap-1.5 pt-10">
+                    <!-- 分页由 JS 动态生成 -->
                 </div>
             </div>
 
+            <!-- 右侧 1 栏：侧边栏 -->
             <div class="space-y-6">
-                <h2 class="text-[11px] font-bold uppercase tracking-wider text-zinc-400">最新发布</h2>
-                <div id="posts-list-container" class="grid gap-6"></div>
+                <!-- 侧边栏搜索框 -->
+                <div class="bg-white p-5 rounded-2xl border border-zinc-100 shadow-sm space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400">文章检索</h3>
+                    <div class="relative">
+                        <input type="text" id="search-input" onkeydown="handleSearch(event)" class="w-full border border-zinc-200 rounded-xl pl-4 pr-10 py-2.5 text-xs focus:ring-2 focus:ring-amber-500/10 focus:border-amber-500 focus:outline-none transition-all" placeholder="输入关键字并按回车搜索...">
+                        <button onclick="triggerSearch()" class="absolute right-3.5 top-3 text-zinc-400 hover:text-zinc-600 text-xs">🔍</button>
+                    </div>
+                </div>
+
+                <!-- 侧边栏热门排行榜 -->
+                <div class="bg-white p-5 rounded-2xl border border-zinc-100 shadow-sm space-y-4">
+                    <div class="border-b border-zinc-100 pb-2 flex items-center justify-between">
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400">🔥 热门文章</h3>
+                        <span class="text-[10px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded font-bold">TOP 5</span>
+                    </div>
+                    <div id="popular-posts-container" class="space-y-3"></div>
+                </div>
             </div>
+
         </div>
 
-        <!-- 视图二：教程详情页 -->
-        <div id="post-view" class="hidden max-w-4xl mx-auto">
-            <a href="#/" class="mb-8 inline-block text-xs font-semibold uppercase tracking-wider text-zinc-400 hover:text-indigo-600 flex items-center gap-1.5 transition-colors">
-                ← 返回目录
+        <!-- 视图二：文章详情页 -->
+        <div id="post-view" class="hidden max-w-4xl mx-auto bg-white p-8 rounded-2xl border border-zinc-100 shadow-sm">
+            <a href="#/" class="mb-8 inline-block text-xs font-bold uppercase tracking-wider text-zinc-400 hover:text-amber-500 flex items-center gap-1.5 transition-colors">
+                ← 返回首页
             </a>
             <div class="mb-6 text-xs text-zinc-400 flex gap-4 border-b border-zinc-100 pb-4">
                 <span id="post-date"></span>
-                <span id="post-category" class="font-bold text-indigo-600"></span>
-                <span id="post-views-count">阅读量: 加载中...</span>
+                <span id="post-category" class="font-bold text-amber-500"></span>
+                <span id="post-views-count">阅读量: -</span>
             </div>
-            <article id="post-content" class="prose prose-zinc prose-indigo max-w-none 
+            <article id="post-content" class="prose prose-zinc prose-amber max-w-none 
                 prose-headings:font-bold prose-headings:tracking-tight
                 prose-img:rounded-xl prose-img:shadow-md prose-img:mx-auto prose-img:border prose-img:border-zinc-100
                 prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-zinc-800 prose-pre:rounded-xl prose-pre:p-0"></article>
@@ -101,7 +130,7 @@
 
         <!-- 视图三：后台管理端 -->
         <div id="admin-view" class="space-y-8 hidden">
-            <!-- 登录窗口 -->
+            <!-- 登录面板 -->
             <div id="admin-login-card" class="max-w-md mx-auto bg-white p-8 rounded-2xl border border-zinc-200/60 shadow-md space-y-6 my-12">
                 <div class="text-center">
                     <h2 class="text-xl font-bold text-zinc-900">管理后台登录</h2>
@@ -115,7 +144,7 @@
                 </div>
             </div>
 
-            <!-- 控制面板（已登录） -->
+            <!-- 控制面板 -->
             <div id="admin-panel" class="hidden space-y-8">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-xl border border-zinc-100 shadow-sm">
                     <div>
@@ -133,11 +162,11 @@
                     <h3 class="text-base font-bold text-zinc-900 border-b border-zinc-100 pb-3 tracking-tight">自定义站点全局文案</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">主标题（如：无服务器数字花园）</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">主标题</label>
                             <input type="text" id="config-title" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">全局分类列表（用英文逗号隔开）</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">全局分类（英文逗号隔开）</label>
                             <input type="text" id="config-categories" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: 技术, 随笔, 教程">
                         </div>
                     </div>
@@ -180,7 +209,7 @@
                     <h3 id="editor-title" class="text-base font-bold text-zinc-900 border-b border-zinc-100 pb-3 tracking-tight">撰写新教程</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">唯一 ID (保存后不可改)</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">唯一 ID (不可修改)</label>
                             <input type="text" id="admin-id" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: advanced-markdown">
                         </div>
                         <div>
@@ -193,12 +222,18 @@
                             </select>
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章摘要</label>
-                        <input type="text" id="admin-summary" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章摘要</label>
+                            <input type="text" id="admin-summary" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">首页封面图 URL (支持 R2 链接)</label>
+                            <input type="text" id="admin-cover" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="https://images.blogs.nyc.mn/xxx.png">
+                        </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">正文 (WYSIWYG 模式：支持直接看图排版，工具栏可一键切源码 / 分屏 / 全屏)</label>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">正文 (WYSIWYG 模式：一键切源码 / 分屏 / 全屏)</label>
                         <div id="vditor-container" class="w-full"></div>
                     </div>
                     <div class="flex justify-end gap-3 pt-4 border-t border-zinc-100">
@@ -229,13 +264,13 @@
 
     <!-- 页脚 -->
     <footer class="bg-white border-t border-zinc-100 py-10 mt-auto text-xs text-zinc-400 tracking-wide">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center space-x-2">
-                <span class="w-2 h-2 bg-emerald-500 rounded-full inline-block"></span>
-                <span>blogs.nyc.mn • 自适应 6.0 闭环版</span>
+                <span class="w-2 h-2 bg-amber-500 rounded-full inline-block"></span>
+                <span>blogs.nyc.mn • 奶油卡片 6.0 分页版</span>
             </div>
             <div class="text-[11px] text-zinc-400">
-                Powered by <a href="https://pages.cloudflare.com" target="_blank" class="hover:underline text-indigo-500">Cloudflare Pages</a>
+                Powered by <a href="https://pages.cloudflare.com" target="_blank" class="hover:underline text-amber-500">Cloudflare Pages</a>
             </div>
         </div>
     </footer>
@@ -243,9 +278,10 @@
     <script>
         let vditorInstance = null;
         let R2_DOMAIN = "";
-        let currentFilterCategory = ""; // 当前筛选分类
-        let currentSearchQuery = "";     // 当前搜索词
-        let activeCategories = [];       // 分类列表
+        let currentFilterCategory = "";
+        let currentSearchQuery = "";
+        let activeCategories = [];
+        let currentPageNum = 1; // 记录当前页码
 
         marked.setOptions({
             highlight: function(code, lang) {
@@ -255,13 +291,10 @@
             langPrefix: 'hljs language-'
         });
 
-        // 监听路由变化
         window.addEventListener('hashchange', handleRouting);
-        
-        // 页面首次载入
         window.addEventListener('load', async () => {
-            await loadSiteConfig(); // 载入站点文案标题
-            handleRouting();        // 执行路由定位
+            await loadSiteConfig();
+            handleRouting();
         });
 
         function handleRouting() {
@@ -272,11 +305,10 @@
                 const postId = hash.replace('#/post/', '');
                 loadPost(postId);
             } else {
-                showHomeView(); // 首页或者 hash 为空时展现
+                showHomeView();
             }
         }
 
-        // 获取站点全局文案并安全容错
         async function loadSiteConfig() {
             try {
                 const res = await fetch('./api/config?_t=' + Date.now());
@@ -287,28 +319,19 @@
                 const subtitle = data.site_subtitle || "无服务器数字花园";
                 activeCategories = JSON.parse(data.site_categories || '["技术","教程","随笔","思考"]');
 
-                // 渲染界面
                 document.title = title;
-                const navTitle = document.getElementById('nav-site-title');
-                if (navTitle) navTitle.innerText = title;
-                const siteTitle = document.getElementById('site-title-display');
-                if (siteTitle) siteTitle.innerText = title;
-                const siteSubtitle = document.getElementById('site-subtitle-display');
-                if (siteSubtitle) siteSubtitle.innerText = subtitle;
+                document.getElementById('nav-site-title').innerText = title;
+                document.getElementById('site-title-display').innerText = title;
+                document.getElementById('site-subtitle-display').innerText = subtitle;
 
                 renderCategoryFilters();
-
-                // 填充后台表单
-                const cTitle = document.getElementById('config-title');
-                if (cTitle) cTitle.value = title;
-                const cSubtitle = document.getElementById('config-subtitle');
-                if (cSubtitle) cSubtitle.value = subtitle;
-                const cCats = document.getElementById('config-categories');
-                if (cCats) cCats.value = activeCategories.join(', ');
+                document.getElementById('config-title').value = title;
+                document.getElementById('config-subtitle').value = subtitle;
+                document.getElementById('config-categories').value = activeCategories.join(', ');
 
                 fillCategorySelect();
             } catch (err) {
-                console.error("加载 D1 全局配置出错, 自动启动默认备份参数:", err);
+                console.error("加载全局配置出错:", err);
                 activeCategories = ["技术", "教程", "随笔", "思考"];
                 document.title = "blogs.nyc.mn";
                 renderCategoryFilters();
@@ -316,19 +339,18 @@
             }
         }
 
-        // 渲染主页分类药丸按钮
         function renderCategoryFilters() {
             const container = document.getElementById('category-filter-container');
             if (!container) return;
             container.innerHTML = `
-                <button onclick="filterByCategory('')" class="px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${!currentFilterCategory ? 'bg-indigo-600 text-white shadow-sm' : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200/60'}">
+                <button onclick="filterByCategory('')" class="px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all ${!currentFilterCategory ? 'bg-zinc-950 text-white shadow-sm' : 'bg-white text-zinc-500 border border-zinc-100 hover:bg-zinc-50'}">
                     全部
                 </button>
             `;
             activeCategories.forEach(cat => {
                 const isSelected = currentFilterCategory === cat;
                 container.innerHTML += `
-                    <button onclick="filterByCategory('${cat}')" class="px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${isSelected ? 'bg-indigo-600 text-white shadow-sm' : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200/60'}">
+                    <button onclick="filterByCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all ${isSelected ? 'bg-zinc-950 text-white shadow-sm' : 'bg-white text-zinc-500 border border-zinc-100 hover:bg-zinc-50'}">
                         ${cat}
                     </button>
                 `;
@@ -347,8 +369,9 @@
 
         async function filterByCategory(cat) {
             currentFilterCategory = cat;
+            currentPageNum = 1; // 切换分类时重置回第 1 页
             renderCategoryFilters();
-            await fetchPostsAndRender();
+            await fetchPostsAndRender(1);
         }
 
         async function handleSearch(e) {
@@ -359,57 +382,199 @@
 
         async function triggerSearch() {
             currentSearchQuery = document.getElementById('search-input').value.trim();
-            await fetchPostsAndRender();
+            currentPageNum = 1; // 搜索时重置回第 1 页
+            await fetchPostsAndRender(1);
         }
 
-        // 【安全修复】：展现主页时，清空之前所有的筛选状态，确保打开时默认加载“全部”
         async function showHomeView() {
-            currentFilterCategory = ""; // 清空分类
-            currentSearchQuery = "";     // 清空搜索词
+            currentFilterCategory = "";
+            currentSearchQuery = "";
+            currentPageNum = 1; // 重置页码
             const sInput = document.getElementById('search-input');
-            if (sInput) sInput.value = ""; // 清空搜索框文字
+            if (sInput) sInput.value = "";
 
-            renderCategoryFilters(); // 刷新分类过滤器样式（使“全部”重新高亮）
+            renderCategoryFilters();
 
             document.getElementById('home-view').classList.remove('hidden');
             document.getElementById('post-view').classList.add('hidden');
             document.getElementById('admin-view').classList.add('hidden');
             
-            await fetchPostsAndRender(); // 载入无筛选条件下的完整列表
+            await fetchPostsAndRender(1);
+            await fetchPopularPosts();
         }
 
-        async function fetchPostsAndRender() {
+        // 核心渲染器 (支持动态页码渲染和 D1 API 分页数据格式)
+        async function fetchPostsAndRender(page = 1) {
+            currentPageNum = page; // 缓存当前页
             const container = document.getElementById('posts-list-container');
             if (!container) return;
             container.innerHTML = '<p class="text-zinc-400 text-sm">正在加载中...</p>';
 
             try {
-                let url = `./api/posts?_t=${Date.now()}`;
+                // 向 D1 发起携带 page 和 limit (每页12条) 的分页请求
+                let url = `./api/posts?page=${page}&limit=12&_t=${Date.now()}`;
                 if (currentFilterCategory) url += `&category=${encodeURIComponent(currentFilterCategory)}`;
                 if (currentSearchQuery) url += `&q=${encodeURIComponent(currentSearchQuery)}`;
 
                 const response = await fetch(url);
+                const resData = await response.json();
+                
+                const posts = resData.results;
+                const total = resData.total;
+                const limit = resData.limit;
+
+                container.innerHTML = '';
+
+                if (posts.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-zinc-400 text-sm py-12 text-center">暂无发布内容。</div>';
+                    document.getElementById('pagination-container').innerHTML = '';
+                    return;
+                }
+
+                posts.forEach((post, index) => {
+                    const coverHtml = post.cover 
+                        ? `<img src="${post.cover}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="${post.title}">`
+                        : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)} flex items-center justify-center text-white/10 font-bold text-3xl select-none">BLOGS</div>`;
+
+                    container.innerHTML += `
+                        <div class="group bg-white rounded-2xl border border-zinc-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden flex flex-col justify-between">
+                            <div>
+                                <div class="h-44 w-full overflow-hidden relative bg-zinc-50">
+                                    ${coverHtml}
+                                    <span class="absolute top-3 left-3 bg-zinc-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded backdrop-blur-sm uppercase">${post.category || '未分类'}</span>
+                                </div>
+                                <div class="p-5 space-y-2">
+                                    <h3 class="text-base font-bold text-zinc-900 line-clamp-2 group-hover:text-amber-500 transition-colors">
+                                        <a href="#/post/${post.id}">${post.title}</a>
+                                    </h3>
+                                    <p class="text-zinc-500 text-xs leading-relaxed line-clamp-3">${post.summary}</p>
+                                </div>
+                            </div>
+                            <div class="px-5 pb-5 pt-2 border-t border-zinc-50 flex items-center justify-between text-[11px] text-zinc-400">
+                                <div class="flex items-center space-x-1.5">
+                                    <span class="w-4 h-4 bg-zinc-100 rounded-full flex items-center justify-center text-[10px]">👤</span>
+                                    <span class="font-medium">admin</span>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <span>📅 ${post.date}</span>
+                                    <span>👁️ ${post.views}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                // 调用底部分页条生成器
+                renderPagination(total, limit, page);
+
+            } catch (err) {
+                container.innerHTML = `<div class="col-span-full text-red-500 text-sm text-center">获取文章数据失败，请确认配置。</div>`;
+            }
+        }
+
+        // 【精修升级】复刻深色复古页码导航条 (Ellipsis 折叠页码算法)
+        function renderPagination(total, limit, currentPage) {
+            const container = document.getElementById('pagination-container');
+            if (!container) return;
+
+            const totalPages = Math.ceil(total / limit);
+            if (totalPages <= 1) {
+                container.innerHTML = ''; // 如果只有 1 页，不显示分页条
+                return;
+            }
+
+            let pageHtml = "";
+
+            // 1. 上一页 按钮
+            if (currentPage > 1) {
+                pageHtml += `<button onclick="fetchPostsAndRender(${currentPage - 1})" class="px-3.5 py-1.5 text-xs font-semibold bg-[#343a40] text-gray-200 hover:bg-[#495057] active:scale-95 rounded transition-all">« 上一页</button>`;
+            }
+
+            // 算法：限制中间显示的页码，多余的用 ... 代替 (复刻截图效果)
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+
+            if (startPage > 1) {
+                pageHtml += `<button onclick="fetchPostsAndRender(1)" class="px-3 py-1.5 text-xs font-semibold bg-[#343a40] text-gray-200 hover:bg-[#495057] rounded transition-all">1</button>`;
+                if (startPage > 2) {
+                    pageHtml += `<span class="px-1 text-zinc-400 text-xs">...</span>`;
+                }
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                if (i === currentPage) {
+                    // 当前页使用橙色高亮
+                    pageHtml += `<span class="px-3 py-1.5 text-xs font-bold bg-amber-500 text-white rounded shadow-sm">${i}</span>`;
+                } else {
+                    pageHtml += `<button onclick="fetchPostsAndRender(${i})" class="px-3 py-1.5 text-xs font-semibold bg-[#343a40] text-gray-200 hover:bg-[#495057] rounded transition-all">${i}</button>`;
+                }
+            }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    pageHtml += `<span class="px-1 text-zinc-400 text-xs">...</span>`;
+                }
+                pageHtml += `<button onclick="fetchPostsAndRender(${totalPages})" class="px-3 py-1.5 text-xs font-semibold bg-[#343a40] text-gray-200 hover:bg-[#495057] rounded transition-all">${totalPages}</button>`;
+            }
+
+            // 2. 下一页 按钮
+            if (currentPage < totalPages) {
+                pageHtml += `<button onclick="fetchPostsAndRender(${currentPage + 1})" class="px-3.5 py-1.5 text-xs font-semibold bg-[#343a40] text-gray-200 hover:bg-[#495057] active:scale-95 rounded transition-all">下一页 »</button>`;
+            }
+
+            container.innerHTML = pageHtml;
+        }
+
+        async function fetchPopularPosts() {
+            const container = document.getElementById('popular-posts-container');
+            if (!container) return;
+            container.innerHTML = '<p class="text-zinc-400 text-xs">读取中...</p>';
+
+            try {
+                const response = await fetch(`./api/posts?popular=5&_t=${Date.now()}`);
                 const posts = await response.json();
                 container.innerHTML = '';
 
                 if (posts.length === 0) {
-                    container.innerHTML = '<p class="text-zinc-400 text-sm py-12 text-center">当前分类下暂无发布内容。</p>';
+                    container.innerHTML = '<p class="text-zinc-400 text-xs">暂无热度统计</p>';
                     return;
                 }
 
-                posts.forEach(post => {
+                posts.forEach((post, index) => {
+                    const thumbHtml = post.cover 
+                        ? `<img src="${post.cover}" class="w-full h-full object-cover" alt="">`
+                        : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)}"></div>`;
+
                     container.innerHTML += `
-                        <div class="bg-white p-6 rounded-xl border border-zinc-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
-                            <span class="text-xs text-zinc-400 font-medium">${post.date} • <span class="text-indigo-600 font-bold">${post.category || '未分类'}</span> • 阅读量: ${post.views}</span>
-                            <h3 class="text-lg font-bold mt-1.5 mb-2 hover:text-indigo-600 transition-colors"><a href="#/post/${post.id}">${post.title}</a></h3>
-                            <p class="text-zinc-500 text-sm mb-4 leading-relaxed">${post.summary}</p>
-                            <a href="#/post/${post.id}" class="text-xs font-semibold tracking-wider text-indigo-600 hover:text-indigo-700 uppercase">开始阅读 →</a>
-                        </div>
+                        <a href="#/post/${post.id}" class="flex items-center gap-3 p-1.5 hover:bg-zinc-50 rounded-lg transition-colors group">
+                            <div class="w-12 h-12 rounded-md overflow-hidden bg-zinc-100 shrink-0">
+                                ${thumbHtml}
+                            </div>
+                            <div class="min-w-0 flex-grow">
+                                <h4 class="text-xs font-bold text-zinc-800 line-clamp-2 leading-snug group-hover:text-amber-500 transition-colors">${post.title}</h4>
+                                <div class="text-[9px] text-zinc-400 mt-1 flex justify-between">
+                                    <span>${post.date}</span>
+                                    <span class="font-bold text-amber-500">🔥 ${post.views}</span>
+                                </div>
+                            </div>
+                        </a>
                     `;
                 });
-            } catch (err) {
-                container.innerHTML = `<p class="text-red-500 text-sm">获取文章数据失败，请确认数据库状态和后端配置。</p>`;
+            } catch (e) {
+                container.innerHTML = '<p class="text-red-500 text-xs">读取排行失败</p>';
             }
+        }
+
+        const gradients = [
+            "from-indigo-400 to-purple-500",
+            "from-pink-400 to-rose-500",
+            "from-cyan-400 to-blue-500",
+            "from-emerald-400 to-teal-500",
+            "from-amber-400 to-orange-500",
+            "from-violet-400 to-purple-500"
+        ];
+        function getGradient(index) {
+            return gradients[index % gradients.length];
         }
 
         async function loadPost(postId) {
@@ -619,21 +784,26 @@
             try {
                 const response = await fetch('./api/posts?_t=' + Date.now());
                 const posts = await response.json();
+                
+                // 注意：由于 GET 接口在不传 page 时默认执行分页，
+                // 后台管理表格需要获取完整的未分页数据。
+                // 接口默认逻辑如果没有 page 限制就会分页，但管理后台数据较少时直接使用 results
+                const postsArr = posts.results || posts;
                 tbody.innerHTML = '';
 
-                if (posts.length === 0) {
+                if (postsArr.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-zinc-400 text-xs">暂无文章</td></tr>';
                     return;
                 }
 
-                posts.forEach(post => {
+                postsArr.forEach(post => {
                     tbody.innerHTML += `
                         <tr class="border-b border-zinc-100 hover:bg-zinc-50/50 transition-colors">
                             <td class="py-3.5 font-semibold text-zinc-900">${post.title}</td>
                             <td class="py-3.5"><span class="bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded text-xs font-semibold">${post.category || '未分类'}</span></td>
                             <td class="py-3.5 text-xs text-zinc-400">${post.views}</td>
                             <td class="py-3.5 text-right space-x-3">
-                                <button onclick="editPost('${post.id}', '${post.title}', '${post.summary}', '${post.category || '未分类'}')" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs transition-colors">编辑</button>
+                                <button onclick="editPost('${post.id}', '${post.title}', '${post.summary}', '${post.category || '未分类'}', '${post.cover || ''}')" class="text-indigo-600 hover:text-indigo-800 font-semibold text-xs transition-colors">编辑</button>
                                 <button onclick="deletePost('${post.id}')" class="text-red-600 hover:text-red-800 font-semibold text-xs transition-colors">删除</button>
                             </td>
                         </tr>
@@ -650,6 +820,7 @@
             document.getElementById('admin-id').value = '';
             document.getElementById('admin-title').value = '';
             document.getElementById('admin-summary').value = '';
+            document.getElementById('admin-cover').value = '';
             document.getElementById('admin-category').value = activeCategories[0] || '未分类';
             vditorInstance.setValue('');
             document.getElementById('editor-title').innerText = '撰写新教程';
@@ -662,12 +833,13 @@
             const id = document.getElementById('admin-id').value.trim();
             const title = document.getElementById('admin-title').value.trim();
             const summary = document.getElementById('admin-summary').value.trim();
+            const cover = document.getElementById('admin-cover').value.trim();
             const category = document.getElementById('admin-category').value;
             const content = vditorInstance.getValue();
             const btn = document.getElementById('publish-btn');
 
             if (!id || !title || !content) {
-                alert('请填写文章 ID、标题和正文');
+                alert('请填写文章 ID、标题 and 正文');
                 return;
             }
 
@@ -679,7 +851,7 @@
                     method: 'POST',
                     headers: { 'Authorization': password, 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        id, title, summary, content, category,
+                        id, title, summary, content, category, cover,
                         date: new Date().toISOString().split('T')[0]
                     })
                 });
@@ -696,7 +868,7 @@
             }
         }
 
-        async function editPost(id, title, summary, category) {
+        async function editPost(id, title, summary, category, cover) {
             isEditing = true;
             document.getElementById('editor-title').innerText = `编辑教程: ${title}`;
             document.getElementById('publish-btn').innerText = '保存更新';
@@ -707,6 +879,7 @@
             
             document.getElementById('admin-title').value = title;
             document.getElementById('admin-summary').value = summary;
+            document.getElementById('admin-cover').value = cover || '';
             document.getElementById('admin-category').value = category || '未分类';
 
             vditorInstance.setValue('正在从 R2 提取正文内容...');

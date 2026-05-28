@@ -209,14 +209,24 @@
                     </div>
                 </div>
 
-                <!-- 编辑器工作区 -->
+                <!-- 编辑器工作区 (第一栏修正：1/4宽度唯一 ID + 3/4宽度文章主标题) -->
                 <div id="editor-zone" class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm space-y-4">
                     <h3 id="editor-title" class="text-base font-bold text-zinc-900 border-b border-zinc-100 pb-3 tracking-tight">撰写新教程</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                        <div>
+                    
+                    <!-- 第一行：ID (不可修改) 与 文章主标题 -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="md:col-span-1">
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">唯一 ID (不可修改)</label>
                             <input type="text" id="admin-id" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: advanced-markdown">
                         </div>
+                        <div class="md:col-span-3">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章标题</label>
+                            <input type="text" id="admin-title" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="请输入文章主标题">
+                        </div>
+                    </div>
+
+                    <!-- 第二行：一二级分类和排版选择 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">所属大系列导航</label>
                             <select id="admin-series" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all bg-white">
@@ -235,16 +245,19 @@
                             </select>
                         </div>
                     </div>
+
+                    <!-- 第三行：摘要与封面图 URL -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="sm:col-span-2">
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章摘要</label>
-                            <input type="text" id="admin-summary" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
+                            <input type="text" id="admin-summary" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="请输入文章摘要">
                         </div>
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">首页封面图 URL</label>
                             <input type="text" id="admin-cover" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="https://images.blogs.nyc.mn/xxx.png">
                         </div>
                     </div>
+
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">正文 (WYSIWYG 模式：一键切源码 / 分屏 / 全屏)</label>
                         <div id="vditor-container" class="w-full"></div>
@@ -432,7 +445,6 @@
             select.innerHTML += `<option value="默认系列">默认系列</option>`;
         }
 
-        // 【安全防空取值器】物理隔绝 Element Null 报错，确保永远不发生 Value Error 阻断运行
         function safeGetValue(id) {
             const el = document.getElementById(id);
             if (!el) {
@@ -709,7 +721,7 @@
                 addCopyButtons();
                 document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
             } catch (err) {
-                postContent.innerHTML = '<p class="text-red-500 text-sm">无法从 R2 载入文章，请检查存储桶的公网访问设置以及跨域 CORS 策略设置。</p>';
+                postContent.innerHTML = '<p class="text-red-500 text-sm">无法从 R2 载入文章，请确保跨域策略配置成功。</p>';
             }
         }
 
@@ -968,11 +980,12 @@
             if (editorZone) editorZone.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 【超级防御】：通过 safeGetValue 进行节点锁定，阻断任何 Null 报错
+        // 【安全大重构】：防空保护，全链路监控并精准捕获和弹窗报错。
         async function publishPost() {
             try {
                 const password = getActivePassword();
                 const id = safeGetValue('admin-id').trim();
+                // 修复大Bug：这里之前由于 HTML 漏掉导致这一行在后台获取不到节点值
                 const title = safeGetValue('admin-title').trim();
                 const summary = safeGetValue('admin-summary').trim();
                 const cover = safeGetValue('admin-cover').trim();
@@ -1028,7 +1041,6 @@
             }
         }
 
-        // 【安全黄金修复】：直接通过 safeGetValue 锁定节点，绝无 Null 崩溃
         async function editPost(index) {
             try {
                 if (!window.allPosts || !window.allPosts[index]) {

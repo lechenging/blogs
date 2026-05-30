@@ -1,3 +1,7 @@
+## 演示站
+：blogs.nyc.mn[演示站](https://blogs.nyc.mn/)
+
+
 ## 🛠️ 第一阶段：一键获取项目代码
 
 1. 登录您的 [GitHub 账号](https://github.com/)。

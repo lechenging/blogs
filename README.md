@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS config (
 
 **第三步（一键初始化站点默认配置数据）：**
 > ⚠️ **重要提示**：请将下面最后一行代码中的 `https://images.blogs.nyc.mn` 替换为您在第三阶段中准备绑定的 **R2 自定义二级域名**（需带上 `https://` 协议头，结尾不带斜杠）如果此时你还没创建R2储存桶你可以先不发送最后一段代码，等后面单独执行一次即可。
-⚠️以下是数据库初始值，你可以根据自己的情况修改。分别是 默认密码 默认网站名称 默认网站二级介绍 默认标签 默认系列分组 默认外链 
+以下是数据库初始值，你可以根据自己的情况修改。分别是 默认密码 默认网站名称 默认网站二级介绍 默认标签 默认系列分组 默认外链 
 ```sql
 INSERT OR IGNORE INTO config (key, value) VALUES ('admin_password', 'admin123');
 INSERT OR IGNORE INTO config (key, value) VALUES ('site_title', '无服务器数字花园');

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>blogs.nyc.mn - 数字花园</title>
+    <title>miai.de5.net - Cloudflare博客</title>
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -18,37 +19,68 @@
         }
     </script>
     <style>
-        html { scroll-behavior: smooth; }
-        body { background-color: #f7f9fb; }
-        .code-block-wrapper { position: relative; }
-        .copy-btn {
-            position: absolute; top: 10px; right: 10px;
-            background: rgba(255, 255, 255, 0.08); color: #9ca3af;
-            border: 1px solid rgba(156, 163, 175, 0.15); border-radius: 6px;
-            padding: 4px 10px; font-size: 11px; cursor: pointer; transition: all 0.2s;
+        html {
+            scroll-behavior: smooth;
         }
-        .copy-btn:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
+
+        body {
+            background-color: #f7f9fb;
+        }
+
+        .code-block-wrapper {
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #9ca3af;
+            border: 1px solid rgba(156, 163, 175, 0.15);
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
     </style>
 </head>
+
 <body class="text-zinc-800 min-h-screen flex flex-col antialiased">
 
     <nav class="bg-white border-b border-zinc-100 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-16 py-3 md:py-0 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div
+            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-16 py-3 md:py-0 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div class="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 w-full md:w-auto">
                 <a href="#/" class="flex items-center space-x-2 shrink-0">
-                    <span class="w-3.5 h-3.5 bg-amber-500 rounded-full flex items-center justify-center animate-pulse"></span>
-                    <span id="nav-site-title" class="text-base font-bold tracking-tight text-zinc-900">blogs.nyc.mn</span>
+                    <span
+                        class="w-3.5 h-3.5 bg-amber-500 rounded-full flex items-center justify-center animate-pulse"></span>
+                    <span id="nav-site-title"
+                        class="text-base font-bold tracking-tight text-zinc-900">miai.de5.net</span>
                 </a>
-                
-                <div id="series-navbar-container" class="flex flex-wrap gap-x-4 gap-y-2 text-xs font-bold text-zinc-500 uppercase tracking-wider"></div>
+
+                <div id="series-navbar-container"
+                    class="flex flex-wrap gap-x-4 gap-y-2 text-xs font-bold text-zinc-500 uppercase tracking-wider">
+                </div>
             </div>
-            
+
             <div class="flex items-center space-x-6 shrink-0">
-                <div id="custom-navbar-links" class="hidden md:flex items-center space-x-6 text-xs font-semibold text-zinc-500"></div>
-                
-                <a href="./admin.html" class="text-zinc-300 hover:text-amber-500 transition-all p-1.5 rounded-full hover:bg-zinc-50 shrink-0" title="管理控制台">
-                    <svg class="w-5.5 h-5.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                <div id="custom-navbar-links"
+                    class="hidden md:flex items-center space-x-6 text-xs font-semibold text-zinc-500"></div>
+
+                <a href="./admin.html"
+                    class="text-zinc-300 hover:text-amber-500 transition-all p-1.5 rounded-full hover:bg-zinc-50 shrink-0"
+                    title="管理控制台">
+                    <svg class="w-5.5 h-5.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
                 </a>
             </div>
@@ -56,7 +88,7 @@
     </nav>
 
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        
+
         <div id="home-view" class="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <div class="lg:col-span-3 space-y-6 flex flex-col justify-between">
                 <div class="space-y-6">
@@ -77,15 +109,19 @@
                 <div class="bg-white p-5 rounded-2xl border border-zinc-100 shadow-sm space-y-3">
                     <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400">文章检索</h3>
                     <div class="relative">
-                        <input type="text" id="search-input" onkeydown="handleSearch(event)" class="w-full border border-zinc-200 rounded-xl pl-4 pr-10 py-2.5 text-xs focus:ring-2 focus:ring-amber-500/10 focus:border-amber-500 focus:outline-none transition-all" placeholder="输入关键字并按回车搜索...">
-                        <button onclick="triggerSearch()" class="absolute right-3.5 top-3 text-zinc-400 hover:text-zinc-600 text-xs">🔍</button>
+                        <input type="text" id="search-input" onkeydown="handleSearch(event)"
+                            class="w-full border border-zinc-200 rounded-xl pl-4 pr-10 py-2.5 text-xs focus:ring-2 focus:ring-amber-500/10 focus:border-amber-500 focus:outline-none transition-all"
+                            placeholder="输入关键字并按回车搜索...">
+                        <button onclick="triggerSearch()"
+                            class="absolute right-3.5 top-3 text-zinc-400 hover:text-zinc-600 text-xs">🔍</button>
                     </div>
                 </div>
 
                 <div class="bg-white p-5 rounded-2xl border border-zinc-100 shadow-sm space-y-4">
                     <div class="border-b border-zinc-100 pb-2 flex items-center justify-between">
                         <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400">🔥 热门文章</h3>
-                        <span id="popular-top-badge" class="text-[10px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded font-bold">TOP 5</span>
+                        <span id="popular-top-badge"
+                            class="text-[10px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded font-bold">TOP 5</span>
                     </div>
                     <div id="popular-posts-container" class="space-y-3"></div>
                 </div>
@@ -93,7 +129,8 @@
         </div>
 
         <div id="post-view" class="hidden max-w-5xl mx-auto bg-white p-8 rounded-2xl border border-zinc-100 shadow-sm">
-            <a href="#/" class="mb-8 inline-block text-xs font-semibold uppercase tracking-wider text-zinc-400 hover:text-amber-500 flex items-center gap-1.5 transition-colors">
+            <a href="#/"
+                class="mb-8 inline-block text-xs font-semibold uppercase tracking-wider text-zinc-400 hover:text-amber-500 flex items-center gap-1.5 transition-colors">
                 ← 返回首页
             </a>
             <div class="mb-6 text-xs text-zinc-400 flex gap-4 border-b border-zinc-100 pb-4">
@@ -104,38 +141,41 @@
             <article id="post-content" class="prose prose-zinc prose-amber max-w-none 
                 prose-headings:font-bold prose-headings:tracking-tight
                 prose-img:rounded-xl prose-img:shadow-md prose-img:mx-auto prose-img:border prose-img:border-zinc-100
-                prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-zinc-800 prose-pre:rounded-xl prose-pre:p-0"></article>
+                prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-zinc-800 prose-pre:rounded-xl prose-pre:p-0">
+            </article>
         </div>
 
     </main>
 
     <footer class="bg-white border-t border-zinc-100 py-10 mt-auto text-xs text-zinc-400 tracking-wide">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div
+            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center space-x-2">
                 <span class="w-2 h-2 bg-amber-500 rounded-full inline-block"></span>
-                <span>blogs.nyc.mn • 自适应 6.5 极速前端版</span>
+                <span>自适应 • 极速前端版</span>
             </div>
             <div class="text-[11px] text-zinc-400">
-                Powered by <a href="https://pages.cloudflare.com" target="_blank" class="hover:underline text-amber-500">Cloudflare Pages</a>
+                Powered by <a href="https://pages.cloudflare.com" target="_blank"
+                    class="hover:underline text-amber-500">Cloudflare Pages</a>
             </div>
         </div>
     </footer>
 
     <script>
         let R2_DOMAIN = "";
-        let currentFilterSeries = "";    
-        let currentFilterCategory = "";  
-        let currentSearchQuery = "";     
-        
-        let activeCategories = [];       
-        let activeSeriesList = [];       
-        let dbNavMeta = {};              
+        let currentFilterSeries = "";
+        let currentFilterCategory = "";
+        let currentSearchQuery = "";
+
+        let activeCategories = [];
+        let activeSeriesList = [];
+        let dbNavMeta = {};
         let currentPageNum = 1;
         let globalLayoutMode = "standard";
-        let globalPopularLimit = 5; 
+        let globalPopularLimit = 5;
 
         marked.setOptions({
-            highlight: function(code, lang) {
+            highlight: function (code, lang) {
                 const language = hljs.getLanguage(lang) ? lang : 'plaintext';
                 return hljs.highlight(code, { language }).value;
             },
@@ -144,9 +184,9 @@
 
         window.addEventListener('hashchange', handleRouting);
         window.addEventListener('load', async () => {
-            await loadSiteConfig(); 
-            await fetchNavMeta();   
-            handleRouting();        
+            await loadSiteConfig();
+            await fetchNavMeta();
+            handleRouting();
         });
 
         function handleRouting() {
@@ -167,14 +207,14 @@
                 const res = await fetch('./api/config?_t=' + Date.now());
                 if (!res.ok) throw new Error();
                 const data = await res.json();
-                
-                const title = data.site_title || "Blogs.nyc.mn";
-                const subtitle = data.site_subtitle || "无服务器数字花园";
+
+                const title = data.site_title || "miai.de5.net";
+                const subtitle = data.site_subtitle || "AI， 让思考发声！";
                 activeCategories = JSON.parse(data.site_categories || '["技术","教程","随笔","思考"]');
                 activeSeriesList = JSON.parse(data.site_series || '["科学上网","谷歌系列","NAS系列"]');
-                const rawNavLinks = JSON.parse(data.site_nav_links || '[{"name": "订阅转换", "url": "https://sub.blogs.nyc.mn"}]');
+                const rawNavLinks = JSON.parse(data.site_nav_links || '[{"name": "CC API", "url": "https://napi.mai.us.ci"}]');
                 globalLayoutMode = data.site_layout_mode || "standard";
-                
+
                 globalPopularLimit = parseInt(data.site_popular_limit) || 5;
                 R2_DOMAIN = data.site_r2_domain || "";
 
@@ -182,7 +222,7 @@
                 document.getElementById('nav-site-title').innerText = title;
                 document.getElementById('site-title-display').innerText = title;
                 document.getElementById('site-subtitle-display').innerText = subtitle;
-                
+
                 const badge = document.getElementById('popular-top-badge');
                 if (badge) badge.innerText = `TOP ${globalPopularLimit}`;
 
@@ -193,7 +233,7 @@
                 console.error("加载全局配置出错:", err);
                 activeCategories = ["技术", "教程", "随笔", "思考"];
                 activeSeriesList = ["科学上网", "谷歌系列", "NAS系列"];
-                document.title = "blogs.nyc.mn";
+                document.title = "miai.de5.net";
                 renderCategoryFilters();
             }
         }
@@ -213,12 +253,12 @@
             try {
                 const res = await fetch('./api/posts?get_nav_meta=true&_t=' + Date.now());
                 dbNavMeta = await res.json();
-                
+
                 const finalSeriesList = Array.from(new Set([...activeSeriesList, ...Object.keys(dbNavMeta)]));
 
                 const navContainer = document.getElementById('series-navbar-container');
                 navContainer.innerHTML = '';
-                
+
                 finalSeriesList.forEach(series => {
                     const isSelected = currentFilterSeries === series;
                     navContainer.innerHTML += `
@@ -234,8 +274,8 @@
             const container = document.getElementById('category-filter-container');
             if (!container) return;
 
-            let allowedCategories = activeCategories; 
-            
+            let allowedCategories = activeCategories;
+
             if (currentFilterSeries && dbNavMeta[currentFilterSeries] && dbNavMeta[currentFilterSeries].length > 0) {
                 allowedCategories = dbNavMeta[currentFilterSeries];
             }
@@ -275,35 +315,35 @@
         }
 
         async function showHomeView() {
-            currentFilterSeries = "";    
-            currentFilterCategory = "";  
-            currentSearchQuery = "";     
+            currentFilterSeries = "";
+            currentFilterCategory = "";
+            currentSearchQuery = "";
             const sInput = document.getElementById('search-input');
             if (sInput) sInput.value = "";
 
-            await fetchNavMeta();        
-            renderCategoryFilters();     
+            await fetchNavMeta();
+            renderCategoryFilters();
 
             document.getElementById('home-view').classList.remove('hidden');
             document.getElementById('post-view').classList.add('hidden');
-            
+
             await fetchPostsAndRender(1);
             await fetchPopularPosts();
         }
 
         async function showSeriesView(seriesName) {
-            currentFilterSeries = seriesName; 
-            currentFilterCategory = "";       
+            currentFilterSeries = seriesName;
+            currentFilterCategory = "";
             currentSearchQuery = "";
             const sInput = document.getElementById('search-input');
             if (sInput) sInput.value = "";
 
-            await fetchNavMeta();             
-            renderCategoryFilters();          
+            await fetchNavMeta();
+            renderCategoryFilters();
 
             document.getElementById('home-view').classList.remove('hidden');
             document.getElementById('post-view').classList.add('hidden');
-            
+
             await fetchPostsAndRender(1);
             await fetchPopularPosts();
         }
@@ -322,7 +362,7 @@
 
                 const response = await fetch(url);
                 const resData = await response.json();
-                
+
                 const posts = resData.results;
                 const total = resData.total;
                 const limit = resData.limit;
@@ -336,7 +376,7 @@
                 }
 
                 posts.forEach((post, index) => {
-                    const coverHtml = post.cover 
+                    const coverHtml = post.cover
                         ? `<img src="${post.cover}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 rounded-t-2xl" alt="${post.title}">`
                         : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)} flex items-center justify-center text-white/10 font-bold text-3xl select-none rounded-t-2xl">BLOGS</div>`;
 
@@ -345,7 +385,7 @@
                         : '';
 
                     const titleClass = (globalLayoutMode === 'simple')
-                        ? "text-sm font-bold text-zinc-900 line-clamp-3 group-hover:text-amber-500 transition-colors" 
+                        ? "text-sm font-bold text-zinc-900 line-clamp-3 group-hover:text-amber-500 transition-colors"
                         : "text-sm font-bold text-zinc-900 line-clamp-1 group-hover:text-amber-500 transition-colors";
 
                     container.innerHTML += `
@@ -441,7 +481,7 @@
                 }
 
                 posts.forEach((post, index) => {
-                    const thumbHtml = post.cover 
+                    const thumbHtml = post.cover
                         ? `<img src="${post.cover}" class="w-full h-full object-cover rounded-md animate-fade-in" alt="">`
                         : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)} rounded-md"></div>`;
 
@@ -480,14 +520,14 @@
         async function loadPost(postId) {
             document.getElementById('home-view').classList.add('hidden');
             document.getElementById('post-view').classList.remove('hidden');
-            
+
             const postContent = document.getElementById('post-content');
             postContent.innerHTML = '<p class="text-zinc-400 text-sm">正在加载...</p>';
 
             try {
                 const r2Base = R2_DOMAIN || window.location.origin;
                 const response = await fetch(`${r2Base}/posts/${postId}.md?_t=` + Date.now());
-                
+
                 if (!response.ok) throw new Error();
                 const text = await response.text();
                 postContent.innerHTML = marked.parse(text);
@@ -530,4 +570,5 @@
         }
     </script>
 </body>
+
 </html>

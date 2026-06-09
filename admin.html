@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>blogs.nyc.mn - 后台控制面板</title>
+    <title>miai.de5.net - 后台管理</title>
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -19,55 +20,84 @@
         }
     </script>
     <style>
-        html, body { height: 100dvh; overflow: hidden; background-color: #f7f9fb; }
-        .vditor { border-color: #e2e8f0 !important; border-radius: 12px !important; }
-        .vditor-toolbar { border-bottom-color: #f1f5f9 !important; background-color: #fafafa !important; border-radius: 12px 12px 0 0 !important; }
-        .vditor-content { background: #fff !important; }
+        html,
+        body {
+            height: 100dvh;
+            overflow: hidden;
+            background-color: #f7f9fb;
+        }
+
+        .vditor {
+            border-color: #e2e8f0 !important;
+            border-radius: 12px !important;
+        }
+
+        .vditor-toolbar {
+            border-bottom-color: #f1f5f9 !important;
+            background-color: #fafafa !important;
+            border-radius: 12px 12px 0 0 !important;
+        }
+
+        .vditor-content {
+            background: #fff !important;
+        }
     </style>
 </head>
+
 <body class="text-zinc-800 font-sans flex antialiased h-[100dvh]">
 
     <div id="admin-login-view" class="fixed inset-0 bg-[#f7f9fb] flex items-center justify-center z-50 overflow-y-auto">
         <div class="max-w-md w-full mx-4 bg-white p-8 rounded-2xl border border-zinc-100 shadow-xl space-y-6">
             <div class="text-center">
-                <div class="w-14 h-14 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-amber-500/20">
+                <div
+                    class="w-14 h-14 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-amber-500/20">
                     <span class="text-2xl">👤</span>
                 </div>
-                <h2 class="text-xl font-bold tracking-tight text-zinc-900">Blogs 奶油管理后台</h2>
-                <p class="text-xs text-zinc-400 mt-1.5 leading-relaxed">请输入您在 D1 数据库中配置的管理密码解锁系统</p>
+                <h2 class="text-xl font-bold tracking-tight text-zinc-900">管理后台</h2>
+                <p class="text-xs text-zinc-400 mt-1.5 leading-relaxed">D1 数据库中配置的管理密码解锁系统</p>
             </div>
             <div class="space-y-4">
-                <input type="password" id="admin-pass" class="w-full border border-zinc-200 rounded-xl px-4 py-3 text-[16px] focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 focus:outline-none transition-all duration-300" placeholder="请输入您的密码 (默认: admin123)">
-                <button onclick="verifyAndLogin()" class="w-full bg-zinc-900 hover:bg-zinc-800 text-white py-3 rounded-xl text-sm font-semibold tracking-wide shadow-md hover:shadow-lg transition-all duration-300">
-                    确认解锁控制台
+                <input type="password" id="admin-pass"
+                    class="w-full border border-zinc-200 rounded-xl px-4 py-3 text-[16px] focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 focus:outline-none transition-all duration-300"
+                    placeholder="">
+                <button onclick="verifyAndLogin()"
+                    class="w-full bg-zinc-900 hover:bg-zinc-800 text-white py-3 rounded-xl text-sm font-semibold tracking-wide shadow-md hover:shadow-lg transition-all duration-300">
+                    登录
                 </button>
             </div>
         </div>
     </div>
 
     <div id="admin-main-view" class="hidden w-full h-full flex relative overflow-hidden">
-        <div id="sidebar-overlay" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden transition-all duration-300"></div>
-        
-        <aside class="fixed md:static inset-y-0 left-0 w-64 bg-white/70 backdrop-blur-xl border-r border-zinc-200/50 text-zinc-700 flex flex-col justify-between p-6 shrink-0 h-full z-50 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+        <div id="sidebar-overlay" onclick="toggleMobileSidebar()"
+            class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden transition-all duration-300"></div>
+
+        <aside
+            class="fixed md:static inset-y-0 left-0 w-64 bg-white/70 backdrop-blur-xl border-r border-zinc-200/50 text-zinc-700 flex flex-col justify-between p-6 shrink-0 h-full z-50 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
             <div class="space-y-6">
                 <div class="flex flex-col border-b border-zinc-100 pb-5">
                     <div class="flex items-center space-x-2 mb-4">
                         <span class="w-3.5 h-3.5 bg-amber-500 rounded-full"></span>
-                        <span id="sidebar-site-title" class="text-sm font-bold tracking-tight text-zinc-900 line-clamp-1">blogs.nyc.mn 后台</span>
+                        <span id="sidebar-site-title"
+                            class="text-sm font-bold tracking-tight text-zinc-900 line-clamp-1">miai.de5.net 后台</span>
                     </div>
-                    <a href="./" target="_blank" class="w-full flex items-center justify-center space-x-2 px-3 py-2.5 rounded-lg text-xs font-semibold text-zinc-500 hover:text-zinc-900 bg-zinc-50 hover:bg-zinc-100 transition-all border border-zinc-200/60">
+                    <a href="./" target="_blank"
+                        class="w-full flex items-center justify-center space-x-2 px-3 py-2.5 rounded-lg text-xs font-semibold text-zinc-500 hover:text-zinc-900 bg-zinc-50 hover:bg-zinc-100 transition-all border border-zinc-200/60">
                         <span>🏠</span> <span>打开网站前台 ↗</span>
                     </a>
                 </div>
-                
+
                 <nav class="space-y-1">
-                    <button id="menu-btn-posts" onclick="switchTab('panel-posts')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-bold tracking-wide transition-all bg-amber-500/10 text-amber-600 border border-amber-500/20 shadow-sm">
+                    <button id="menu-btn-posts" onclick="switchTab('panel-posts')"
+                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-bold tracking-wide transition-all bg-amber-500/10 text-amber-600 border border-amber-500/20 shadow-sm">
                         <span>📂</span> <span class="tracking-wider">文章列表管理</span>
                     </button>
-                    <button id="menu-btn-editor" onclick="switchTab('panel-editor')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 border border-transparent">
+                    <button id="menu-btn-editor" onclick="switchTab('panel-editor')"
+                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 border border-transparent">
                         <span>✍️</span> <span class="tracking-wider">撰写新教程</span>
                     </button>
-                    <button id="menu-btn-config" onclick="switchTab('panel-config')" class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 border border-transparent">
+                    <button id="menu-btn-config" onclick="switchTab('panel-config')"
+                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 border border-transparent">
                         <span>⚙️</span> <span class="tracking-wider">站点全局配置</span>
                     </button>
                 </nav>
@@ -76,23 +106,31 @@
             <div class="border-t border-zinc-100 pt-5 space-y-3">
                 <div class="flex items-center justify-between text-xs text-slate-400 px-2">
                     <span>系统状态: 运行正常</span>
-                    <button onclick="showChangePasswordModal()" class="hover:text-amber-500 underline transition-colors">改密</button>
+                    <button onclick="showChangePasswordModal()"
+                        class="hover:text-amber-500 underline transition-colors">改密</button>
                 </div>
-                <button onclick="logoutAdmin()" class="w-full bg-red-50 text-red-600 hover:bg-red-100 py-2 rounded-lg text-xs font-semibold transition-all">
+                <button onclick="logoutAdmin()"
+                    class="w-full bg-red-50 text-red-600 hover:bg-red-100 py-2 rounded-lg text-xs font-semibold transition-all">
                     退出登录
                 </button>
             </div>
         </aside>
 
         <main class="flex-grow flex flex-col overflow-hidden h-full">
-            <div class="flex items-center justify-between bg-white border-b border-zinc-100 p-4 md:hidden shrink-0 w-full">
-                <button onclick="toggleMobileSidebar()" class="text-zinc-600 hover:text-zinc-900 p-1 rounded hover:bg-zinc-50 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            <div
+                class="flex items-center justify-between bg-white border-b border-zinc-100 p-4 md:hidden shrink-0 w-full">
+                <button onclick="toggleMobileSidebar()"
+                    class="text-zinc-600 hover:text-zinc-900 p-1 rounded hover:bg-zinc-50 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                 </button>
-                <span id="mobile-brand-title" class="text-sm font-bold text-zinc-900">奶油控制台</span>
-                <div class="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-xs">👤</div>
+                <span id="mobile-brand-title" class="text-sm font-bold text-zinc-900">控制台</span>
+                <div
+                    class="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-xs">
+                    👤</div>
             </div>
 
             <div class="flex-grow p-4 sm:p-6 lg:p-8 overflow-y-auto h-full">
@@ -104,22 +142,36 @@
                             <p class="text-xs text-zinc-400 mt-1">管理、修改、删除和一键筛选已发布的文章</p>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-white p-4 rounded-xl border border-zinc-100 shadow-sm">
+                        <div
+                            class="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-white p-4 rounded-xl border border-zinc-100 shadow-sm">
                             <div>
-                                <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">🔍 标题检索</label>
-                                <input type="text" id="admin-filter-q" oninput="filterAdminTable()" class="w-full border border-zinc-200 rounded-lg px-3 py-1.5 text-[16px] md:text-xs focus:outline-indigo-500 bg-white" placeholder="检索标题关键词...">
+                                <label
+                                    class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">🔍
+                                    标题检索</label>
+                                <input type="text" id="admin-filter-q" oninput="filterAdminTable()"
+                                    class="w-full border border-zinc-200 rounded-lg px-3 py-1.5 text-[16px] md:text-xs focus:outline-indigo-500 bg-white"
+                                    placeholder="检索标题关键词...">
                             </div>
                             <div>
-                                <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">📂 筛选大系列</label>
-                                <select id="admin-filter-series" onchange="filterAdminTable()" class="w-full border border-zinc-200 rounded-lg px-3 py-1.5 text-[16px] md:text-xs focus:outline-indigo-500 bg-white"></select>
+                                <label
+                                    class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">📂
+                                    筛选大系列</label>
+                                <select id="admin-filter-series" onchange="filterAdminTable()"
+                                    class="w-full border border-zinc-200 rounded-lg px-3 py-1.5 text-[16px] md:text-xs focus:outline-indigo-500 bg-white"></select>
                             </div>
                             <div>
-                                <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">🏷️ 筛选子分类</label>
-                                <select id="admin-filter-category" onchange="filterAdminTable()" class="w-full border border-zinc-200 rounded-lg px-3 py-1.5 text-[16px] md:text-xs focus:outline-indigo-500 bg-white"></select>
+                                <label
+                                    class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">🏷️
+                                    筛选子分类</label>
+                                <select id="admin-filter-category" onchange="filterAdminTable()"
+                                    class="w-full border border-zinc-200 rounded-lg px-3 py-1.5 text-[16px] md:text-xs focus:outline-indigo-500 bg-white"></select>
                             </div>
                             <div>
-                                <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">🔒 筛选发布状态</label>
-                                <select id="admin-filter-status" onchange="filterAdminTable()" class="w-full border border-zinc-200 rounded-lg px-3 py-1.5 text-[16px] md:text-xs focus:outline-indigo-500 bg-white">
+                                <label
+                                    class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-1">🔒
+                                    筛选发布状态</label>
+                                <select id="admin-filter-status" onchange="filterAdminTable()"
+                                    class="w-full border border-zinc-200 rounded-lg px-3 py-1.5 text-[16px] md:text-xs focus:outline-indigo-500 bg-white">
                                     <option value="">全部状态</option>
                                     <option value="publish">公开 (Publish)</option>
                                     <option value="draft">隐藏 (Draft)</option>
@@ -131,7 +183,8 @@
                             <div class="overflow-x-auto">
                                 <table class="w-full text-left text-sm text-zinc-600">
                                     <thead>
-                                        <tr class="bg-zinc-50 border-b border-zinc-100 text-[11px] font-bold uppercase tracking-wider text-zinc-400">
+                                        <tr
+                                            class="bg-zinc-50 border-b border-zinc-100 text-[11px] font-bold uppercase tracking-wider text-zinc-400">
                                             <th class="px-6 py-3.5">文章标题</th>
                                             <th class="px-6 py-3.5">所属系列 ➔ 子分类</th>
                                             <th class="px-6 py-3.5">权重 ➔ 浏览 ➔ 状态</th>
@@ -153,31 +206,48 @@
                         <div class="bg-white p-6 rounded-xl border border-zinc-200/60 shadow-sm space-y-5 relative">
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                                 <div>
-                                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">唯一 ID (不可修改)</label>
-                                    <input type="text" id="admin-id" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all" placeholder="例如: advanced-markdown">
+                                    <label
+                                        class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">唯一
+                                        ID (不可修改)</label>
+                                    <input type="text" id="admin-id"
+                                        class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all"
+                                        placeholder="例如: advanced-markdown">
                                 </div>
                                 <div class="sm:col-span-3">
-                                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章标题</label>
-                                    <input type="text" id="admin-title" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all" placeholder="请输入文章主标题">
+                                    <label
+                                        class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章标题</label>
+                                    <input type="text" id="admin-title"
+                                        class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all"
+                                        placeholder="请输入文章主标题">
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                                 <div>
-                                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">所属大系列导航</label>
-                                    <select id="admin-series" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none bg-white"></select>
+                                    <label
+                                        class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">所属大系列导航</label>
+                                    <select id="admin-series"
+                                        class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none bg-white"></select>
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">二级子分类选择</label>
-                                    <select id="admin-category" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none bg-white"></select>
+                                    <label
+                                        class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">二级子分类选择</label>
+                                    <select id="admin-category"
+                                        class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none bg-white"></select>
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">排序权重 (数字越大越靠前)</label>
-                                    <input type="number" id="admin-weight" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all" value="0">
+                                    <label
+                                        class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">排序权重
+                                        (数字越大越靠前)</label>
+                                    <input type="number" id="admin-weight"
+                                        class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all"
+                                        value="0">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">发布显示状态</label>
-                                    <select id="admin-status" class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none bg-white">
+                                    <label
+                                        class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">发布显示状态</label>
+                                    <select id="admin-status"
+                                        class="w-full border border-zinc-200 rounded-lg px-3.5 h-10 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none bg-white">
                                         <option value="publish">🟢 公开发布 (Publish)</option>
                                         <option value="draft">🔴 隐藏草稿 (Draft - 仅供秘密链接预览)</option>
                                     </select>
@@ -186,29 +256,42 @@
 
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div class="sm:col-span-2">
-                                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章摘要说明</label>
-                                    <input type="text" id="admin-summary" class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all" placeholder="请输入文章摘要">
+                                    <label
+                                        class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">文章摘要说明</label>
+                                    <input type="text" id="admin-summary"
+                                        class="w-full border border-zinc-200 rounded-lg px-3.5 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all"
+                                        placeholder="请输入文章摘要">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">首页特色封面图 URL</label>
+                                    <label
+                                        class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">首页特色封面图
+                                        URL</label>
                                     <div class="flex gap-2">
-                                        <input type="text" id="admin-cover" class="flex-grow border border-zinc-200 rounded-lg px-3.5 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all" placeholder="https://images.blogs.nyc.mn/xxx.png">
-                                        <button onclick="triggerCoverUpload()" class="bg-zinc-800 hover:bg-zinc-900 text-white text-xs px-4 rounded-lg font-bold transition-all shrink-0">上传</button>
+                                        <input type="text" id="admin-cover"
+                                            class="flex-grow border border-zinc-200 rounded-lg px-3.5 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:outline-none transition-all"
+                                            placeholder="https://images.miai.de5.net/xxx.png">
+                                        <button onclick="triggerCoverUpload()"
+                                            class="bg-zinc-800 hover:bg-zinc-900 text-white text-xs px-4 rounded-lg font-bold transition-all shrink-0">上传</button>
                                     </div>
-                                    <input type="file" id="cover-file-input" accept="image/*" class="hidden" onchange="handleCoverFileSelected()">
+                                    <input type="file" id="cover-file-input" accept="image/*" class="hidden"
+                                        onchange="handleCoverFileSelected()">
                                 </div>
                             </div>
 
                             <div>
-                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">正文编辑器</label>
+                                <label
+                                    class="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">正文编辑器</label>
                                 <div id="vditor-container" class="w-full"></div>
                             </div>
-                            
-                            <div class="sticky bottom-0 bg-white/95 backdrop-blur-sm py-4 border-t border-zinc-100 z-40 flex justify-end gap-3">
-                                <button onclick="cancelEdit()" class="border border-zinc-200 hover:bg-zinc-50 text-zinc-600 px-5 py-2 rounded-lg text-sm font-medium transition-colors">
+
+                            <div
+                                class="sticky bottom-0 bg-white/95 backdrop-blur-sm py-4 border-t border-zinc-100 z-40 flex justify-end gap-3">
+                                <button onclick="cancelEdit()"
+                                    class="border border-zinc-200 hover:bg-zinc-50 text-zinc-600 px-5 py-2 rounded-lg text-sm font-medium transition-colors">
                                     取消重置
                                 </button>
-                                <button onclick="publishPost()" id="publish-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm">
+                                <button onclick="publishPost()" id="publish-btn"
+                                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm">
                                     直接发布（瞬间生效）
                                 </button>
                             </div>
@@ -223,57 +306,80 @@
 
                         <div class="bg-white p-8 rounded-xl border border-zinc-100 shadow-sm space-y-6">
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">R2 存储桶公网访问域名</label>
-                                <input type="text" id="config-r2-domain" class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="例如: https://images.blogs.nyc.mn">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">R2
+                                    存储桶公网访问域名</label>
+                                <input type="text" id="config-r2-domain"
+                                    class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all"
+                                    placeholder="例如: https://images.miai.de5.net">
                                 <span class="text-[10px] text-zinc-400 block mt-1">用于在前后台提取并加载存放在 R2 中的文章内容及媒体文件。</span>
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">网站主标题（Title）</label>
-                                <input type="text" id="config-title" class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
+                                <label
+                                    class="block text-xs font-bold uppercase tracking-wider text-zinc-400">网站主标题（Title）</label>
+                                <input type="text" id="config-title"
+                                    class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">副标题 / 描述说明（Slogan）</label>
-                                <input type="text" id="config-subtitle" class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">副标题 /
+                                    描述说明（Slogan）</label>
+                                <input type="text" id="config-subtitle"
+                                    class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">全局大系列导航栏列表（用英文逗号隔开）</label>
-                                <input type="text" id="config-series" class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
+                                <label
+                                    class="block text-xs font-bold uppercase tracking-wider text-zinc-400">全局大系列导航栏列表（用英文逗号隔开）</label>
+                                <input type="text" id="config-series"
+                                    class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
                                 <span class="text-[10px] text-zinc-400 block mt-1">示例：科学上网, 谷歌系列, NAS系列</span>
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">二级子分类标签列表（用英文逗号隔开）</label>
-                                <input type="text" id="config-categories" class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
+                                <label
+                                    class="block text-xs font-bold uppercase tracking-wider text-zinc-400">二级子分类标签列表（用英文逗号隔开）</label>
+                                <input type="text" id="config-categories"
+                                    class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all">
                                 <span class="text-[10px] text-zinc-400 block mt-1">示例：技术, 教程, 随笔, 思考</span>
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">全局卡片排版模式</label>
-                                <select id="config-layout-mode" class="w-full border border-zinc-200 rounded-lg px-4 h-11 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all bg-white">
+                                <label
+                                    class="block text-xs font-bold uppercase tracking-wider text-zinc-400">全局卡片排版模式</label>
+                                <select id="config-layout-mode"
+                                    class="w-full border border-zinc-200 rounded-lg px-4 h-11 py-2 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all bg-white">
                                     <option value="standard">图片 + 标题 + 摘要 (标准样式)</option>
                                     <option value="simple">图片 + 标题 (极简缩略样式)</option>
                                 </select>
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">右侧侧边栏“热门文章”最大推荐展示数量</label>
-                                <input type="number" id="config-popular-limit" min="1" max="20" class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" value="5">
+                                <label
+                                    class="block text-xs font-bold uppercase tracking-wider text-zinc-400">右侧侧边栏“热门文章”最大推荐展示数量</label>
+                                <input type="number" id="config-popular-limit" min="1" max="20"
+                                    class="w-full border border-zinc-200 rounded-lg px-4 py-2.5 text-[16px] md:text-sm focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all"
+                                    value="5">
                                 <span class="text-[10px] text-zinc-400 block mt-1">控制首页侧边栏最受欢迎教程的加载条数。</span>
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">右上角外链导航 (格式: 名称, 链接，一行一个)</label>
-                                <textarea id="config-nav-links" rows="4" class="w-full border border-zinc-200 rounded-xl p-4 text-[16px] md:text-xs font-mono focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all" placeholder="订阅转换, https://sub.blogs.nyc.mn&#10;IP查询, https://ip.blogs.nyc.mn"></textarea>
-                                <div class="bg-zinc-50 p-4 rounded-xl border border-zinc-100 text-[11px] text-zinc-400 leading-relaxed mt-1">
-                                    <span class="font-bold text-zinc-500">💡 书写说明：</span>每一行代表一个链接，请使用 <strong>英文半角逗号</strong> <code class="bg-white px-1 py-0.5 rounded border border-zinc-200">,</code> 隔开名称和链接。
+                                <label class="block text-xs font-bold uppercase tracking-wider text-zinc-400">右上角外链导航
+                                    (格式: 名称, 链接，一行一个)</label>
+                                <textarea id="config-nav-links" rows="4"
+                                    class="w-full border border-zinc-200 rounded-xl p-4 text-[16px] md:text-xs font-mono focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 focus:outline-none transition-all"
+                                    placeholder="订阅转换, https://sub.miai.de5.net&#10;IP查询, https://ip.miai.de5.net"></textarea>
+                                <div
+                                    class="bg-zinc-50 p-4 rounded-xl border border-zinc-100 text-[11px] text-zinc-400 leading-relaxed mt-1">
+                                    <span class="font-bold text-zinc-500">💡 书写说明：</span>每一行代表一个链接，请使用
+                                    <strong>英文半角逗号</strong> <code
+                                        class="bg-white px-1 py-0.5 rounded border border-zinc-200">,</code> 隔开名称和链接。
                                 </div>
                             </div>
 
                             <div class="flex justify-end pt-4 border-t border-zinc-100">
-                                <button onclick="saveSiteConfig()" id="save-config-btn" class="bg-zinc-900 hover:bg-zinc-800 text-white px-5 py-2.5 rounded-lg text-xs font-semibold transition-all shadow-sm">
+                                <button onclick="saveSiteConfig()" id="save-config-btn"
+                                    class="bg-zinc-900 hover:bg-zinc-800 text-white px-5 py-2.5 rounded-lg text-xs font-semibold transition-all shadow-sm">
                                     更新配置（瞬间生效）
                                 </button>
                             </div>
@@ -288,10 +394,14 @@
     <div id="password-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <div class="bg-white p-6 rounded-2xl w-80 shadow-lg space-y-4">
             <h3 class="text-base font-bold text-zinc-900">修改后台管理密码</h3>
-            <input type="password" id="new-password" class="w-full border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-indigo-500" placeholder="请输入新密码">
+            <input type="password" id="new-password"
+                class="w-full border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-indigo-500"
+                placeholder="请输入新密码">
             <div class="flex justify-end gap-2">
-                <button onclick="closePasswordModal()" class="text-zinc-500 text-xs hover:underline px-3 py-1">取消</button>
-                <button onclick="submitChangePassword()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-4 py-1.5 rounded-lg transition-all">确定修改</button>
+                <button onclick="closePasswordModal()"
+                    class="text-zinc-500 text-xs hover:underline px-3 py-1">取消</button>
+                <button onclick="submitChangePassword()"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-4 py-1.5 rounded-lg transition-all">确定修改</button>
             </div>
         </div>
     </div>
@@ -299,11 +409,11 @@
     <script>
         let vditorInstance = null;
         let R2_DOMAIN = "";
-        let activeCategories = [];       
-        let activeSeriesList = [];       
-        let dbNavMeta = {};              
+        let activeCategories = [];
+        let activeSeriesList = [];
+        let dbNavMeta = {};
         let isEditing = false;
-        let mobileSidebarOpen = false; 
+        let mobileSidebarOpen = false;
 
         window.addEventListener('load', async () => {
             const password = getActivePassword();
@@ -406,14 +516,14 @@
                 const res = await fetch('./api/config?_t=' + Date.now());
                 if (!res.ok) throw new Error();
                 const data = await res.json();
-                
-                const title = data.site_title || "Blogs.nyc.mn";
+
+                const title = data.site_title || "miai.de5.net";
                 activeCategories = JSON.parse(data.site_categories || '["技术","教程","随笔","思考"]');
                 activeSeriesList = JSON.parse(data.site_series || '["科学上网","谷歌系列","NAS系列"]');
-                const rawNavLinks = JSON.parse(data.site_nav_links || '[{"name": "订阅转换", "url": "https://sub.blogs.nyc.mn"}]');
+                const rawNavLinks = JSON.parse(data.site_nav_links || '[{"name": "订阅转换", "url": "https://sub.miai.de5.net"}]');
                 globalLayoutMode = data.site_layout_mode || "standard";
                 const sitePopularLimit = data.site_popular_limit || "5";
-                
+
                 R2_DOMAIN = data.site_r2_domain || "";
 
                 document.title = title + " - 后台控制面板";
@@ -429,13 +539,13 @@
                 document.getElementById('config-series').value = activeSeriesList.join(', ');
                 document.getElementById('config-nav-links').value = rawNavLinks.map(item => `${item.name}, ${item.url}`).join('\n');
                 document.getElementById('config-r2-domain').value = R2_DOMAIN;
-                
+
                 setSelectValue('config-layout-mode', globalLayoutMode);
                 document.getElementById('config-popular-limit').value = sitePopularLimit;
 
                 fillCategorySelect();
                 fillSeriesSelect();
-                fillAdminFilterSelects(); 
+                fillAdminFilterSelects();
 
             } catch (err) {
                 console.error("加载全局配置出错:", err);
@@ -511,16 +621,16 @@
             if (fileInput.files.length === 0) return;
             const file = fileInput.files[0];
             const uploadBtn = document.querySelector('button[onclick="triggerCoverUpload()"]');
-            
+
             uploadBtn.innerText = '传中...';
             uploadBtn.disabled = true;
 
-            const url = await uploadImageViaVditor(file); 
-            if (url) document.getElementById('admin-cover').value = url; 
-            
+            const url = await uploadImageViaVditor(file);
+            if (url) document.getElementById('admin-cover').value = url;
+
             uploadBtn.innerText = '上传';
             uploadBtn.disabled = false;
-            fileInput.value = ''; 
+            fileInput.value = '';
         }
 
         async function saveSiteConfig() {
@@ -529,7 +639,7 @@
             const subtitle = safeGetValue('config-subtitle').trim();
             const categoriesStr = safeGetValue('config-categories').trim();
             const seriesStr = safeGetValue('config-series').trim();
-            const navLinksStr = safeGetValue('config-nav-links').trim(); 
+            const navLinksStr = safeGetValue('config-nav-links').trim();
             const site_layout_mode = document.getElementById('config-layout-mode').value;
             const site_popular_limit = safeGetValue('config-popular-limit').trim() || "5";
             const site_r2_domain = safeGetValue('config-r2-domain').trim();
@@ -659,11 +769,11 @@
             const tbody = document.getElementById('admin-posts-table');
             if (!tbody) return;
             tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-zinc-400 text-xs">正在读取数据库...</td></tr>';
-            
+
             try {
-                const password = getActivePassword(); 
+                const password = getActivePassword();
                 const response = await fetch('./api/posts?_t=' + Date.now(), {
-                    headers: { 'Authorization': password } 
+                    headers: { 'Authorization': password }
                 });
                 const posts = await response.json();
                 window.allPosts = posts.results || posts;
@@ -685,7 +795,7 @@
 
             postsArray.forEach((post) => {
                 const originalIndex = window.allPosts.findIndex(p => p.id === post.id);
-                const statusBadge = post.status === 'draft' 
+                const statusBadge = post.status === 'draft'
                     ? `<span class="bg-red-50 text-red-600 px-2 py-0.5 rounded text-[10px] font-bold">隐藏 (Draft)</span>`
                     : `<span class="bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded text-[10px] font-bold">公开 (Publish)</span>`;
 
@@ -726,7 +836,7 @@
 
         function startNewPost() {
             isEditing = false;
-            
+
             const adminId = document.getElementById('admin-id');
             if (adminId) { adminId.disabled = false; adminId.value = ''; }
             const adminTitle = document.getElementById('admin-title');
@@ -737,19 +847,19 @@
             if (adminCover) adminCover.value = '';
             const adminWeight = document.getElementById('admin-weight');
             if (adminWeight) adminWeight.value = '0';
-            
+
             const adminSeries = document.getElementById('admin-series');
             if (adminSeries) { adminSeries.value = activeSeriesList[0] || '默认系列'; }
             const adminCategory = document.getElementById('admin-category');
             if (adminCategory) { adminCategory.value = activeCategories[0] || '未分类'; }
             const adminStatus = document.getElementById('admin-status');
             if (adminStatus) adminStatus.value = 'publish';
-            
+
             if (vditorInstance) { vditorInstance.setValue(''); }
-            
+
             document.getElementById('editor-title').innerText = '撰写新教程';
             document.getElementById('publish-btn').innerText = '直接发布（瞬间生效）';
-            
+
             switchTab('panel-editor');
         }
 
@@ -758,7 +868,7 @@
             try {
                 const password = getActivePassword();
                 const id = safeGetValue('admin-id').trim();
-                const title = safeGetValue('admin-title').trim(); 
+                const title = safeGetValue('admin-title').trim();
                 const summary = safeGetValue('admin-summary').trim();
                 const cover = safeGetValue('admin-cover').trim();
                 const series = safeGetValue('admin-series') || '默认系列';
@@ -779,7 +889,7 @@
 
                 if (btn) {
                     btn.innerText = '正在发布到 D1 与 R2...';
-                    btn.disabled = true; 
+                    btn.disabled = true;
                 }
 
                 const res = await fetch('./api/posts', {
@@ -787,17 +897,17 @@
                     headers: { 'Authorization': password, 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         id, title, summary, content, category, cover, series, status, weight,
-                        layout_mode: globalLayoutMode, 
+                        layout_mode: globalLayoutMode,
                         date: new Date().toISOString().split('T')[0]
                     })
                 });
 
                 if (!res.ok) throw new Error(await res.text());
                 alert('文章同步发布成功！');
-                
+
                 await refreshAdminTable();
                 startNewPost();
-                switchTab('panel-posts'); 
+                switchTab('panel-posts');
 
             } catch (err) {
                 alert('【发布失败】详细错误信息:\n' + err.message);
@@ -818,14 +928,14 @@
                 const post = window.allPosts[index];
 
                 isEditing = true;
-                
+
                 document.getElementById('editor-title').innerText = `编辑教程: ${post.title || ''}`;
                 const pubBtn = document.getElementById('publish-btn');
                 if (pubBtn) pubBtn.innerText = '保存更新';
-                
+
                 const adminIdInput = document.getElementById('admin-id');
                 if (adminIdInput) { adminIdInput.value = post.id || ''; adminIdInput.disabled = true; }
-                
+
                 const adminTitle = document.getElementById('admin-title');
                 if (adminTitle) adminTitle.value = post.title || '';
                 const adminSummary = document.getElementById('admin-summary');
@@ -834,7 +944,7 @@
                 if (adminCover) adminCover.value = post.cover || '';
                 const adminWeight = document.getElementById('admin-weight');
                 if (adminWeight) adminWeight.value = post.weight || 0;
-                
+
                 setSelectValue('admin-series', post.series || '默认系列');
                 setSelectValue('admin-category', post.category || '未分类');
                 setSelectValue('admin-status', post.status || 'publish');
@@ -881,4 +991,5 @@
         }
     </script>
 </body>
+
 </html>

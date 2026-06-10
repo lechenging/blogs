@@ -4,17 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>后台管理 - 雅致书卷控制台</title>
+    <title>后台管理 - 极简数字花园控制台</title>
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/vditor/dist/index.css" />
     <script src="https://unpkg.com/vditor/dist/index.min.js"></script>
     
-    <!-- Google Fonts for Editorial Aesthetics -->
+    <!-- Modern sans font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -22,8 +22,7 @@
                 extend: {
                     fontFamily: {
                         sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-                        serif: ['Lora', 'Georgia', 'serif'],
-                        display: ['Playfair Display', 'Georgia', 'serif']
+                        display: ['Space Grotesk', 'Plus Jakarta Sans', 'sans-serif']
                     }
                 }
             }
@@ -34,163 +33,156 @@
         body {
             height: 100dvh;
             overflow: hidden;
-            background-color: #FAF8F5; /* Warm Editorial Neutral background */
+            background-color: #f8fafc; /* Slate 50 ultra clean background */
         }
 
         .vditor {
-            border-color: #E6E1D6 !important;
-            border-radius: 0 !important;
+            border-color: #e2e8f0 !important;
+            border-radius: 12px !important;
             box-shadow: none !important;
-            background-color: #FCFAF2 !important;
+            background-color: #ffffff !important;
         }
 
         .vditor-toolbar {
-            border-bottom-color: #E6E1D6 !important;
-            background-color: #FAF6F0 !important;
-            border-radius: 0 !important;
+            border-bottom-color: #e2e8f0 !important;
+            background-color: #f8fafc !important;
+            border-radius: 12px 12px 0 0 !important;
         }
 
         .vditor-content {
-            background: #FCFAF2 !important;
+            background: #ffffff !important;
         }
 
         .vditor-reset {
-            font-family: 'Lora', Georgia, serif !important;
-            font-size: 15px !important;
-            color: #2D2A26 !important;
-            background-color: #FCFAF2 !important;
-        }
-
-        /* Form elements styles override */
-        select, input, textarea {
-            background-color: #FCFAF2 !important;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 14px !important;
+            color: #1e293b !important;
         }
     </style>
 </head>
 
-<body class="text-[#2D2A26] font-sans flex antialiased h-[100dvh]">
+<body class="text-slate-800 font-sans flex antialiased h-[100dvh]">
 
-    <!-- Login View -->
-    <div id="admin-login-view" class="fixed inset-0 bg-[#FAF8F5] flex items-center justify-center z-50 overflow-y-auto">
-        <div class="max-w-md w-full mx-4 bg-[#FCFAF2] p-10 border border-[#E6E1D6] space-y-8 shadow-md text-center">
-            <div class="space-y-4">
-                <div class="w-12 h-12 bg-[#FAF6F0] border border-[#E6E1D6] flex items-center justify-center mx-auto text-[#B37422]">
-                    <span class="text-xl">👤</span>
+    <!-- Login Box -->
+    <div id="admin-login-view" class="fixed inset-0 bg-slate-50 flex items-center justify-center z-50 overflow-y-auto">
+        <div class="max-w-md w-full mx-4 bg-white p-8 rounded-3xl border border-slate-100 shadow-xl space-y-6 text-center">
+            <div class="space-y-3">
+                <div class="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto text-indigo-650">
+                    <span class="text-lg">🔐</span>
                 </div>
-                <h2 class="text-2xl font-serif font-bold tracking-widest text-[#1C1B19] uppercase">控制台解锁</h2>
-                <div class="w-8 h-[2px] bg-[#C58B36] mx-auto"></div>
-                <p class="text-xs text-[#736F6A] leading-relaxed">请输入由云端部署数据库初始配置的管理解锁密码</p>
+                <h2 class="text-xl font-display font-bold tracking-tight text-slate-900">管理后台</h2>
+                <p class="text-xs text-slate-400 leading-relaxed max-w-xs mx-auto">请输入在 D1 数据库中初始化的管理安全码解锁系统</p>
             </div>
             <div class="space-y-4">
                 <input type="password" id="admin-pass"
-                    class="w-full bg-[#FCFAF2] border-b border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-2 py-3 text-center text-sm focus:outline-none transition-all placeholder-[#B3A895]"
-                    placeholder="解锁通行码">
+                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-550 focus:ring-4 focus:ring-indigo-100 rounded-2xl px-4 py-3 text-center text-sm focus:outline-none transition-all placeholder-slate-400"
+                    placeholder="安全通行解锁码">
                 <button onclick="verifyAndLogin()"
-                    class="w-full bg-[#1C1B19] hover:bg-[#B37422] text-[#FCFAF2] py-3 text-xs tracking-widest uppercase font-bold transition-all duration-300">
-                    验证登录
+                    class="w-full bg-slate-900 hover:bg-indigo-600 text-white py-3 rounded-2xl text-xs font-semibold tracking-wider uppercase transition-all duration-300 shadow-sm hover:shadow-md">
+                    确认登录
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Main Admin View -->
-    <div id="admin-main-view" class="hidden w-full h-full flex relative overflow-hidden bg-[#FAF8F5]">
+    <!-- Main Workspace -->
+    <div id="admin-main-view" class="hidden w-full h-full flex relative overflow-hidden bg-slate-50">
         <div id="sidebar-overlay" onclick="toggleMobileSidebar()"
-            class="fixed inset-0 bg-[#1C1B19]/30 backdrop-blur-sm z-40 hidden transition-all duration-300"></div>
+            class="fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-40 hidden transition-all duration-300"></div>
 
-        <!-- Sidebar -->
+        <!-- Sidebar Navigation -->
         <aside
-            class="fixed md:static inset-y-0 left-0 w-64 bg-[#FCFAF2] border-r border-[#E6E1D6] text-[#2D2A26] flex flex-col justify-between p-6 shrink-0 h-full z-50 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+            class="fixed md:static inset-y-0 left-0 w-64 bg-white border-r border-slate-100 text-slate-700 flex flex-col justify-between p-6 shrink-0 h-full z-50 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
             <div class="space-y-8">
-                <div class="flex flex-col border-b border-[#E6E1D6] pb-6">
+                <div class="flex flex-col border-b border-slate-50 pb-5">
                     <div class="flex items-center space-x-2.5 mb-4">
-                        <span class="w-2 h-2 bg-[#C58B36] rounded-full shrink-0"></span>
+                        <span class="w-2.5 h-2.5 bg-indigo-600 rounded-full shrink-0"></span>
                         <span id="sidebar-site-title"
-                            class="text-xs font-serif font-bold tracking-widest text-[#1C1B19] uppercase line-clamp-1">MIAI.DE5.NET 后台</span>
+                            class="text-xs font-display font-bold tracking-wide text-slate-900 uppercase line-clamp-1">控制台</span>
                     </div>
                     <a href="./" target="_blank"
-                        class="w-full flex items-center justify-center space-x-2 px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-[#736F6A] hover:text-[#1C1B19] bg-[#FAF6F0] border border-[#E6E1D6] hover:bg-[#F2ECE1] transition-all">
-                        <span>打开前台预览 ➔</span>
+                        class="w-full flex items-center justify-center space-x-2 px-3 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 border border-slate-100 hover:border-slate-200 transition-all">
+                        <span>打开网站主页 ➔</span>
                     </a>
                 </div>
 
-                <nav class="space-y-1.5">
+                <nav class="space-y-1">
                     <button id="menu-btn-posts" onclick="switchTab('panel-posts')"
-                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-none text-xs font-bold uppercase tracking-wider transition-all border border-[#C58B36] bg-[#FAF6F0] text-[#B37422]">
-                        <span>📂</span> <span class="tracking-widest">文章列表管理</span>
+                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border border-indigo-100 bg-indigo-50/50 text-indigo-650">
+                        <span>📂</span> <span class="tracking-wide">文章列表管理</span>
                     </button>
                     <button id="menu-btn-editor" onclick="switchTab('panel-editor')"
-                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-none text-xs font-medium uppercase tracking-wider transition-all text-[#736F6A] hover:bg-[#F2ECE1] hover:text-[#1C1B19] border border-transparent">
-                        <span>✍️</span> <span class="tracking-widest">撰写新文章</span>
+                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all text-slate-500 hover:bg-slate-50 hover:text-slate-900 border border-transparent">
+                        <span>✍️</span> <span class="tracking-wide">撰写新教程</span>
                     </button>
                     <button id="menu-btn-config" onclick="switchTab('panel-config')"
-                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-none text-xs font-medium uppercase tracking-wider transition-all text-[#736F6A] hover:bg-[#F2ECE1] hover:text-[#1C1B19] border border-transparent">
-                        <span>⚙️</span> <span class="tracking-widest">站点全局配置</span>
+                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all text-slate-500 hover:bg-slate-50 hover:text-slate-900 border border-transparent">
+                        <span>⚙️</span> <span class="tracking-wide">站点配置</span>
                     </button>
                 </nav>
             </div>
 
-            <div class="border-t border-[#E6E1D6] pt-6 space-y-4">
-                <div class="flex items-center justify-between text-[10px] uppercase font-bold tracking-wider text-[#A69E94] px-1">
-                    <span>系统正常</span>
+            <div class="border-t border-slate-50 pt-5 space-y-3">
+                <div class="flex items-center justify-between text-[10px] uppercase font-bold tracking-wider text-slate-400 px-1">
+                    <span>系统状态正常</span>
                     <button onclick="showChangePasswordModal()"
-                        class="text-[#B37422] hover:text-[#C58B36] underline transition-colors">修改密码</button>
+                        class="text-indigo-600 hover:text-indigo-500 underline transition-colors">改密</button>
                 </div>
                 <button onclick="logoutAdmin()"
-                    class="w-full bg-[#FAF6F0] text-[#736F6A] hover:bg-[#FAF0ED] hover:text-[#A64B2A] py-2 border border-[#E6E1D6] text-[10px] font-bold uppercase tracking-wider transition-all">
-                    安全退出
+                    class="w-full bg-slate-50 text-slate-655 hover:bg-red-50 hover:text-red-600 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider border border-slate-100 transition-all">
+                    退出登录
                 </button>
             </div>
         </aside>
 
-        <!-- Main Content Area -->
+        <!-- Right Panels viewport -->
         <main class="flex-grow flex flex-col overflow-hidden h-full">
-            <!-- Mobile Header Bar -->
-            <div class="flex items-center justify-between bg-[#FCFAF2] border-b border-[#E6E1D6] p-4 md:hidden shrink-0 w-full">
-                <button onclick="toggleMobileSidebar()" class="text-[#736F6A] hover:text-[#1C1B19] p-1 focus:outline-none">
+            <!-- Mobile Navigation header -->
+            <div class="flex items-center justify-between bg-white border-b border-slate-100 p-4 md:hidden shrink-0 w-full">
+                <button onclick="toggleMobileSidebar()" class="text-slate-500 hover:text-slate-900 p-1 focus:outline-none">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                 </button>
-                <span id="mobile-brand-title" class="text-xs font-serif font-bold tracking-widest text-[#1C1B19] uppercase">控制台</span>
-                <div class="w-8 h-8 rounded-full bg-[#FAF6F0] border border-[#E6E1D6] flex items-center justify-center text-xs">👤</div>
+                <span id="mobile-brand-title" class="text-xs font-display font-bold tracking-wide text-slate-900 uppercase">控制台</span>
+                <div class="w-8 h-8 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center text-xs">👤</div>
             </div>
 
-            <!-- Dashboard Panels Container -->
+            <!-- Workspace Panels Container -->
             <div class="flex-grow p-4 sm:p-8 overflow-y-auto h-full">
-                <div class="max-w-7xl mx-auto w-full space-y-8 pb-12">
+                <div class="max-w-7xl mx-auto w-full space-y-6 pb-12">
 
-                    <!-- Tab 1: Posts Management Panel -->
+                    <!-- Tab 1: Posts panel -->
                     <div id="panel-posts" class="admin-panel-content space-y-6">
-                        <div class="border-b border-[#E6E1D6] pb-4">
-                            <h2 class="text-2xl font-serif font-bold text-[#1C1B19] uppercase tracking-wider">文章列表管理</h2>
-                            <p class="text-xs text-[#736F6A] mt-1">检索、编辑、下线或物理销毁在站点中发布的所有文章及关联媒体。</p>
+                        <div class="border-b border-slate-100 pb-3">
+                            <h2 class="text-xl font-display font-extrabold text-slate-900 tracking-tight">文章列表管理</h2>
+                            <p class="text-xs text-slate-400 mt-1">管理、修改、下架或彻底销毁已发布的教程和文章记录。</p>
                         </div>
 
-                        <!-- Filters Card -->
-                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-[#FCFAF2] p-5 border border-[#E6E1D6] shadow-sm">
+                        <!-- Filters box -->
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
                             <div>
-                                <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94] mb-1.5">🔍 标题检索</label>
+                                <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">🔍 标题检索</label>
                                 <input type="text" id="admin-filter-q" oninput="filterAdminTable()"
-                                    class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-3 py-1.5 text-xs focus:outline-none placeholder-[#B3A895]"
+                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-550 rounded-xl px-3 py-1.5 text-xs focus:outline-none placeholder-slate-400"
                                     placeholder="检索标题关键词...">
                             </div>
                             <div>
-                                <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94] mb-1.5">📂 筛选大系列</label>
+                                <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">📂 筛选大系列</label>
                                 <select id="admin-filter-series" onchange="filterAdminTable()"
-                                    class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-3 py-1.5 text-xs focus:outline-none"></select>
+                                    class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-550 rounded-xl px-3 py-1.5 text-xs focus:outline-none"></select>
                             </div>
                             <div>
-                                <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94] mb-1.5">🏷️ 筛选子分类</label>
+                                <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">🏷️ 筛选子分类</label>
                                 <select id="admin-filter-category" onchange="filterAdminTable()"
-                                    class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-3 py-1.5 text-xs focus:outline-none"></select>
+                                    class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-550 rounded-xl px-3 py-1.5 text-xs focus:outline-none"></select>
                             </div>
                             <div>
-                                <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94] mb-1.5">🔒 发布状态</label>
+                                <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">🔒 发布状态</label>
                                 <select id="admin-filter-status" onchange="filterAdminTable()"
-                                    class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-3 py-1.5 text-xs focus:outline-none">
+                                    class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-550 rounded-xl px-3 py-1.5 text-xs focus:outline-none">
                                     <option value="">全部状态</option>
                                     <option value="publish">公开 (Publish)</option>
                                     <option value="draft">隐藏 (Draft)</option>
@@ -198,89 +190,89 @@
                             </div>
                         </div>
 
-                        <!-- Posts Table -->
-                        <div class="bg-[#FCFAF2] border border-[#E6E1D6] shadow-sm overflow-hidden">
+                        <!-- Grid/Table Card -->
+                        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
                             <div class="overflow-x-auto">
-                                <table class="w-full text-left text-xs text-[#2D2A26]">
+                                <table class="w-full text-left text-xs text-slate-600">
                                     <thead>
-                                        <tr class="bg-[#FAF6F0] border-b border-[#E6E1D6] text-[10px] font-bold uppercase tracking-widest text-[#A69E94]">
+                                        <tr class="bg-slate-50 border-b border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                                             <th class="px-6 py-4">文章标题</th>
                                             <th class="px-6 py-4">所属系列 ➔ 分类</th>
                                             <th class="px-6 py-4">权重 ➔ 浏览 ➔ 状态</th>
                                             <th class="px-6 py-4 text-right">操作</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="admin-posts-table" class="divide-y divide-[#F2ECE1]"></tbody>
+                                    <tbody id="admin-posts-table" class="divide-y divide-slate-100"></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Tab 2: Editor Panel -->
+                    <!-- Tab 2: Write/Editor panel -->
                     <div id="panel-editor" class="admin-panel-content space-y-6 hidden">
-                        <div class="border-b border-[#E6E1D6] pb-4">
-                            <h2 id="editor-title" class="text-2xl font-serif font-bold text-[#1C1B19] uppercase tracking-wider">撰写新教程</h2>
-                            <p class="text-xs text-[#736F6A] mt-1">使用 Vditor 所见即所得排版编辑器，支持多媒体一键贴图无感直传至 R2。</p>
+                        <div class="border-b border-slate-100 pb-3">
+                            <h2 id="editor-title" class="text-xl font-display font-extrabold text-slate-900 tracking-tight">撰写新教程</h2>
+                            <p class="text-xs text-slate-400 mt-1">使用精美的所见即所得编辑器发布，多媒体文件自动上传同步到 R2 存储桶中。</p>
                         </div>
 
-                        <div class="bg-[#FCFAF2] p-6 sm:p-8 border border-[#E6E1D6] shadow-sm space-y-6 relative">
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-5 relative">
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                                 <div>
-                                    <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94] mb-1.5">唯一 ID (不可修改)</label>
+                                    <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">唯一 ID (不可修改)</label>
                                     <input type="text" id="admin-id"
-                                        class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-3.5 py-2 text-xs focus:outline-none placeholder-[#B3A895]"
+                                        class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-3.5 py-2 text-xs focus:outline-none placeholder-slate-400"
                                         placeholder="例如: advanced-markdown">
                                 </div>
                                 <div class="md:col-span-3">
-                                    <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94] mb-1.5">文章标题</label>
+                                    <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">文章标题</label>
                                     <input type="text" id="admin-title"
-                                        class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-3.5 py-2 text-xs focus:outline-none placeholder-[#B3A895]"
+                                        class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-3.5 py-2 text-xs focus:outline-none placeholder-slate-400"
                                         placeholder="请输入文章主标题">
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                                 <div>
-                                    <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94] mb-1.5">所属大系列导航</label>
+                                    <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">所属大系列导航</label>
                                     <select id="admin-series"
-                                        class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-3.5 h-10 py-2 text-xs focus:outline-none"></select>
+                                        class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-550 rounded-xl px-3.5 h-10 py-2 text-xs focus:outline-none"></select>
                                 </div>
                                 <div>
-                                    <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94] mb-1.5">二级子分类选择</label>
+                                    <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">二级子分类选择</label>
                                     <select id="admin-category"
-                                        class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-3.5 h-10 py-2 text-xs focus:outline-none"></select>
+                                        class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-550 rounded-xl px-3.5 h-10 py-2 text-xs focus:outline-none"></select>
                                 </div>
                                 <div>
-                                    <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94] mb-1.5">排序权重 (越大越靠前)</label>
+                                    <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">排序权重 (数字越大越靠前)</label>
                                     <input type="number" id="admin-weight"
-                                        class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-3.5 h-10 py-2 text-xs focus:outline-none"
+                                        class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-3.5 h-10 py-2 text-xs focus:outline-none"
                                         value="0">
                                 </div>
                                 <div>
-                                    <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94] mb-1.5">发布显示状态</label>
+                                    <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">发布显示状态</label>
                                     <select id="admin-status"
-                                        class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-3.5 h-10 py-2 text-xs focus:outline-none">
+                                        class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-550 rounded-xl px-3.5 h-10 py-2 text-xs focus:outline-none">
                                         <option value="publish">🟢 公开发布 (Publish)</option>
                                         <option value="draft">🔴 隐藏草稿 (Draft - 仅供秘密链接预览)</option>
                                     </select>
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div class="sm:col-span-2">
-                                    <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94] mb-1.5">文章摘要说明</label>
+                                    <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">文章摘要说明</label>
                                     <input type="text" id="admin-summary"
-                                        class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-3.5 py-2 text-xs focus:outline-none placeholder-[#B3A895]"
+                                        class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-3.5 py-2 text-xs focus:outline-none placeholder-slate-400"
                                         placeholder="请输入文章摘要">
                                 </div>
                                 <div>
-                                    <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94] mb-1.5">首页特色封面图 URL</label>
+                                    <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">首页特色封面图 URL</label>
                                     <div class="flex gap-2">
                                         <input type="text" id="admin-cover"
-                                            class="flex-grow border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-3.5 py-2 text-xs focus:outline-none placeholder-[#B3A895]"
+                                            class="flex-grow bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-3.5 py-2 text-xs focus:outline-none placeholder-slate-400"
                                             placeholder="https://images.blogs.nyc.mn/xxx.png">
                                         <button onclick="triggerCoverUpload()"
-                                            class="bg-[#1C1B19] hover:bg-[#B37422] text-[#FCFAF2] text-[10px] font-bold uppercase tracking-wider px-4 rounded-none transition-colors shrink-0">上传</button>
+                                            class="bg-slate-900 hover:bg-indigo-600 text-white text-xs px-4 rounded-xl font-semibold transition-colors shrink-0">上传</button>
                                     </div>
                                     <input type="file" id="cover-file-input" accept="image/*" class="hidden"
                                         onchange="handleCoverFileSelected()">
@@ -288,95 +280,95 @@
                             </div>
 
                             <div>
-                                <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94] mb-1.5">正文编辑器</label>
+                                <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">正文编辑器</label>
                                 <div id="vditor-container" class="w-full"></div>
                             </div>
 
-                            <div class="sticky bottom-0 bg-[#FCFAF2]/95 backdrop-blur-sm py-4 border-t border-[#E6E1D6] z-40 flex justify-end gap-3">
+                            <div class="sticky bottom-0 bg-white/95 backdrop-blur-sm py-4 border-t border-slate-50 z-40 flex justify-end gap-3">
                                 <button onclick="cancelEdit()"
-                                    class="border border-[#E6E1D6] hover:bg-[#FAF6F0] text-[#736F6A] px-5 py-2 rounded-none text-xs font-bold uppercase tracking-wider transition-colors">
+                                    class="border border-slate-150 hover:bg-slate-50 text-slate-500 px-5 py-2 rounded-xl text-xs font-semibold transition-colors">
                                     取消重置
                                 </button>
                                 <button onclick="publishPost()" id="publish-btn"
-                                    class="bg-[#1C1B19] hover:bg-[#B37422] text-[#FCFAF2] px-6 py-2 rounded-none text-xs font-bold uppercase tracking-widest transition-colors shadow-sm">
+                                    class="bg-indigo-650 hover:bg-indigo-500 text-white px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors shadow-sm">
                                     直接发布（瞬间生效）
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Tab 3: Configuration Panel -->
+                    <!-- Tab 3: Config settings panel -->
                     <div id="panel-config" class="admin-panel-content space-y-6 hidden">
-                        <div class="border-b border-[#E6E1D6] pb-4">
-                            <h2 class="text-2xl font-serif font-bold text-[#1C1B19] uppercase tracking-wider">自定义站点全局配置与分类导航</h2>
-                            <p class="text-xs text-[#736F6A] mt-1">管理一二级专题、卡片布局、外链和 D1/R2 系统常量配置。</p>
+                        <div class="border-b border-slate-100 pb-3">
+                            <h2 class="text-xl font-display font-extrabold text-slate-900 tracking-tight">站点全局配置</h2>
+                            <p class="text-xs text-slate-400 mt-1">在线配置站点名称、系列及分类、导航链接和底层 R2/D1 系统常数。</p>
                         </div>
 
-                        <div class="bg-[#FCFAF2] p-8 border border-[#E6E1D6] shadow-sm space-y-6">
+                        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-6">
                             <div class="space-y-1.5">
-                                <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94]">R2 存储桶公网访问域名</label>
+                                <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400">R2 存储桶公网访问域名</label>
                                 <input type="text" id="config-r2-domain"
-                                    class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-4 py-2.5 text-xs focus:outline-none placeholder-[#B3A895]"
+                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-xs focus:outline-none placeholder-slate-400"
                                     placeholder="例如: https://images.blogs.nyc.mn">
-                                <span class="text-[10px] text-[#A69E94] block mt-1">用于在前后台提取并加载存放在 R2 中的文章内容及媒体文件。</span>
+                                <span class="text-[10px] text-slate-400 block mt-1">用于在前后台提取并加载存放在 R2 中的文章内容及媒体文件。</span>
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94]">网站主标题（Title）</label>
+                                <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400">网站主标题（Title）</label>
                                 <input type="text" id="config-title"
-                                    class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-4 py-2.5 text-xs focus:outline-none">
+                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-xs focus:outline-none">
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94]">副标题 / 描述说明（Slogan）</label>
+                                <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400">副标题 / 描述说明（Slogan）</label>
                                 <input type="text" id="config-subtitle"
-                                    class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-4 py-2.5 text-xs focus:outline-none">
+                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-xs focus:outline-none">
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94]">全局大系列导航栏列表（用英文逗号隔开）</label>
+                                <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400">全局大系列导航栏列表（用英文逗号隔开）</label>
                                 <input type="text" id="config-series"
-                                    class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-4 py-2.5 text-xs focus:outline-none">
-                                <span class="text-[10px] text-[#A69E94] block mt-1">示例：科学上网, 谷歌系列, NAS系列</span>
+                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-xs focus:outline-none">
+                                <span class="text-[10px] text-slate-400 block mt-1">示例：科学上网, 谷歌系列, NAS系列</span>
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94]">二级子分类标签列表（用英文逗号隔开）</label>
+                                <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400">二级子分类标签列表（用英文逗号隔开）</label>
                                 <input type="text" id="config-categories"
-                                    class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-4 py-2.5 text-xs focus:outline-none">
-                                <span class="text-[10px] text-[#A69E94] block mt-1">示例：技术, 教程, 随笔, 思考</span>
+                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-xs focus:outline-none">
+                                <span class="text-[10px] text-slate-400 block mt-1">示例：技术, 教程, 随笔, 思考</span>
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94]">全局卡片排版模式</label>
+                                <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400">全局卡片排版模式</label>
                                 <select id="config-layout-mode"
-                                    class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-4 h-11 py-2 text-xs focus:outline-none">
+                                    class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-550 rounded-xl px-4 h-11 py-2 text-xs focus:outline-none">
                                     <option value="standard">图片 + 标题 + 摘要 (标准样式)</option>
                                     <option value="simple">图片 + 标题 (极简缩略样式)</option>
                                 </select>
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94]">右侧侧边栏“热门文章”最大推荐展示数量</label>
+                                <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400">右侧侧边栏“热门文章”最大推荐展示数量</label>
                                 <input type="number" id="config-popular-limit" min="1" max="20"
-                                    class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-4 py-2.5 text-xs focus:outline-none"
+                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-550 rounded-xl px-4 py-2.5 text-xs focus:outline-none"
                                     value="5">
-                                <span class="text-[10px] text-[#A69E94] block mt-1">控制首页侧边栏最受欢迎教程的加载条数。</span>
+                                <span class="text-[10px] text-slate-400 block mt-1">控制首页侧边栏最受欢迎教程的加载条数。</span>
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block text-[9px] font-bold uppercase tracking-widest text-[#A69E94]">右上角外链导航 (格式: 名称, 链接，一行一个)</label>
+                                <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400">右上角外链导航 (格式: 名称, 链接，一行一个)</label>
                                 <textarea id="config-nav-links" rows="4"
-                                    class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none p-4 text-xs font-mono focus:outline-none"
+                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-550 rounded-2xl p-4 text-xs font-mono focus:outline-none"
                                     placeholder="订阅转换, https://sub.blogs.nyc.mn&#10;IP查询, https://ip.blogs.nyc.mn"></textarea>
-                                <div class="bg-[#FAF6F0] p-4 border border-[#E6E1D6] text-[10px] text-[#736F6A] uppercase tracking-wider leading-relaxed mt-1">
-                                    <span class="font-bold text-[#1C1B19]">💡 书写说明：</span>每一行代表一个链接，请使用 <strong class="text-[#B37422]">英文半角逗号</strong> <code class="bg-[#FCFAF2] px-1 py-0.5 border border-[#E6E1D6]">,</code> 隔开名称和链接。
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-[10px] text-slate-400 uppercase tracking-wider leading-relaxed mt-1">
+                                    <span class="font-bold text-slate-500">💡 书写说明：</span>每一行代表一个链接，请使用 <strong class="text-slate-600">英文半角逗号</strong> <code class="bg-white px-1 py-0.5 rounded border border-slate-100">,</code> 隔开名称和链接。
                                 </div>
                             </div>
 
-                            <div class="flex justify-end pt-4 border-t border-[#E6E1D6]">
+                            <div class="flex justify-end pt-4 border-t border-slate-100">
                                 <button onclick="saveSiteConfig()" id="save-config-btn"
-                                    class="bg-[#1C1B19] hover:bg-[#B37422] text-[#FCFAF2] px-5 py-2.5 rounded-none text-xs font-bold uppercase tracking-wider transition-all shadow-sm">
+                                    class="bg-slate-900 hover:bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-sm">
                                     更新配置（瞬间生效）
                                 </button>
                             </div>
@@ -388,18 +380,18 @@
         </main>
     </div>
 
-    <!-- Password Modal -->
-    <div id="password-modal" class="hidden fixed inset-0 bg-[#1C1B19]/50 flex items-center justify-center z-50">
-        <div class="bg-[#FCFAF2] border border-[#E6E1D6] p-6 rounded-none w-80 shadow-lg space-y-4">
-            <h3 class="text-sm font-serif font-bold text-[#1C1B19] uppercase tracking-wider">修改后台管理密码</h3>
+    <!-- Password Modal Dialog -->
+    <div id="password-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50">
+        <div class="bg-white p-6 border border-slate-100 rounded-3xl w-80 shadow-xl space-y-4">
+            <h3 class="text-sm font-display font-bold text-slate-900 uppercase tracking-wider">修改后台密码</h3>
             <input type="password" id="new-password"
-                class="w-full border border-[#E6E1D6] focus:border-[#C58B36] rounded-none px-3 py-2 text-xs focus:outline-none placeholder-[#B3A895]"
+                class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs focus:outline-none placeholder-slate-400"
                 placeholder="请输入新密码">
             <div class="flex justify-end gap-2 text-[10px] font-bold uppercase tracking-wider">
                 <button onclick="closePasswordModal()"
-                    class="text-[#736F6A] hover:underline px-3 py-1">取消</button>
+                    class="text-slate-400 hover:text-slate-900 px-3 py-1">取消</button>
                 <button onclick="submitChangePassword()"
-                    class="bg-[#1C1B19] hover:bg-[#B37422] text-[#FCFAF2] px-4 py-1.5 transition-colors">确定修改</button>
+                    class="bg-slate-900 hover:bg-indigo-600 text-white px-4 py-1.5 rounded-lg transition-colors">确定修改</button>
             </div>
         </div>
     </div>
@@ -455,7 +447,7 @@
             document.getElementById(tabId).classList.remove('hidden');
 
             document.querySelectorAll('nav button').forEach(btn => {
-                btn.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-none text-xs font-medium uppercase tracking-wider transition-all text-[#736F6A] hover:bg-[#F2ECE1] hover:text-[#1C1B19] border border-transparent";
+                btn.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all text-slate-500 hover:bg-slate-50 hover:text-slate-900 border border-transparent";
             });
 
             const activeBtnMap = {
@@ -465,7 +457,7 @@
             };
             const activeBtn = document.getElementById(activeBtnMap[tabId]);
             if (activeBtn) {
-                activeBtn.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-none text-xs font-bold uppercase tracking-wider transition-all border border-[#C58B36] bg-[#FAF6F0] text-[#B37422]";
+                activeBtn.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border border-indigo-100 bg-indigo-50/50 text-indigo-650";
             }
 
             if (mobileSidebarOpen) {
@@ -565,6 +557,7 @@
             select.innerHTML += `<option value="未分类">未分类</option>`;
         }
 
+        // Populates Series dropdown on create/edit panel
         function fillSeriesSelect() {
             const select = document.getElementById('admin-series');
             if (!select) return;
@@ -575,7 +568,7 @@
             select.innerHTML += `<option value="默认系列">默认系列</option>`;
         }
 
-        // Dropdown populator for filter bars
+        // Populates filter lists on list panel
         function fillAdminFilterSelects() {
             const sSelect = document.getElementById('admin-filter-series');
             if (sSelect) {
@@ -767,7 +760,7 @@
         async function refreshAdminTable() {
             const tbody = document.getElementById('admin-posts-table');
             if (!tbody) return;
-            tbody.innerHTML = '<tr><td colspan="4" class="py-6 text-center text-[#736F6A] text-xs font-sans">正在读取数据库...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="4" class="py-6 text-center text-slate-400 text-xs font-sans">正在读取数据库...</td></tr>';
 
             try {
                 const password = getActivePassword();
@@ -788,33 +781,33 @@
             tbody.innerHTML = '';
 
             if (postsArray.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="py-6 text-center text-[#736F6A] text-xs font-sans">无符合筛选条件的文章</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="py-6 text-center text-slate-400 text-xs font-sans">无符合筛选条件的文章</td></tr>';
                 return;
             }
 
             postsArray.forEach((post) => {
                 const originalIndex = window.allPosts.findIndex(p => p.id === post.id);
                 const statusBadge = post.status === 'draft'
-                    ? `<span class="bg-[#FAF0ED] text-[#A64B2A] border border-[#F2DED9] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider font-sans">隐藏 (Draft)</span>`
-                    : `<span class="bg-[#EDFAF1] text-[#2A8A46] border border-[#D9F2E1] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider font-sans">公开 (Publish)</span>`;
+                    ? `<span class="bg-red-50 text-red-650 px-2 py-0.5 rounded-md text-[10px] font-bold font-sans">隐藏 (Draft)</span>`
+                    : `<span class="bg-emerald-50 text-emerald-650 px-2 py-0.5 rounded-md text-[10px] font-bold font-sans">公开 (Publish)</span>`;
 
                 tbody.innerHTML += `
-                    <tr class="border-b border-[#F2ECE1] hover:bg-[#FDFCF7] transition-colors">
-                        <td class="px-6 py-4 font-serif font-bold text-[#1C1B19] text-sm">${post.title}</td>
+                    <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4 font-semibold text-slate-900 text-xs">${post.title}</td>
                         <td class="px-6 py-4">
-                            <span class="bg-[#FAF6F0] border border-[#E6E1D6] text-[#736F6A] px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase font-sans">
+                            <span class="bg-indigo-50/50 border border-indigo-100/50 text-indigo-650 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider font-sans">
                                 ${post.series || '默认'} ➔ ${post.category || '未分类'}
                             </span>
                         </td>
-                        <td class="px-6 py-4 text-[10px] uppercase font-bold tracking-wider text-[#A69E94] font-sans">
-                            <span class="text-[#B37422]">⚓ WEIGHT: ${post.weight || 0}</span> • 
+                        <td class="px-6 py-4 text-[10px] font-semibold text-slate-400 font-sans">
+                            <span class="text-indigo-600">⚓ ${post.weight || 0}</span> • 
                             <span>👁️ ${post.views} VIEWS</span> • 
                             ${statusBadge}
                         </td>
-                        <td class="px-6 py-4 text-right space-x-3 text-[10px] font-bold uppercase tracking-wider font-sans shrink-0">
-                            <a href="./index.html#/post/${post.id}" target="_blank" class="text-[#2A8A46] hover:underline">查看 ↗</a>
-                            <button onclick="editPost(${originalIndex})" class="text-[#B37422] hover:underline">编辑</button>
-                            <button onclick="deletePost('${post.id}')" class="text-[#A64B2A] hover:underline">删除</button>
+                        <td class="px-6 py-4 text-right space-x-3 text-[10px] font-bold uppercase tracking-wider font-sans">
+                            <a href="./index.html#/post/${post.id}" target="_blank" class="text-indigo-650 hover:text-indigo-500 transition-colors">查看 ↗</a>
+                            <button onclick="editPost(${originalIndex})" class="text-slate-600 hover:text-slate-900 transition-colors">编辑</button>
+                            <button onclick="deletePost('${post.id}')" class="text-red-650 hover:text-red-500 transition-colors">删除</button>
                         </td>
                     </tr>
                 `;

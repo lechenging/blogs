@@ -54,9 +54,62 @@
         }
 
         .vditor-reset {
-            font-family: 'Plus Jakarta Sans', sans-serif !important;
-            font-size: 14px !important;
-            color: #1e293b !important;
+            font-family: 'Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif' !important;
+            font-size: 14.5px !important;
+            color: #334155 !important;
+            line-height: 1.625 !important;
+        }
+
+        .vditor-reset h1, 
+        .vditor-reset h2, 
+        .vditor-reset h3, 
+        .vditor-reset h4 {
+            font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif !important;
+            color: #0f172a !important;
+            font-weight: 700 !important;
+            margin-top: 1.5em !important;
+            margin-bottom: 0.5em !important;
+        }
+
+        .vditor-reset a {
+            color: #4f46e5 !important;
+            text-decoration: underline !important;
+        }
+
+        .vditor-reset blockquote {
+            border-left: 4px solid #6366f1 !important;
+            background-color: #f8fafc !important;
+            color: #475569 !important;
+            padding: 8px 16px !important;
+            font-style: italic !important;
+        }
+
+        .vditor-reset img {
+            border-radius: 12px !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+
+        .vditor-reset code {
+            background-color: #f1f5f9 !important;
+            color: #6366f1 !important;
+            padding: 2px 6px !important;
+            border-radius: 4px !important;
+            font-family: monospace !important;
+        }
+
+        .vditor-reset pre {
+            background-color: #0f172a !important;
+            border: 1px solid #1e293b !important;
+            border-radius: 12px !important;
+            color: #f1f5f9 !important;
+            padding: 16px !important;
+        }
+
+        .vditor-reset pre code {
+            background-color: transparent !important;
+            color: inherit !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
         }
     </style>
 </head>
@@ -375,14 +428,7 @@
                         </div>
                     </div>
 
-                        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-6">
-                            <div class="space-y-1.5">
-                                <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400">R2 存储桶公网访问域名</label>
-                                <input type="text" id="config-r2-domain"
-                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-xs focus:outline-none placeholder-slate-400"
-                                    placeholder="例如: https://images.blogs.nyc.mn">
-                                <span class="text-[10px] text-slate-400 block mt-1">用于在前后台提取并加载存放在 R2 中的文章内容及媒体文件。</span>
-                            </div>
+                </div>
 
                             <div class="space-y-1.5">
                                 <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400">网站主标题（Title）</label>

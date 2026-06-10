@@ -205,45 +205,13 @@
                 <!-- Sidebar -->
                 <div class="space-y-6">
                     <!-- Popular Posts -->
-                    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-                        <div class="border-b border-slate-100 pb-2 flex items-center justify-between">
-                            <h3 class="text-xs font-display font-bold uppercase tracking-wider text-slate-555">🔥 热门排行</h3>
-                            <span id="popular-top-badge" class="text-[9px] bg-slate-50 border border-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-semibold">TOP 5</span>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+                        <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-slate-500">🔥 热门文章</h3>
+                            <span id="popular-top-badge" class="text-[11px] bg-orange-50 text-orange-500 px-2.5 py-1 rounded-md font-bold">TOP 5</span>
                         </div>
                         <div id="popular-posts-container" class="space-y-4"></div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-                    <div id="category-filter-container" class="flex flex-wrap gap-2"></div>
-
-                    <div id="posts-list-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
-                </div>
-
-                <div id="pagination-container" class="flex justify-center items-center gap-1.5 pt-12"></div>
-            </div>
-
-            <!-- Sidebar -->
-            <div class="space-y-6">
-                <!-- Search Box -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-                    <h3 class="text-xs font-display font-bold uppercase tracking-wider text-slate-500">文章检索</h3>
-                    <div class="relative">
-                        <input type="text" id="search-input" onkeydown="handleSearch(event)"
-                            class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl pl-4 pr-10 py-2.5 text-xs font-sans focus:outline-none transition-all placeholder-slate-400"
-                            placeholder="输入关键字并按回车搜索...">
-                        <button onclick="triggerSearch()" class="absolute right-3.5 top-3 text-slate-400 hover:text-slate-650 transition-colors text-xs">🔍</button>
-                    </div>
-                </div>
-
-                <!-- Popular Posts -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-                    <div class="border-b border-slate-100 pb-2 flex items-center justify-between">
-                        <h3 class="text-xs font-display font-bold uppercase tracking-wider text-slate-500">🔥 热门排行</h3>
-                        <span id="popular-top-badge" class="text-[9px] bg-slate-50 border border-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-semibold">TOP 5</span>
-                    </div>
-                    <div id="popular-posts-container" class="space-y-4"></div>
                 </div>
             </div>
         </div>
@@ -657,19 +625,19 @@
 
                 posts.forEach((post, index) => {
                     const thumbHtml = post.cover
-                        ? `<img src="${post.cover}" class="w-full h-full object-cover rounded-lg" alt="">`
-                        : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)} rounded-lg"></div>`;
+                        ? `<img src="${post.cover}" class="w-full h-full object-cover" alt="">`
+                        : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)}"></div>`;
 
                     container.innerHTML += `
-                        <a href="#/post/${post.id}" class="flex items-center gap-3.5 p-2 hover:bg-slate-50 rounded-xl transition-all group">
-                            <div class="w-11 h-11 rounded-lg overflow-hidden bg-slate-50 shrink-0 border border-slate-100">
+                        <a href="#/post/${post.id}" class="flex items-start gap-3 py-2.5 px-1 rounded-xl hover:bg-slate-50 transition-colors group">
+                            <div class="w-14 h-12 rounded-lg overflow-hidden bg-slate-100 shrink-0 border border-slate-100">
                                 ${thumbHtml}
                             </div>
-                            <div class="min-w-0 flex-grow">
-                                <h4 class="text-xs font-bold text-slate-800 line-clamp-2 leading-snug group-hover:text-indigo-600 transition-colors">${post.title}</h4>
-                                <div class="text-[9px] text-slate-400 mt-1 flex justify-between uppercase font-sans font-semibold">
+                            <div class="min-w-0 flex-grow pt-0.5">
+                                <h4 class="text-[13px] font-extrabold text-slate-950 line-clamp-2 leading-snug group-hover:text-orange-500 transition-colors">${post.title}</h4>
+                                <div class="text-[10px] text-slate-400 mt-1 flex items-center justify-between font-semibold">
                                     <span>${post.date}</span>
-                                    <span class="font-bold text-indigo-650">👁️ ${post.views}</span>
+                                    <span class="inline-flex items-center gap-1 text-indigo-650 font-bold">👁️ ${post.views}</span>
                                 </div>
                             </div>
                         </a>

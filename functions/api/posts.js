@@ -18,12 +18,27 @@ export async function onRequest(context) {
       const series = url.searchParams.get("series");
       const popularLimit = url.searchParams.get("popular");
       const getNavMeta = url.searchParams.get("get_nav_meta");
+      const id = url.searchParams.get("id");
       
       // 判断是否是管理员后台发起的请求
       const authHeader = request.headers.get("Authorization");
       const isAdmin = await verifyPassword(authHeader, env);
 
-      // A. 获取一二级导航元数据
+      // A. 获取单篇文章元数据，详情页直接访问时用于补齐标题、封面和分类信息
+      if (id) {
+        const query = isAdmin
+          ? "SELECT id, title, summary, date, views, category, series, cover, layout_mode, status, weight FROM posts WHERE id = ?"
+          : "SELECT id, title, summary, date, views, category, series, cover, layout_mode, status, weight FROM posts WHERE id = ? AND status = 'publish'";
+
+        const post = await env.DB.prepare(query).bind(id).first();
+        if (!post) {
+          return new Response("Not found", { status: 404 });
+        }
+
+        return new Response(JSON.stringify(post), { headers: { "Content-Type": "application/json" } });
+      }
+
+      // B. 获取一二级导航元数据
       if (getNavMeta) {
         // 如果是管理员，获取所有文章一二级目关系；游客只获取公开文章的层级
         let query = "SELECT DISTINCT series, category FROM posts";
@@ -40,7 +55,7 @@ export async function onRequest(context) {
         return new Response(JSON.stringify(navMeta), { headers: { "Content-Type": "application/json" } });
       }
 
-      // B. 获取热门排行 (游客模式下不显示隐藏文章)
+      // C. 获取热门排行 (游客模式下不显示隐藏文章)
       if (popularLimit) {
         const limit = parseInt(popularLimit) || 5;
         const query = isAdmin 
@@ -51,7 +66,7 @@ export async function onRequest(context) {
         return new Response(JSON.stringify(results), { headers: { "Content-Type": "application/json" } });
       }
 
-      // C. 标准列表（加入物理权重与状态控制）
+      // D. 标准列表（加入物理权重与状态控制）
       const page = parseInt(url.searchParams.get("page")) || 1;
       const limit = parseInt(url.searchParams.get("limit")) || 12;
       const offset = (page - 1) * limit;

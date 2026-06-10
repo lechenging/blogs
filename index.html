@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>miai.de5.net - Cloudflare博客</title>
+    <title>首页 | 编程技术｜运维技术｜建站技巧｜后端开发｜前端开发｜知识库｜免费资源</title>
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -48,6 +48,35 @@
         .copy-btn:hover {
             background: rgba(255, 255, 255, 0.15);
             color: #fff;
+        }
+
+        .post-toc button.active {
+            color: #f59e0b;
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .image-preview-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(8px);
+        }
+
+        .image-preview-overlay.active {
+            display: flex;
+        }
+
+        .image-preview-overlay img {
+            max-width: min(1120px, 100%);
+            max-height: 88vh;
+            border-radius: 16px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
         }
     </style>
 </head>
@@ -128,21 +157,45 @@
             </div>
         </div>
 
-        <div id="post-view" class="hidden max-w-5xl mx-auto bg-white p-8 rounded-2xl border border-zinc-100 shadow-sm">
+        <div id="post-view" class="hidden max-w-7xl mx-auto">
             <a href="#/"
                 class="mb-8 inline-block text-xs font-semibold uppercase tracking-wider text-zinc-400 hover:text-amber-500 flex items-center gap-1.5 transition-colors">
                 ← 返回首页
             </a>
-            <div class="mb-6 text-xs text-zinc-400 flex gap-4 border-b border-zinc-100 pb-4">
-                <span id="post-date"></span>
-                <span id="post-category" class="font-bold text-amber-500"></span>
-                <span id="post-views-count">阅读量: -</span>
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+                <article class="lg:col-span-3 bg-white p-6 sm:p-8 rounded-2xl border border-zinc-100 shadow-sm">
+                    <header class="mb-8 border-b border-zinc-100 pb-6 space-y-4">
+                        <div class="flex flex-wrap gap-2 text-[11px] font-bold tracking-wider uppercase">
+                            <span id="post-category" class="bg-amber-50 text-amber-600 px-2 py-1 rounded-full">未分类</span>
+                            <span id="post-series" class="bg-zinc-100 text-zinc-500 px-2 py-1 rounded-full">默认系列</span>
+                        </div>
+                        <h1 id="post-title" class="text-2xl sm:text-4xl font-black tracking-tight text-zinc-950 leading-tight">正在加载...</h1>
+                        <p id="post-summary" class="hidden text-sm text-zinc-500 leading-relaxed"></p>
+                        <div class="text-xs text-zinc-400 flex flex-wrap gap-x-4 gap-y-2">
+                            <span id="post-date"></span>
+                            <span id="post-views-count">阅读量: -</span>
+                        </div>
+                        <div id="post-cover-wrap" class="hidden overflow-hidden rounded-2xl border border-zinc-100 bg-zinc-50">
+                            <img id="post-cover" class="w-full max-h-[460px] object-cover" alt="">
+                        </div>
+                    </header>
+                    <section id="post-content" class="prose prose-zinc prose-amber max-w-none 
+                        prose-headings:font-bold prose-headings:tracking-tight
+                        prose-img:rounded-xl prose-img:shadow-md prose-img:mx-auto prose-img:border prose-img:border-zinc-100 prose-img:cursor-zoom-in
+                        prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-zinc-800 prose-pre:rounded-xl prose-pre:p-0">
+                    </section>
+                </article>
+                <aside class="hidden lg:block sticky top-24 bg-white p-5 rounded-2xl border border-zinc-100 shadow-sm">
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-4">文章目录</h2>
+                    <nav id="post-toc" class="post-toc text-xs space-y-1 text-zinc-500">
+                        <p class="text-zinc-300">暂无目录</p>
+                    </nav>
+                </aside>
             </div>
-            <article id="post-content" class="prose prose-zinc prose-amber max-w-none 
-                prose-headings:font-bold prose-headings:tracking-tight
-                prose-img:rounded-xl prose-img:shadow-md prose-img:mx-auto prose-img:border prose-img:border-zinc-100
-                prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-zinc-800 prose-pre:rounded-xl prose-pre:p-0">
-            </article>
+        </div>
+
+        <div id="image-preview-overlay" class="image-preview-overlay" onclick="closeImagePreview()">
+            <img id="image-preview-target" src="" alt="图片预览" onclick="event.stopPropagation()">
         </div>
 
     </main>
@@ -173,6 +226,7 @@
         let currentPageNum = 1;
         let globalLayoutMode = "standard";
         let globalPopularLimit = 5;
+        let currentSiteTitle = "miai.de5.net";
 
         marked.setOptions({
             highlight: function (code, lang) {
@@ -210,6 +264,7 @@
 
                 const title = data.site_title || "miai.de5.net";
                 const subtitle = data.site_subtitle || "AI， 让思考发声！";
+                currentSiteTitle = title;
                 activeCategories = JSON.parse(data.site_categories || '["技术","教程","随笔","思考"]');
                 activeSeriesList = JSON.parse(data.site_series || '["科学上网","谷歌系列","NAS系列"]');
                 const rawNavLinks = JSON.parse(data.site_nav_links || '[{"name": "CC API", "url": "https://napi.mai.us.ci"}]');
@@ -233,6 +288,7 @@
                 console.error("加载全局配置出错:", err);
                 activeCategories = ["技术", "教程", "随笔", "思考"];
                 activeSeriesList = ["科学上网", "谷歌系列", "NAS系列"];
+                currentSiteTitle = "miai.de5.net";
                 document.title = "miai.de5.net";
                 renderCategoryFilters();
             }
@@ -326,6 +382,7 @@
 
             document.getElementById('home-view').classList.remove('hidden');
             document.getElementById('post-view').classList.add('hidden');
+            document.title = currentSiteTitle;
 
             await fetchPostsAndRender(1);
             await fetchPopularPosts();
@@ -343,6 +400,7 @@
 
             document.getElementById('home-view').classList.remove('hidden');
             document.getElementById('post-view').classList.add('hidden');
+            document.title = `${seriesName} - ${currentSiteTitle}`;
 
             await fetchPostsAndRender(1);
             await fetchPopularPosts();
@@ -517,14 +575,61 @@
             return gradients[index % gradients.length];
         }
 
+        function escapeHtml(value) {
+            return String(value || '').replace(/[&<>'"]/g, (char) => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[char]));
+        }
+
+        function updatePostMeta(post) {
+            const title = post.title || '未命名文章';
+            document.title = title;
+            document.getElementById('post-title').innerText = title;
+            document.getElementById('post-date').innerText = post.date ? `发布于 ${post.date}` : '';
+            document.getElementById('post-category').innerText = post.category || '未分类';
+            document.getElementById('post-series').innerText = post.series || '默认系列';
+            document.getElementById('post-views-count').innerText = `阅读量: ${post.views || 0}`;
+
+            const summary = document.getElementById('post-summary');
+            if (post.summary) {
+                summary.innerText = post.summary;
+                summary.classList.remove('hidden');
+            } else {
+                summary.classList.add('hidden');
+            }
+
+            const coverWrap = document.getElementById('post-cover-wrap');
+            const cover = document.getElementById('post-cover');
+            if (post.cover) {
+                cover.src = post.cover;
+                cover.alt = title;
+                coverWrap.classList.remove('hidden');
+            } else {
+                cover.removeAttribute('src');
+                cover.alt = '';
+                coverWrap.classList.add('hidden');
+            }
+        }
+
         async function loadPost(postId) {
             document.getElementById('home-view').classList.add('hidden');
             document.getElementById('post-view').classList.remove('hidden');
 
             const postContent = document.getElementById('post-content');
             postContent.innerHTML = '<p class="text-zinc-400 text-sm">正在加载...</p>';
+            document.getElementById('post-toc').innerHTML = '<p class="text-zinc-300">正在生成目录...</p>';
+            document.getElementById('post-title').innerText = '正在加载...';
 
             try {
+                const metaResponse = await fetch(`./api/posts?id=${encodeURIComponent(postId)}&_t=${Date.now()}`);
+                if (!metaResponse.ok) throw new Error('文章元数据不存在');
+                const post = await metaResponse.json();
+                updatePostMeta(post);
+
                 const r2Base = R2_DOMAIN || window.location.origin;
                 const response = await fetch(`${r2Base}/posts/${postId}.md?_t=` + Date.now());
 
@@ -542,9 +647,64 @@
 
                 addCopyButtons();
                 document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+                buildPostToc();
+                enableImagePreview();
             } catch (err) {
+                document.getElementById('post-title').innerText = '文章加载失败';
+                document.getElementById('post-toc').innerHTML = '<p class="text-zinc-300">暂无目录</p>';
                 postContent.innerHTML = '<p class="text-red-500 text-sm">无法从 R2 载入文章，请确保跨域策略配置成功。</p>';
             }
+        }
+
+        function buildPostToc() {
+            const toc = document.getElementById('post-toc');
+            const headings = Array.from(document.querySelectorAll('#post-content h2, #post-content h3'));
+            if (!toc || headings.length === 0) {
+                toc.innerHTML = '<p class="text-zinc-300">暂无目录</p>';
+                return;
+            }
+
+            const usedIds = new Set();
+            toc.innerHTML = headings.map((heading, index) => {
+                const baseId = heading.id || `section-${index + 1}`;
+                let finalId = baseId;
+                let suffix = 1;
+                while (usedIds.has(finalId)) {
+                    finalId = `${baseId}-${suffix}`;
+                    suffix += 1;
+                }
+                usedIds.add(finalId);
+                heading.id = finalId;
+
+                const indentClass = heading.tagName === 'H3' ? 'pl-5' : 'pl-3';
+                return `<button type="button" data-target="${finalId}" class="block w-full text-left border-l-2 border-zinc-100 ${indentClass} py-1.5 hover:text-amber-500 hover:border-amber-500 transition-colors line-clamp-2">${escapeHtml(heading.innerText)}</button>`;
+            }).join('');
+
+            toc.querySelectorAll('button[data-target]').forEach((button) => {
+                button.addEventListener('click', () => {
+                    const target = document.getElementById(button.dataset.target);
+                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+        }
+
+        function enableImagePreview() {
+            document.querySelectorAll('#post-content img, #post-cover').forEach((img) => {
+                img.onclick = () => {
+                    const overlay = document.getElementById('image-preview-overlay');
+                    const target = document.getElementById('image-preview-target');
+                    target.src = img.src;
+                    target.alt = img.alt || '图片预览';
+                    overlay.classList.add('active');
+                };
+            });
+        }
+
+        function closeImagePreview() {
+            const overlay = document.getElementById('image-preview-overlay');
+            const target = document.getElementById('image-preview-target');
+            overlay.classList.remove('active');
+            target.removeAttribute('src');
         }
 
         function addCopyButtons() {

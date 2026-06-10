@@ -9,11 +9,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
+    
+    <!-- Google Fonts for Editorial Aesthetics -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'] }
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        display: ['Playfair Display', 'Georgia', 'serif']
+                    }
                 }
             }
         }
@@ -24,36 +34,26 @@
         }
 
         body {
-            background-color: #f7f9fb;
+            background-color: #FAF8F5; /* Warm Editorial Neutral background */
+        }
+
+        .font-serif-title {
+            font-family: 'Playfair Display', Georgia, serif;
+        }
+
+        .font-serif-body {
+            font-family: 'Lora', Georgia, serif;
         }
 
         .code-block-wrapper {
             position: relative;
         }
 
-        .copy-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.08);
-            color: #9ca3af;
-            border: 1px solid rgba(156, 163, 175, 0.15);
-            border-radius: 6px;
-            padding: 4px 10px;
-            font-size: 11px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .copy-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
-        }
-
         .post-toc button.active {
-            color: #f59e0b;
-            border-left-color: #f59e0b;
-            background: #fffbeb;
+            color: #b37422;
+            border-left-color: #b37422;
+            background-color: #F7F3EB;
+            font-weight: 700;
         }
 
         .post-toc {
@@ -63,21 +63,19 @@
         }
 
         .post-toc::-webkit-scrollbar {
-            width: 5px;
+            width: 3px;
         }
 
         .post-toc::-webkit-scrollbar-track {
-            background: #f4f4f5;
-            border-radius: 999px;
+            background: #F2ECE1;
         }
 
         .post-toc::-webkit-scrollbar-thumb {
-            background: #d4d4d8;
-            border-radius: 999px;
+            background: #D5CDBE;
         }
 
         .post-toc::-webkit-scrollbar-thumb:hover {
-            background: #f59e0b;
+            background: #C58B36;
         }
 
         .image-preview-overlay {
@@ -88,7 +86,7 @@
             align-items: center;
             justify-content: center;
             padding: 24px;
-            background: rgba(15, 23, 42, 0.82);
+            background: rgba(28, 27, 25, 0.92);
             backdrop-filter: blur(8px);
         }
 
@@ -99,8 +97,9 @@
         .image-preview-overlay img {
             max-width: min(1120px, 100%);
             max-height: 88vh;
-            border-radius: 16px;
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+            border-radius: 0;
+            border: 4px solid #FCFAF2;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
         }
 
         .back-to-top {
@@ -108,19 +107,20 @@
             right: 24px;
             bottom: 24px;
             z-index: 60;
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 999px;
-            background: #18181b;
-            color: #fff;
-            box-shadow: 0 12px 32px rgba(24, 24, 27, 0.22);
+            border-radius: 0;
+            border: 1px solid #E6E1D6;
+            background: #FCFAF2;
+            color: #1C1B19;
+            box-shadow: 0 4px 12px rgba(28, 27, 25, 0.08);
             opacity: 0;
             visibility: hidden;
             transform: translateY(12px);
-            transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease, background 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .back-to-top.visible {
@@ -130,49 +130,49 @@
         }
 
         .back-to-top:hover {
-            background: #f59e0b;
+            background: #1C1B19;
+            color: #FCFAF2;
+            border-color: #1C1B19;
         }
 
-        @media (max-width: 640px) {
-            .back-to-top {
-                right: 16px;
-                bottom: 16px;
-                width: 40px;
-                height: 40px;
-            }
+        /* Custom scrollbar for entire website */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FAF8F5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E6E1D6;
+            border: 2px solid #FAF8F5;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #C58B36;
         }
     </style>
 </head>
 
-<body class="text-zinc-800 min-h-screen flex flex-col antialiased">
+<body class="text-[#2D2A26] min-h-screen flex flex-col antialiased bg-[#FAF8F5]">
 
-    <nav class="bg-white border-b border-zinc-100 sticky top-0 z-50">
-        <div
-            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-16 py-3 md:py-0 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <nav class="bg-[#FCFAF2]/90 backdrop-blur-md border-b border-[#E6E1D6] sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-16 py-4 md:py-0 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div class="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 w-full md:w-auto">
-                <a href="#/" class="flex items-center space-x-2 shrink-0">
-                    <span
-                        class="w-3.5 h-3.5 bg-amber-500 rounded-full flex items-center justify-center animate-pulse"></span>
-                    <span id="nav-site-title"
-                        class="text-base font-bold tracking-tight text-zinc-900">miai.de5.net</span>
+                <a href="#/" class="flex items-center space-x-2 shrink-0 group">
+                    <span class="w-2 h-2 bg-[#C58B36] rounded-full flex items-center justify-center shrink-0 animate-pulse"></span>
+                    <span id="nav-site-title" class="text-sm font-serif-title font-bold tracking-widest text-[#1C1B19] uppercase group-hover:text-[#B37422] transition-colors">miai.de5.net</span>
                 </a>
 
-                <div id="series-navbar-container"
-                    class="flex flex-wrap gap-x-4 gap-y-2 text-xs font-bold text-zinc-500 uppercase tracking-wider">
+                <div id="series-navbar-container" class="flex flex-wrap gap-x-6 gap-y-2 text-[10px] font-sans font-bold uppercase tracking-widest text-[#736F6A]">
                 </div>
             </div>
 
             <div class="flex items-center space-x-6 shrink-0">
-                <div id="custom-navbar-links"
-                    class="hidden md:flex items-center space-x-6 text-xs font-semibold text-zinc-500"></div>
+                <div id="custom-navbar-links" class="hidden md:flex items-center space-x-6 text-[10px] font-sans font-bold uppercase tracking-widest text-[#736F6A]"></div>
 
-                <a href="./admin.html"
-                    class="text-zinc-300 hover:text-amber-500 transition-all p-1.5 rounded-full hover:bg-zinc-50 shrink-0"
-                    title="管理控制台">
-                    <svg class="w-5.5 h-5.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                <a href="./admin.html" class="text-[#A69E94] hover:text-[#B37422] transition-colors p-1.5 shrink-0" title="管理控制台">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
                 </a>
             </div>
@@ -181,76 +181,88 @@
 
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-        <div id="home-view" class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            <div class="lg:col-span-3 space-y-6 flex flex-col justify-between">
-                <div class="space-y-6">
-                    <div class="bg-white p-6 rounded-2xl border border-zinc-100 shadow-sm">
-                        <h1 id="site-title-display" class="text-2xl font-bold tracking-tight text-zinc-900">正在加载...</h1>
-                        <p id="site-subtitle-display" class="text-zinc-500 text-xs mt-1.5 leading-relaxed"></p>
+        <div id="home-view" class="grid grid-cols-1 lg:grid-cols-4 gap-10">
+            <div class="lg:col-span-3 space-y-8 flex flex-col justify-between">
+                <div class="space-y-8">
+                    <!-- Editorial Header -->
+                    <div class="bg-[#FCFAF2] p-8 md:p-12 border border-[#E6E1D6] text-center relative overflow-hidden">
+                        <div class="absolute top-3 left-4 right-4 flex items-center justify-between text-[8px] uppercase tracking-widest text-[#A69E94] font-sans font-semibold border-b border-[#F2ECE1] pb-1">
+                            <span>Vol. 2026</span>
+                            <span>Editorial Journal</span>
+                        </div>
+                        <h1 id="site-title-display" class="text-3xl md:text-5xl font-serif-title font-bold tracking-tight text-[#1C1B19] py-4 uppercase">正在加载...</h1>
+                        <div class="w-16 h-[2px] bg-[#C58B36] mx-auto mb-4"></div>
+                        <p id="site-subtitle-display" class="text-[#736F6A] text-xs font-sans italic tracking-wider max-w-xl mx-auto leading-relaxed"></p>
                     </div>
 
-                    <div id="category-filter-container" class="flex flex-wrap gap-2"></div>
+                    <div id="category-filter-container" class="flex flex-wrap gap-x-2 border-b border-[#E6E1D6] pb-2"></div>
 
-                    <div id="posts-list-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6"></div>
+                    <div id="posts-list-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"></div>
                 </div>
 
-                <div id="pagination-container" class="flex justify-center items-center gap-1.5 pt-10"></div>
+                <div id="pagination-container" class="flex justify-center items-center gap-1.5 pt-12"></div>
             </div>
 
-            <div class="space-y-6">
-                <div class="bg-white p-5 rounded-2xl border border-zinc-100 shadow-sm space-y-3">
-                    <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400">文章检索</h3>
+            <!-- Sidebar -->
+            <div class="space-y-8">
+                <!-- Search Box -->
+                <div class="bg-[#FCFAF2] p-6 border border-[#E6E1D6] rounded-none space-y-4 shadow-sm">
+                    <h3 class="text-[10px] font-sans font-bold uppercase tracking-widest text-[#A69E94]">文章检索</h3>
                     <div class="relative">
                         <input type="text" id="search-input" onkeydown="handleSearch(event)"
-                            class="w-full border border-zinc-200 rounded-xl pl-4 pr-10 py-2.5 text-xs focus:ring-2 focus:ring-amber-500/10 focus:border-amber-500 focus:outline-none transition-all"
+                            class="w-full bg-transparent border-b border-[#E6E1D6] focus:border-[#C58B36] rounded-none pl-1 pr-8 py-2 text-xs font-sans focus:outline-none transition-all placeholder-[#B3A895]"
                             placeholder="输入关键字并按回车搜索...">
-                        <button onclick="triggerSearch()"
-                            class="absolute right-3.5 top-3 text-zinc-400 hover:text-zinc-600 text-xs">🔍</button>
+                        <button onclick="triggerSearch()" class="absolute right-1.5 top-2.5 text-[#736F6A] hover:text-[#1C1B19] text-xs transition-colors">🔍</button>
                     </div>
                 </div>
 
-                <div class="bg-white p-5 rounded-2xl border border-zinc-100 shadow-sm space-y-4">
-                    <div class="border-b border-zinc-100 pb-2 flex items-center justify-between">
-                        <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400">🔥 热门文章</h3>
-                        <span id="popular-top-badge"
-                            class="text-[10px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded font-bold">TOP 5</span>
+                <!-- Popular Posts -->
+                <div class="bg-[#FCFAF2] p-6 border border-[#E6E1D6] rounded-none space-y-6 shadow-sm">
+                    <div class="border-b border-[#E6E1D6] pb-2 flex items-center justify-between">
+                        <h3 class="text-[10px] font-sans font-bold uppercase tracking-widest text-[#A69E94]">🔥 热门排行</h3>
+                        <span id="popular-top-badge" class="text-[9px] bg-[#FAF6F0] border border-[#E6E1D6] text-[#B37422] px-2 py-0.5 font-bold font-sans tracking-wider uppercase">TOP 5</span>
                     </div>
-                    <div id="popular-posts-container" class="space-y-3"></div>
+                    <div id="popular-posts-container" class="divide-y divide-[#F2ECE1]"></div>
                 </div>
             </div>
         </div>
 
+        <!-- Detail View -->
         <div id="post-view" class="hidden max-w-7xl mx-auto">
-            <a href="#/"
-                class="mb-8 inline-block text-xs font-semibold uppercase tracking-wider text-zinc-400 hover:text-amber-500 flex items-center gap-1.5 transition-colors">
+            <a href="#/" class="mb-8 inline-block text-[10px] font-sans font-bold uppercase tracking-widest text-[#736F6A] hover:text-[#B37422] flex items-center gap-2 transition-colors">
                 ← 返回首页
             </a>
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-                <article class="lg:col-span-3 bg-white p-6 sm:p-8 rounded-2xl border border-zinc-100 shadow-sm">
-                    <header class="mb-8 border-b border-zinc-100 pb-6 space-y-4">
-                        <div class="flex flex-wrap gap-2 text-[11px] font-bold tracking-wider uppercase">
-                            <span id="post-category" class="bg-amber-50 text-amber-600 px-2 py-1 rounded-full">未分类</span>
-                            <span id="post-series" class="bg-zinc-100 text-zinc-500 px-2 py-1 rounded-full">默认系列</span>
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-10 items-start">
+                <article class="lg:col-span-3 bg-[#FCFAF2] p-8 sm:p-12 border border-[#E6E1D6] rounded-none">
+                    <header class="mb-10 border-b border-[#E6E1D6] pb-8 space-y-6">
+                        <div class="flex flex-wrap gap-2 text-[10px] font-sans font-bold tracking-widest uppercase">
+                            <span id="post-category" class="bg-[#FAF6F0] border border-[#E6E1D6] text-[#B37422] px-2.5 py-1">未分类</span>
+                            <span id="post-series" class="bg-[#FAF6F0] border border-[#E6E1D6] text-[#736F6A] px-2.5 py-1">默认系列</span>
                         </div>
-                        <h1 id="post-title" class="text-2xl sm:text-4xl font-black tracking-tight text-zinc-950 leading-tight">正在加载...</h1>
-                        <p id="post-summary" class="hidden text-sm text-zinc-500 leading-relaxed"></p>
-                        <div class="text-xs text-zinc-400 flex flex-wrap gap-x-4 gap-y-2">
+                        <h1 id="post-title" class="text-3xl sm:text-5xl font-serif-title font-bold tracking-tight text-[#1C1B19] leading-tight">正在加载...</h1>
+                        <p id="post-summary" class="hidden italic text-[#5C5751] text-base border-l-2 border-[#C58B36] pl-4 py-1.5 leading-relaxed"></p>
+                        
+                        <div class="text-[10px] text-[#A69E94] flex flex-wrap gap-x-4 gap-y-2 uppercase tracking-wider font-sans font-semibold">
                             <span id="post-date"></span>
                             <span id="post-views-count">阅读量: -</span>
                         </div>
-                        <div id="post-cover-wrap" class="hidden overflow-hidden rounded-2xl border border-zinc-100 bg-zinc-50">
-                            <img id="post-cover" class="w-full max-h-[460px] object-cover" alt="">
+                        <div id="post-cover-wrap" class="hidden border border-[#E6E1D6] bg-[#FAF8F5]">
+                            <img id="post-cover" class="w-full max-h-[480px] object-cover" alt="">
                         </div>
                     </header>
-                    <section id="post-content" class="prose prose-zinc prose-amber max-w-none 
-                        prose-headings:font-bold prose-headings:tracking-tight
-                        prose-img:rounded-xl prose-img:shadow-md prose-img:mx-auto prose-img:border prose-img:border-zinc-100 prose-img:cursor-zoom-in
-                        prose-pre:bg-[#0d1117] prose-pre:border prose-pre:border-zinc-800 prose-pre:rounded-xl prose-pre:p-0">
+                    <section id="post-content" class="prose prose-stone prose-amber max-w-none font-serif-body text-[#2D2A26] text-[17px] leading-relaxed
+                        prose-headings:font-serif-title prose-headings:text-[#1C1B19] prose-headings:tracking-tight
+                        prose-h1:text-3xl prose-h1:border-b prose-h1:border-[#E6E1D6] prose-h1:pb-3
+                        prose-h2:text-2xl prose-h2:border-b prose-h2:border-[#F2ECE1] prose-h2:pb-2
+                        prose-a:text-[#b37422] prose-a:underline hover:prose-a:text-[#C58B36] prose-a:font-semibold
+                        prose-blockquote:border-l-4 prose-blockquote:border-[#C58B36] prose-blockquote:bg-[#FAF6F0] prose-blockquote:py-2 prose-blockquote:pr-4 prose-blockquote:text-[#5C5751] prose-blockquote:italic
+                        prose-img:border prose-img:border-[#E6E1D6] prose-img:mx-auto prose-img:cursor-zoom-in
+                        prose-pre:bg-[#1C1B19] prose-pre:border prose-pre:border-[#2D2B28] prose-pre:rounded-none prose-pre:p-0">
                     </section>
                 </article>
-                <aside class="hidden lg:block sticky top-24 bg-white p-5 rounded-2xl border border-zinc-100 shadow-sm">
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-4">文章目录</h2>
-                    <nav id="post-toc" class="post-toc text-xs space-y-1 text-zinc-500">
+                <aside class="hidden lg:block sticky top-24 bg-[#FCFAF2] p-6 border border-[#E6E1D6] rounded-none">
+                    <h2 class="text-xs font-sans font-bold uppercase tracking-widest text-[#A69E94] border-b border-[#E6E1D6] pb-2 mb-4">文章目录</h2>
+                    <nav id="post-toc" class="post-toc text-xs space-y-1.5 text-[#736F6A]">
                         <p class="text-zinc-300">暂无目录</p>
                     </nav>
                 </aside>
@@ -262,23 +274,22 @@
         </div>
 
         <button id="back-to-top" class="back-to-top" type="button" aria-label="回到顶部" title="回到顶部">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
             </svg>
         </button>
 
     </main>
 
-    <footer class="bg-white border-t border-zinc-100 py-10 mt-auto text-xs text-zinc-400 tracking-wide">
-        <div
-            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <footer class="bg-[#FAF8F5] border-t border-[#E6E1D6] py-12 mt-auto text-[10px] font-sans font-medium text-[#A69E94] uppercase tracking-wider">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center space-x-2">
-                <span class="w-2 h-2 bg-amber-500 rounded-full inline-block"></span>
+                <span class="w-1.5 h-1.5 bg-[#C58B36] rounded-full inline-block"></span>
                 <span>自适应 • 极速前端版</span>
             </div>
-            <div class="text-[11px] text-zinc-400">
+            <div>
                 Powered by <a href="https://pages.cloudflare.com" target="_blank"
-                    class="hover:underline text-amber-500">Cloudflare Pages</a>
+                    class="hover:text-[#B37422] transition-colors underline">Cloudflare Pages</a>
             </div>
         </div>
     </footer>
@@ -385,7 +396,7 @@
             container.innerHTML = '';
             linksArray.forEach(item => {
                 container.innerHTML += `
-                    <a href="${item.url}" target="_blank" class="hover:text-amber-500 transition-colors">${item.name}</a>
+                    <a href="${item.url}" target="_blank" class="hover:text-[#B37422] tracking-wider transition-colors text-[#736F6A] font-semibold">${item.name}</a>
                 `;
             });
         }
@@ -403,7 +414,7 @@
                 finalSeriesList.forEach(series => {
                     const isSelected = currentFilterSeries === series;
                     navContainer.innerHTML += `
-                        <a href="#/series/${encodeURIComponent(series)}" class="hover:text-amber-500 transition-colors ${isSelected ? 'text-amber-500 font-bold border-b-2 border-amber-500 pb-1' : ''}">${series}</a>
+                        <a href="#/series/${encodeURIComponent(series)}" class="hover:text-[#B37422] tracking-wider transition-colors py-1 ${isSelected ? 'text-[#B37422] font-bold border-b border-[#B37422]' : 'text-[#736F6A]'}">${series}</a>
                     `;
                 });
             } catch (e) {
@@ -421,15 +432,19 @@
                 allowedCategories = dbNavMeta[currentFilterSeries];
             }
 
+            const btnBaseClass = "px-3 py-1.5 text-xs font-sans tracking-wider uppercase transition-all duration-200 border-b-2";
+            const activeClass = "border-[#C58B36] text-[#1C1B19] font-bold";
+            const inactiveClass = "border-transparent text-[#736F6A] hover:text-[#1C1B19] hover:border-[#E6E1D6]";
+
             container.innerHTML = `
-                <button onclick="filterByCategory('')" class="px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all ${!currentFilterCategory ? 'bg-zinc-950 text-white shadow-sm' : 'bg-white text-zinc-500 border border-zinc-100 hover:bg-zinc-50'}">
+                <button onclick="filterByCategory('')" class="${btnBaseClass} ${!currentFilterCategory ? activeClass : inactiveClass}">
                     全部
                 </button>
             `;
             allowedCategories.forEach(cat => {
                 const isSelected = currentFilterCategory === cat;
                 container.innerHTML += `
-                    <button onclick="filterByCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all ${isSelected ? 'bg-zinc-950 text-white shadow-sm' : 'bg-white text-zinc-500 border border-zinc-100 hover:bg-zinc-50'}">
+                    <button onclick="filterByCategory('${cat}')" class="${btnBaseClass} ${isSelected ? activeClass : inactiveClass}">
                         ${cat}
                     </button>
                 `;
@@ -495,7 +510,7 @@
             currentPageNum = page;
             const container = document.getElementById('posts-list-container');
             if (!container) return;
-            container.innerHTML = '<p class="text-zinc-400 text-sm">正在加载中...</p>';
+            container.innerHTML = '<p class="text-[#736F6A] text-xs font-sans">正在加载中...</p>';
 
             try {
                 let url = `./api/posts?page=${page}&limit=12&_t=${Date.now()}`;
@@ -513,41 +528,41 @@
                 container.innerHTML = '';
 
                 if (posts.length === 0) {
-                    container.innerHTML = '<div class="col-span-full text-zinc-400 text-sm py-12 text-center">暂无发布内容。</div>';
+                    container.innerHTML = '<div class="col-span-full text-[#736F6A] text-xs py-16 text-center font-sans">暂无发布内容。</div>';
                     document.getElementById('pagination-container').innerHTML = '';
                     return;
                 }
 
                 posts.forEach((post, index) => {
                     const coverHtml = post.cover
-                        ? `<img src="${post.cover}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 rounded-t-2xl" alt="${post.title}">`
-                        : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)} flex items-center justify-center text-white/10 font-bold text-3xl select-none rounded-t-2xl">BLOGS</div>`;
+                        ? `<img src="${post.cover}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="${post.title}">`
+                        : `<div class="w-full h-full bg-[#F5EFE6] flex flex-col items-center justify-center text-[#8C8275] border-b border-[#E6E1D6] font-serif select-none p-4 text-center"><span class="text-[9px] uppercase tracking-widest text-[#B3A895] mb-1 font-sans">Journal Entry</span><span class="text-xl font-serif italic opacity-85 font-semibold">MIAI</span></div>`;
 
                     const summaryHtml = (globalLayoutMode !== 'simple')
-                        ? `<p class="text-zinc-500 text-xs leading-relaxed line-clamp-2">${post.summary}</p>`
+                        ? `<p class="text-[#736F6A] text-xs leading-relaxed line-clamp-2 mt-2 font-sans">${post.summary}</p>`
                         : '';
 
                     const titleClass = (globalLayoutMode === 'simple')
-                        ? "text-sm font-bold text-zinc-900 line-clamp-3 group-hover:text-amber-500 transition-colors"
-                        : "text-sm font-bold text-zinc-900 line-clamp-1 group-hover:text-amber-500 transition-colors";
+                        ? "text-base font-serif font-bold text-[#1C1B19] line-clamp-3 hover:text-[#B37422] transition-colors leading-snug"
+                        : "text-base font-serif font-bold text-[#1C1B19] line-clamp-2 hover:text-[#B37422] transition-colors leading-snug";
 
                     container.innerHTML += `
-                        <div class="group bg-white rounded-2xl border border-zinc-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden flex flex-col justify-between">
+                        <div class="group bg-[#FCFAF2] border border-[#E6E1D6] hover:border-[#C58B36] transition-all duration-300 overflow-hidden flex flex-col justify-between shadow-sm">
                             <div>
-                                <a href="#/post/${post.id}" class="block aspect-video w-full overflow-hidden relative bg-zinc-50 rounded-t-2xl transform translate-z-0 isolate">
+                                <a href="#/post/${post.id}" class="block aspect-video w-full overflow-hidden relative bg-[#F4EFEB] border-b border-[#E6E1D6] transform translate-z-0 isolate">
                                     ${coverHtml}
-                                    <span class="absolute top-3 left-3 bg-zinc-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded backdrop-blur-sm uppercase z-10">${post.category || '未分类'}</span>
+                                    <span class="absolute top-3 left-3 bg-[#1C1B19] text-[#FCFAF2] text-[9px] tracking-wider uppercase font-sans font-medium px-2 py-0.5 z-10">${post.category || '未分类'}</span>
                                 </a>
-                                <div class="p-5 space-y-2">
+                                <div class="p-6">
                                     <h3 class="${titleClass}">
                                         <a href="#/post/${post.id}" title="${post.title}">${post.title}</a>
                                     </h3>
                                     ${summaryHtml}
                                 </div>
                             </div>
-                            <div class="px-5 pb-5 pt-2 border-t border-zinc-50 flex items-center justify-between text-[10px] text-zinc-400">
+                            <div class="px-6 pb-6 pt-3 border-t border-[#F2ECE1] flex items-center justify-between text-[9px] uppercase tracking-wider text-[#A69E94] font-sans font-semibold">
                                 <span>📅 ${post.date}</span>
-                                <span>👁️ ${post.views}</span>
+                                <span>👁️ ${post.views} VIEWS</span>
                             </div>
                         </div>
                     `;
@@ -556,7 +571,7 @@
                 renderPagination(total, limit, page);
 
             } catch (err) {
-                container.innerHTML = `<div class="col-span-full text-red-500 text-sm text-center">获取文章数据失败，请确认配置。</div>`;
+                container.innerHTML = `<div class="col-span-full text-red-500 text-xs text-center font-sans">获取文章数据失败，请确认配置。</div>`;
             }
         }
 
@@ -571,38 +586,40 @@
             }
 
             let pageHtml = "";
+            const btnClass = "px-3 py-1.5 text-xs font-sans tracking-wider uppercase border border-[#E6E1D6] text-[#736F6A] hover:bg-[#F2ECE1] hover:text-[#1C1B19] active:scale-95 transition-all";
+            const activeClass = "px-3 py-1.5 text-xs font-sans tracking-wider uppercase border border-[#C58B36] bg-[#FCFAF2] text-[#C58B36] font-bold shadow-sm";
 
             if (currentPage > 1) {
-                pageHtml += `<button onclick="fetchPostsAndRender(${currentPage - 1})" class="px-3.5 py-1.5 text-xs font-semibold bg-[#343a40] text-gray-200 hover:bg-[#495057] active:scale-95 rounded transition-all">« 上一页</button>`;
+                pageHtml += `<button onclick="fetchPostsAndRender(${currentPage - 1})" class="${btnClass} rounded-sm mr-1.5">« 前一页</button>`;
             }
 
             let startPage = Math.max(1, currentPage - 2);
             let endPage = Math.min(totalPages, currentPage + 2);
 
             if (startPage > 1) {
-                pageHtml += `<button onclick="fetchPostsAndRender(1)" class="px-3 py-1.5 text-xs font-semibold bg-[#343a40] text-gray-200 hover:bg-[#495057] rounded transition-all">1</button>`;
+                pageHtml += `<button onclick="fetchPostsAndRender(1)" class="${btnClass} rounded-sm mr-1.5">1</button>`;
                 if (startPage > 2) {
-                    pageHtml += `<span class="px-1 text-zinc-400 text-xs">...</span>`;
+                    pageHtml += `<span class="px-1.5 text-[#A69E94] text-xs">...</span>`;
                 }
             }
 
             for (let i = startPage; i <= endPage; i++) {
                 if (i === currentPage) {
-                    pageHtml += `<span class="px-3 py-1.5 text-xs font-bold bg-amber-500 text-white rounded shadow-sm">${i}</span>`;
+                    pageHtml += `<span class="${activeClass} rounded-sm mr-1.5">${i}</span>`;
                 } else {
-                    pageHtml += `<button onclick="fetchPostsAndRender(${i})" class="px-3 py-1.5 text-xs font-semibold bg-[#343a40] text-gray-200 hover:bg-[#495057] rounded transition-all">${i}</button>`;
+                    pageHtml += `<button onclick="fetchPostsAndRender(${i})" class="${btnClass} rounded-sm mr-1.5">${i}</button>`;
                 }
             }
 
             if (endPage < totalPages) {
                 if (endPage < totalPages - 1) {
-                    pageHtml += `<span class="px-1 text-zinc-400 text-xs">...</span>`;
+                    pageHtml += `<span class="px-1.5 text-[#A69E94] text-xs">...</span>`;
                 }
-                pageHtml += `<button onclick="fetchPostsAndRender(${totalPages})" class="px-3 py-1.5 text-xs font-semibold bg-[#343a40] text-gray-200 hover:bg-[#495057] rounded transition-all">${totalPages}</button>`;
+                pageHtml += `<button onclick="fetchPostsAndRender(${totalPages})" class="${btnClass} rounded-sm mr-1.5">${totalPages}</button>`;
             }
 
             if (currentPage < totalPages) {
-                pageHtml += `<button onclick="fetchPostsAndRender(${currentPage + 1})" class="px-3.5 py-1.5 text-xs font-semibold bg-[#343a40] text-gray-200 hover:bg-[#495057] active:scale-95 rounded transition-all">下一页 »</button>`;
+                pageHtml += `<button onclick="fetchPostsAndRender(${currentPage + 1})" class="${btnClass} rounded-sm">后一页 »</button>`;
             }
 
             container.innerHTML = pageHtml;
@@ -611,7 +628,7 @@
         async function fetchPopularPosts() {
             const container = document.getElementById('popular-posts-container');
             if (!container) return;
-            container.innerHTML = '<p class="text-zinc-400 text-xs">读取中...</p>';
+            container.innerHTML = '<p class="text-[#736F6A] text-xs font-sans">读取中...</p>';
 
             try {
                 const response = await fetch(`./api/posts?popular=${globalPopularLimit}&_t=${Date.now()}`);
@@ -619,45 +636,28 @@
                 container.innerHTML = '';
 
                 if (posts.length === 0) {
-                    container.innerHTML = '<p class="text-zinc-400 text-xs">暂无热度统计</p>';
+                    container.innerHTML = '<p class="text-[#736F6A] text-xs font-sans p-4 text-center">暂无热度统计</p>';
                     return;
                 }
 
                 posts.forEach((post, index) => {
-                    const thumbHtml = post.cover
-                        ? `<img src="${post.cover}" class="w-full h-full object-cover rounded-md animate-fade-in" alt="">`
-                        : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)} rounded-md"></div>`;
-
+                    const numStr = String(index + 1).padStart(2, '0');
                     container.innerHTML += `
-                        <a href="#/post/${post.id}" class="flex items-center gap-3 p-1.5 hover:bg-zinc-50 rounded-lg transition-colors group animate-fade-in">
-                            <div class="w-12 h-12 rounded-md overflow-hidden bg-zinc-100 shrink-0">
-                                ${thumbHtml}
-                            </div>
+                        <a href="#/post/${post.id}" class="flex items-start gap-4 py-4 border-b border-[#F2ECE1] last:border-0 hover:bg-[#FDFCF7] px-2 -mx-2 transition-colors group">
+                            <span class="text-2xl font-serif italic font-light text-[#C58B36] opacity-60 group-hover:opacity-100 transition-opacity shrink-0">${numStr}</span>
                             <div class="min-w-0 flex-grow">
-                                <h4 class="text-xs font-bold text-zinc-800 line-clamp-2 leading-snug group-hover:text-amber-500 transition-colors">${post.title}</h4>
-                                <div class="text-[9px] text-zinc-400 mt-1 flex justify-between">
+                                <h4 class="text-xs font-serif font-bold text-[#1C1B19] line-clamp-2 leading-snug group-hover:text-[#B37422] transition-colors">${post.title}</h4>
+                                <div class="text-[9px] text-[#A69E94] mt-1 flex justify-between font-sans uppercase tracking-wider">
                                     <span>${post.date}</span>
-                                    <span class="font-bold text-amber-500">👁️ ${post.views}</span>
+                                    <span class="font-semibold text-[#C58B36]">${post.views} VIEWS</span>
                                 </div>
                             </div>
                         </a>
                     `;
                 });
             } catch (e) {
-                container.innerHTML = '<p class="text-red-500 text-xs">读取排行失败</p>';
+                container.innerHTML = '<p class="text-red-500 text-xs font-sans">读取排行失败</p>';
             }
-        }
-
-        const gradients = [
-            "from-indigo-400 to-purple-500",
-            "from-pink-400 to-rose-500",
-            "from-cyan-400 to-blue-500",
-            "from-emerald-400 to-teal-500",
-            "from-amber-400 to-orange-500",
-            "from-violet-400 to-purple-500"
-        ];
-        function getGradient(index) {
-            return gradients[index % gradients.length];
         }
 
         function escapeHtml(value) {
@@ -705,7 +705,7 @@
             document.getElementById('post-view').classList.remove('hidden');
 
             const postContent = document.getElementById('post-content');
-            postContent.innerHTML = '<p class="text-zinc-400 text-sm">正在加载...</p>';
+            postContent.innerHTML = '<p class="text-[#736F6A] text-xs font-sans">正在加载...</p>';
             document.getElementById('post-toc').innerHTML = '<p class="text-zinc-300">正在生成目录...</p>';
             document.getElementById('post-title').innerText = '正在加载...';
 
@@ -737,7 +737,7 @@
             } catch (err) {
                 document.getElementById('post-title').innerText = '文章加载失败';
                 document.getElementById('post-toc').innerHTML = '<p class="text-zinc-300">暂无目录</p>';
-                postContent.innerHTML = '<p class="text-red-500 text-sm">无法从 R2 载入文章，请确保跨域策略配置成功。</p>';
+                postContent.innerHTML = '<p class="text-red-500 text-xs font-sans">无法从 R2 载入文章，请确保跨域策略配置成功。</p>';
             }
         }
 
@@ -762,7 +762,7 @@
                 heading.id = finalId;
 
                 const indentClass = heading.tagName === 'H3' ? 'pl-5' : 'pl-3';
-                return `<button type="button" data-target="${finalId}" class="block w-full text-left border-l-2 border-zinc-100 ${indentClass} py-1.5 hover:text-amber-500 hover:border-amber-500 transition-colors line-clamp-2">${escapeHtml(heading.innerText)}</button>`;
+                return `<button type="button" data-target="${finalId}" class="block w-full text-left border-l-2 border-zinc-200 ${indentClass} py-1.5 hover:text-[#B37422] hover:border-[#B37422] transition-colors line-clamp-2">${escapeHtml(heading.innerText)}</button>`;
             }).join('');
 
             toc.querySelectorAll('button[data-target]').forEach((button) => {
@@ -774,6 +774,30 @@
                     }
                 });
             });
+
+            // Scroll spy logic
+            const observerOptions = {
+                root: null,
+                rootMargin: '-100px 0px -70% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const activeId = entry.target.id;
+                        toc.querySelectorAll('button[data-target]').forEach(btn => {
+                            if (btn.dataset.target === activeId) {
+                                btn.classList.add('active');
+                            } else {
+                                btn.classList.remove('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            headings.forEach(heading => observer.observe(heading));
         }
 
         function enableImagePreview() {
@@ -798,22 +822,41 @@
         function addCopyButtons() {
             document.querySelectorAll('pre').forEach((preElement) => {
                 if (preElement.parentElement.classList.contains('code-block-wrapper')) return;
+                
+                const codeEl = preElement.querySelector('code');
+                let lang = 'code';
+                if (codeEl) {
+                    const classes = Array.from(codeEl.classList);
+                    const langClass = classes.find(c => c.startsWith('language-') || c.startsWith('hljs'));
+                    if (langClass) {
+                        lang = langClass.replace('language-', '').replace('hljs', '').trim().toUpperCase();
+                    }
+                }
+                
                 const wrapper = document.createElement('div');
-                wrapper.className = 'code-block-wrapper';
+                wrapper.className = 'code-block-wrapper border border-[#2D2B28] rounded-none my-6 bg-[#161513] overflow-hidden';
                 preElement.parentNode.insertBefore(wrapper, preElement);
-                wrapper.appendChild(preElement);
-
+                
+                // Header bar
+                const header = document.createElement('div');
+                header.className = 'flex items-center justify-between px-4 py-2 border-b border-[#2D2B28] bg-[#1F1E1B] text-[10px] uppercase tracking-wider text-[#A69E94] font-sans font-semibold';
+                header.innerHTML = `<span>${lang}</span>`;
+                
                 const button = document.createElement('button');
-                button.className = 'copy-btn';
-                button.innerText = '复制';
+                button.className = 'hover:text-[#FCFAF2] transition-colors focus:outline-none';
+                button.innerText = 'COPY';
                 button.addEventListener('click', () => {
-                    const code = preElement.querySelector('code').innerText;
+                    const code = codeEl ? codeEl.innerText : preElement.innerText;
                     navigator.clipboard.writeText(code).then(() => {
-                        button.innerText = '已复制';
-                        setTimeout(() => button.innerText = '复制', 2000);
+                        button.innerText = 'COPIED';
+                        setTimeout(() => button.innerText = 'COPY', 2000);
                     });
                 });
-                wrapper.appendChild(button);
+                header.appendChild(button);
+                
+                wrapper.appendChild(header);
+                wrapper.appendChild(preElement);
+                preElement.className = 'p-4 m-0 overflow-x-auto text-xs font-mono text-[#E6E1D6] bg-transparent';
             });
         }
     </script>

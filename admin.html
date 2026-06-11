@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://unpkg.com/vditor/dist/index.css" />
     <script src="https://unpkg.com/vditor/dist/index.min.js"></script>
     
-    <!-- Modern sans font -->
+    <!-- 现代无衬线字体 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
@@ -29,23 +29,227 @@
         }
     </script>
     <style>
+        :root {
+            --semi-blue: #0064fa;
+            --semi-blue-hover: #0052d9;
+            --semi-blue-light: #e8f3ff;
+            --semi-green: #00a870;
+            --semi-orange: #ff7d00;
+            --semi-red: #f93920;
+            --semi-red-light: #fff2f0;
+            --semi-text-0: #1c1f23;
+            --semi-text-1: #4e5969;
+            --semi-text-2: #86909c;
+            --semi-border: #e5e6eb;
+            --semi-fill: #f7f8fa;
+            --semi-surface: rgba(255, 255, 255, 0.92);
+            --semi-shadow: 0 18px 48px rgba(28, 31, 35, 0.08);
+            --semi-radius: 18px;
+        }
+
         html,
         body {
             height: 100dvh;
             overflow: hidden;
-            background-color: #f8fafc; /* Slate 50 ultra clean background */
+            background:
+                radial-gradient(circle at 10% 8%, rgba(0, 100, 250, 0.14), transparent 24rem),
+                radial-gradient(circle at 92% 12%, rgba(0, 168, 112, 0.10), transparent 22rem),
+                linear-gradient(180deg, #f7f8fa 0%, #ffffff 52%, #f7f8fa 100%);
+            color: var(--semi-text-0);
+        }
+
+        .semi-admin-shell {
+            position: relative;
+        }
+
+        .semi-admin-shell::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(28, 31, 35, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(28, 31, 35, 0.035) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.74), transparent 76%);
+        }
+
+        .semi-admin-surface {
+            background: var(--semi-surface);
+            border: 1px solid rgba(229, 230, 235, 0.95);
+            border-radius: var(--semi-radius);
+            box-shadow: 0 10px 32px rgba(28, 31, 35, 0.055);
+        }
+
+        .semi-admin-card {
+            background: var(--semi-surface);
+            border: 1px solid rgba(229, 230, 235, 0.95);
+            border-radius: var(--semi-radius);
+            box-shadow: var(--semi-shadow);
+        }
+
+        .semi-admin-sidebar {
+            background: rgba(255, 255, 255, 0.88);
+            border-right: 1px solid rgba(229, 230, 235, 0.9);
+            box-shadow: 12px 0 32px rgba(28, 31, 35, 0.04);
+        }
+
+        .semi-admin-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--semi-blue), #00a1ff);
+            color: #ffffff;
+            font-weight: 900;
+            box-shadow: 0 10px 22px rgba(0, 100, 250, 0.22);
+        }
+
+        .semi-admin-nav-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid transparent;
+            color: var(--semi-text-1);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .semi-admin-nav-btn:hover,
+        .semi-admin-nav-btn.is-active {
+            color: var(--semi-blue);
+            background: var(--semi-blue-light);
+            border-color: rgba(0, 100, 250, 0.22);
+        }
+
+        .semi-admin-nav-btn.is-active {
+            transform: translateX(2px);
+        }
+
+        .semi-admin-input,
+        .semi-admin-select,
+        .semi-admin-textarea {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid var(--semi-border);
+            border-radius: 12px;
+            color: var(--semi-text-0);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .semi-admin-input:hover,
+        .semi-admin-select:hover,
+        .semi-admin-textarea:hover {
+            border-color: #c9cdd4;
+            background: #fbfcff;
+        }
+
+        .semi-admin-input:focus,
+        .semi-admin-select:focus,
+        .semi-admin-textarea:focus {
+            border-color: var(--semi-blue);
+            box-shadow: 0 0 0 3px rgba(0, 100, 250, 0.12);
+            outline: none;
+        }
+
+        .semi-admin-button,
+        .semi-admin-button-secondary,
+        .semi-admin-button-danger {
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 800;
+            transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+        }
+
+        .semi-admin-button {
+            background: var(--semi-blue);
+            color: #ffffff;
+            box-shadow: 0 10px 24px rgba(0, 100, 250, 0.22);
+        }
+
+        .semi-admin-button:hover {
+            background: var(--semi-blue-hover);
+            transform: translateY(-1px);
+        }
+
+        .semi-admin-button-secondary {
+            background: #ffffff;
+            color: var(--semi-text-1);
+            border: 1px solid var(--semi-border);
+        }
+
+        .semi-admin-button-secondary:hover {
+            color: var(--semi-blue);
+            border-color: rgba(0, 100, 250, 0.28);
+            background: var(--semi-blue-light);
+        }
+
+        .semi-admin-button-danger {
+            background: #ffffff;
+            color: var(--semi-red);
+            border: 1px solid rgba(249, 57, 32, 0.2);
+        }
+
+        .semi-admin-button-danger:hover {
+            background: var(--semi-red-light);
+        }
+
+        .semi-admin-tag {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            background: var(--semi-blue-light);
+            color: var(--semi-blue);
+            padding: 3px 9px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .semi-admin-tag-success {
+            background: #e8ffea;
+            color: var(--semi-green);
+        }
+
+        .semi-admin-tag-danger {
+            background: var(--semi-red-light);
+            color: var(--semi-red);
+        }
+
+        .semi-admin-section-title {
+            border-bottom: 1px solid var(--semi-border);
+            padding-bottom: 14px;
+        }
+
+        .semi-admin-table thead tr {
+            background: var(--semi-fill);
+            color: var(--semi-text-1);
+        }
+
+        .semi-admin-table tbody tr {
+            transition: background 0.18s ease;
+        }
+
+        .semi-admin-table tbody tr:hover {
+            background: rgba(232, 243, 255, 0.55);
         }
 
         .vditor {
-            border-color: #e2e8f0 !important;
+            border-color: var(--semi-border) !important;
             border-radius: 12px !important;
             box-shadow: none !important;
             background-color: #ffffff !important;
         }
 
         .vditor-toolbar {
-            border-bottom-color: #e2e8f0 !important;
-            background-color: #f8fafc !important;
+            border-bottom-color: var(--semi-border) !important;
+            background-color: var(--semi-fill) !important;
             border-radius: 12px 12px 0 0 !important;
         }
 
@@ -56,7 +260,7 @@
         .vditor-reset {
             font-family: 'Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif' !important;
             font-size: 14.5px !important;
-            color: #334155 !important;
+            color: var(--semi-text-1) !important;
             line-height: 1.625 !important;
         }
 
@@ -65,33 +269,33 @@
         .vditor-reset h3, 
         .vditor-reset h4 {
             font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif !important;
-            color: #0f172a !important;
+            color: var(--semi-text-0) !important;
             font-weight: 700 !important;
             margin-top: 1.5em !important;
             margin-bottom: 0.5em !important;
         }
 
         .vditor-reset a {
-            color: #4f46e5 !important;
+            color: var(--semi-blue) !important;
             text-decoration: underline !important;
         }
 
         .vditor-reset blockquote {
-            border-left: 4px solid #6366f1 !important;
-            background-color: #f8fafc !important;
-            color: #475569 !important;
+            border-left: 4px solid var(--semi-blue) !important;
+            background-color: var(--semi-blue-light) !important;
+            color: var(--semi-text-1) !important;
             padding: 8px 16px !important;
             font-style: italic !important;
         }
 
         .vditor-reset img {
             border-radius: 12px !important;
-            border: 1px solid #e2e8f0 !important;
+            border: 1px solid var(--semi-border) !important;
         }
 
         .vditor-reset code {
             background-color: #f1f5f9 !important;
-            color: #6366f1 !important;
+            color: var(--semi-blue) !important;
             padding: 2px 6px !important;
             border-radius: 4px !important;
             font-family: monospace !important;
@@ -114,24 +318,24 @@
     </style>
 </head>
 
-<body class="text-slate-800 font-sans flex antialiased h-[100dvh]">
+<body class="semi-admin-shell text-slate-800 font-sans flex antialiased h-[100dvh]">
 
     <!-- Login Box -->
-    <div id="admin-login-view" class="fixed inset-0 bg-slate-50 flex items-center justify-center z-50 overflow-y-auto">
-        <div class="max-w-md w-full mx-4 bg-white p-8 rounded-3xl border border-slate-100 shadow-xl space-y-6 text-center">
+    <div id="admin-login-view" class="fixed inset-0 flex items-center justify-center z-50 overflow-y-auto p-4">
+        <div class="max-w-md w-full semi-admin-card p-8 space-y-6 text-center">
             <div class="space-y-3">
-                <div class="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto text-indigo-650">
-                    <span class="text-lg">🔐</span>
+                <div class="semi-admin-logo mx-auto">
+                    <span>S</span>
                 </div>
                 <h2 class="text-xl font-display font-bold tracking-tight text-slate-900">管理后台</h2>
-                <p class="text-xs text-slate-400 leading-relaxed max-w-xs mx-auto">请输入在 D1 数据库中初始化的管理安全码解锁系统</p>
+                <p class="text-xs text-slate-500 leading-relaxed max-w-xs mx-auto">请输入 D1 数据库中初始化的管理密码，进入 Semi 风格控制台。</p>
             </div>
             <div class="space-y-4">
                 <input type="password" id="admin-pass"
-                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-550 focus:ring-4 focus:ring-indigo-100 rounded-2xl px-4 py-3 text-center text-sm focus:outline-none transition-all placeholder-slate-400"
-                    placeholder="安全通行解锁码">
+                    class="semi-admin-input px-4 py-3 text-center text-sm placeholder-slate-400"
+                    placeholder="输入管理密码">
                 <button onclick="verifyAndLogin()"
-                    class="w-full bg-slate-900 hover:bg-indigo-600 text-white py-3 rounded-2xl text-xs font-semibold tracking-wider uppercase transition-all duration-300 shadow-sm hover:shadow-md">
+                    class="w-full semi-admin-button py-3 tracking-wider uppercase">
                     确认登录
                 </button>
             </div>
@@ -139,37 +343,37 @@
     </div>
 
     <!-- Main Workspace -->
-    <div id="admin-main-view" class="hidden w-full h-full flex relative overflow-hidden bg-slate-50">
+    <div id="admin-main-view" class="hidden w-full h-full flex relative overflow-hidden">
         <div id="sidebar-overlay" onclick="toggleMobileSidebar()"
             class="fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-40 hidden transition-all duration-300"></div>
 
         <!-- Sidebar Navigation -->
         <aside
-            class="fixed md:static inset-y-0 left-0 w-64 bg-white border-r border-slate-100 text-slate-700 flex flex-col justify-between p-6 shrink-0 h-full z-50 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+            class="semi-admin-sidebar fixed md:static inset-y-0 left-0 w-64 text-slate-700 flex flex-col justify-between p-6 shrink-0 h-full z-50 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
             <div class="space-y-8">
                 <div class="flex flex-col border-b border-slate-50 pb-5">
-                    <div class="flex items-center space-x-2.5 mb-4">
-                        <span class="w-2.5 h-2.5 bg-indigo-600 rounded-full shrink-0"></span>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="semi-admin-logo shrink-0">S</span>
                         <span id="sidebar-site-title"
-                            class="text-xs font-display font-bold tracking-wide text-slate-900 uppercase line-clamp-1">控制台</span>
+                            class="text-xs font-display font-bold tracking-wide text-slate-900 uppercase line-clamp-2">控制台</span>
                     </div>
                     <a href="./" target="_blank"
-                        class="w-full flex items-center justify-center space-x-2 px-3 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 border border-slate-100 hover:border-slate-200 transition-all">
+                        class="w-full flex items-center justify-center space-x-2 px-3 py-2.5 semi-admin-button-secondary text-[10px] uppercase tracking-wider">
                         <span>打开网站主页 ➔</span>
                     </a>
                 </div>
 
                 <nav class="space-y-1">
                     <button id="menu-btn-posts" onclick="switchTab('panel-posts')"
-                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border border-indigo-100 bg-indigo-50/50 text-indigo-650">
+                        class="semi-admin-nav-btn is-active">
                         <span>📂</span> <span class="tracking-wide">文章列表管理</span>
                     </button>
                     <button id="menu-btn-editor" onclick="switchTab('panel-editor')"
-                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all text-slate-500 hover:bg-slate-50 hover:text-slate-900 border border-transparent">
+                        class="semi-admin-nav-btn">
                         <span>✍️</span> <span class="tracking-wide">撰写新教程</span>
                     </button>
                     <button id="menu-btn-config" onclick="switchTab('panel-config')"
-                        class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all text-slate-500 hover:bg-slate-50 hover:text-slate-900 border border-transparent">
+                        class="semi-admin-nav-btn">
                         <span>⚙️</span> <span class="tracking-wide">站点配置</span>
                     </button>
                 </nav>
@@ -179,10 +383,10 @@
                 <div class="flex items-center justify-between text-[10px] uppercase font-bold tracking-wider text-slate-500 px-1">
                     <span>系统状态正常</span>
                     <button onclick="showChangePasswordModal()"
-                        class="text-indigo-650 hover:text-indigo-500 underline transition-colors">改密</button>
+                        class="text-[var(--semi-blue)] hover:text-[var(--semi-blue-hover)] underline transition-colors">改密</button>
                 </div>
                 <button onclick="logoutAdmin()"
-                    class="w-full bg-slate-55 text-slate-700 hover:bg-red-50 hover:text-red-600 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider border border-slate-200 transition-all">
+                    class="w-full semi-admin-button-danger py-2 text-[10px] uppercase tracking-wider">
                     退出登录
                 </button>
             </div>
@@ -204,38 +408,38 @@
             </div>
 
             <!-- Workspace Panels Container -->
-            <div class="flex-grow p-4 sm:p-8 overflow-y-auto h-full">
+            <div class="flex-grow p-4 sm:p-8 overflow-y-auto h-full relative">
                 <div class="max-w-7xl mx-auto w-full space-y-6 pb-12">
 
                     <!-- Tab 1: Posts panel -->
                     <div id="panel-posts" class="admin-panel-content space-y-6">
-                        <div class="border-b border-slate-100 pb-3">
+                        <div class="semi-admin-section-title">
                             <h2 class="text-xl font-display font-extrabold text-slate-900 tracking-tight">文章列表管理</h2>
                             <p class="text-xs text-slate-500 mt-1">管理、修改、下架或彻底销毁已发布的教程和文章记录。</p>
                         </div>
 
                         <!-- Filters box -->
-                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 semi-admin-surface p-5">
                             <div>
                                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">🔍 标题检索</label>
                                 <input type="text" id="admin-filter-q" oninput="filterAdminTable()"
-                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-550 rounded-xl px-3 py-1.5 text-xs focus:outline-none placeholder-slate-400"
+                                    class="semi-admin-input px-3 py-1.5 text-xs placeholder-slate-400"
                                     placeholder="检索标题关键词...">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">📂 筛选大系列</label>
                                 <select id="admin-filter-series" onchange="filterAdminTable()"
-                                    class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-550 rounded-xl px-3 py-1.5 text-xs focus:outline-none"></select>
+                                    class="semi-admin-select px-3 py-1.5 text-xs"></select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">🏷️ 筛选子分类</label>
                                 <select id="admin-filter-category" onchange="filterAdminTable()"
-                                    class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-550 rounded-xl px-3 py-1.5 text-xs focus:outline-none"></select>
+                                    class="semi-admin-select px-3 py-1.5 text-xs"></select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">🔒 发布状态</label>
                                 <select id="admin-filter-status" onchange="filterAdminTable()"
-                                    class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-550 rounded-xl px-3 py-1.5 text-xs focus:outline-none">
+                                    class="semi-admin-select px-3 py-1.5 text-xs">
                                     <option value="">全部状态</option>
                                     <option value="publish">公开 (Publish)</option>
                                     <option value="draft">隐藏 (Draft)</option>
@@ -244,9 +448,9 @@
                         </div>
 
                         <!-- Grid/Table Card -->
-                        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                        <div class="semi-admin-surface overflow-hidden">
                             <div class="overflow-x-auto">
-                                <table class="w-full text-left text-xs text-slate-600">
+                                <table class="semi-admin-table w-full text-left text-xs text-slate-600">
                                     <thead>
                                         <tr class="bg-slate-50 border-b border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-600">
                                             <th class="px-6 py-4">文章标题</th>
@@ -263,23 +467,23 @@
 
                     <!-- Tab 2: Write/Editor panel -->
                     <div id="panel-editor" class="admin-panel-content space-y-6 hidden">
-                        <div class="border-b border-slate-100 pb-3">
+                        <div class="semi-admin-section-title">
                             <h2 id="editor-title" class="text-xl font-display font-extrabold text-slate-900 tracking-tight">撰写新教程</h2>
                             <p class="text-xs text-slate-500 mt-1">使用精美的所见即所得编辑器发布，多媒体文件自动上传同步到 R2 存储桶中。</p>
                         </div>
 
-                        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-5 relative">
+                        <div class="semi-admin-surface p-6 sm:p-8 space-y-5 relative">
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                                 <div>
                                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">唯一 ID (不可修改)</label>
                                     <input type="text" id="admin-id"
-                                        class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-3.5 py-2 text-xs focus:outline-none placeholder-slate-400"
+                                        class="semi-admin-input px-3.5 py-2 text-xs placeholder-slate-400"
                                         placeholder="例如: advanced-markdown">
                                 </div>
                                 <div class="md:col-span-3">
                                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">文章标题</label>
                                     <input type="text" id="admin-title"
-                                        class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-3.5 py-2 text-xs focus:outline-none placeholder-slate-400"
+                                        class="semi-admin-input px-3.5 py-2 text-xs placeholder-slate-400"
                                         placeholder="请输入文章主标题">
                                 </div>
                             </div>
@@ -288,23 +492,23 @@
                                 <div>
                                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">所属大系列导航</label>
                                     <select id="admin-series"
-                                        class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-550 rounded-xl px-3.5 h-10 py-2 text-xs focus:outline-none"></select>
+                                        class="semi-admin-select px-3.5 h-10 py-2 text-xs"></select>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">二级子分类选择</label>
                                     <select id="admin-category"
-                                        class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-550 rounded-xl px-3.5 h-10 py-2 text-xs focus:outline-none"></select>
+                                        class="semi-admin-select px-3.5 h-10 py-2 text-xs"></select>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">排序权重 (数字越大越靠前)</label>
                                     <input type="number" id="admin-weight"
-                                        class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-3.5 h-10 py-2 text-xs focus:outline-none"
+                                        class="semi-admin-input px-3.5 h-10 py-2 text-xs"
                                         value="0">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">发布显示状态</label>
                                     <select id="admin-status"
-                                        class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-550 rounded-xl px-3.5 h-10 py-2 text-xs focus:outline-none">
+                                        class="semi-admin-select px-3.5 h-10 py-2 text-xs">
                                         <option value="publish">🟢 公开发布 (Publish)</option>
                                         <option value="draft">🔴 隐藏草稿 (Draft - 仅供秘密链接预览)</option>
                                     </select>
@@ -315,17 +519,17 @@
                                 <div class="sm:col-span-2">
                                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">文章摘要说明</label>
                                     <input type="text" id="admin-summary"
-                                        class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-3.5 py-2 text-xs focus:outline-none placeholder-slate-400"
+                                        class="semi-admin-input px-3.5 py-2 text-xs placeholder-slate-400"
                                         placeholder="请输入文章摘要">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">首页特色封面图 URL</label>
                                     <div class="flex gap-2">
                                         <input type="text" id="admin-cover"
-                                            class="flex-grow bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-3.5 py-2 text-xs focus:outline-none placeholder-slate-400"
+                                            class="semi-admin-input flex-grow px-3.5 py-2 text-xs placeholder-slate-400"
                                             placeholder="https://images.blogs.nyc.mn/xxx.png">
                                         <button onclick="triggerCoverUpload()"
-                                            class="bg-slate-900 hover:bg-indigo-600 text-white text-xs px-4 rounded-xl font-semibold transition-colors shrink-0">上传</button>
+                                            class="semi-admin-button text-xs px-4 shrink-0">上传</button>
                                     </div>
                                     <input type="file" id="cover-file-input" accept="image/*" class="hidden"
                                         onchange="handleCoverFileSelected()">
@@ -339,11 +543,11 @@
 
                             <div class="sticky bottom-0 bg-white/95 backdrop-blur-sm py-4 border-t border-slate-50 z-40 flex justify-end gap-3">
                                 <button onclick="cancelEdit()"
-                                    class="border border-slate-150 hover:bg-slate-50 text-slate-500 px-5 py-2 rounded-xl text-xs font-semibold transition-colors">
+                                    class="semi-admin-button-secondary px-5 py-2">
                                     取消重置
                                 </button>
                                 <button onclick="publishPost()" id="publish-btn"
-                                    class="bg-indigo-650 hover:bg-indigo-500 text-white px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors shadow-sm">
+                                    class="semi-admin-button px-6 py-2 uppercase tracking-wider">
                                     直接发布（瞬间生效）
                                 </button>
                             </div>
@@ -352,16 +556,16 @@
 
                     <!-- Tab 3: Config settings panel -->
                     <div id="panel-config" class="admin-panel-content space-y-6 hidden">
-                        <div class="border-b border-slate-100 pb-3">
+                        <div class="semi-admin-section-title">
                             <h2 class="text-xl font-display font-extrabold text-slate-900 tracking-tight">站点全局配置</h2>
                             <p class="text-xs text-slate-500 mt-1">在线配置站点名称、系列及分类、导航链接和底层 R2/D1 system 常数。</p>
                         </div>
 
-                        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-6">
+                        <div class="semi-admin-surface p-6 sm:p-8 space-y-6">
                             <div class="space-y-1.5">
                                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">R2 存储桶公网访问域名</label>
                                 <input type="text" id="config-r2-domain"
-                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-xs focus:outline-none placeholder-slate-400"
+                                    class="semi-admin-input px-4 py-2.5 text-xs placeholder-slate-400"
                                     placeholder="例如: https://images.blogs.nyc.mn">
                                 <span class="text-[10px] text-slate-500 block mt-1">用于在前后台提取并加载存放在 R2 中的文章内容及媒体文件。</span>
                             </div>
@@ -369,33 +573,33 @@
                             <div class="space-y-1.5">
                                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">网站主标题（Title）</label>
                                 <input type="text" id="config-title"
-                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-xs focus:outline-none">
+                                    class="semi-admin-input px-4 py-2.5 text-xs">
                             </div>
 
                             <div class="space-y-1.5">
                                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">副标题 / 描述说明（Slogan）</label>
                                 <input type="text" id="config-subtitle"
-                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-xs focus:outline-none">
+                                    class="semi-admin-input px-4 py-2.5 text-xs">
                             </div>
 
                             <div class="space-y-1.5">
                                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">全局大系列导航栏列表（用英文逗号隔开）</label>
                                 <input type="text" id="config-series"
-                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-xs focus:outline-none">
+                                    class="semi-admin-input px-4 py-2.5 text-xs">
                                 <span class="text-[10px] text-slate-500 block mt-1">示例：科学上网, 谷歌系列, NAS系列</span>
                             </div>
 
                             <div class="space-y-1.5">
                                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">二级子分类标签列表（用英文逗号隔开）</label>
                                 <input type="text" id="config-categories"
-                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-4 py-2.5 text-xs focus:outline-none">
+                                    class="semi-admin-input px-4 py-2.5 text-xs">
                                 <span class="text-[10px] text-slate-500 block mt-1">示例：技术, 教程, 随笔, 思考</span>
                             </div>
 
                             <div class="space-y-1.5">
                                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">全局卡片排版模式</label>
                                 <select id="config-layout-mode"
-                                    class="w-full bg-slate-50 border border-slate-100 focus:border-indigo-550 rounded-xl px-4 h-11 py-2 text-xs focus:outline-none">
+                                    class="semi-admin-select px-4 h-11 py-2 text-xs">
                                     <option value="standard">图片 + 标题 + 摘要 (标准样式)</option>
                                     <option value="simple">图片 + 标题 (极简缩略样式)</option>
                                 </select>
@@ -404,7 +608,7 @@
                             <div class="space-y-1.5">
                                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">右侧侧边栏“热门文章”最大推荐展示数量</label>
                                 <input type="number" id="config-popular-limit" min="1" max="20"
-                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-550 rounded-xl px-4 py-2.5 text-xs focus:outline-none"
+                                    class="semi-admin-input px-4 py-2.5 text-xs"
                                     value="5">
                                 <span class="text-[10px] text-slate-500 block mt-1">控制首页侧边栏最受欢迎教程的加载条数。</span>
                             </div>
@@ -412,7 +616,7 @@
                             <div class="space-y-1.5">
                                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">右上角外链导航 (格式: 名称, 链接，一行一个)</label>
                                 <textarea id="config-nav-links" rows="4"
-                                    class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-550 rounded-2xl p-4 text-xs font-mono focus:outline-none"
+                                    class="semi-admin-textarea p-4 text-xs font-mono"
                                     placeholder="订阅转换, https://sub.blogs.nyc.mn&#10;IP查询, https://ip.blogs.nyc.mn"></textarea>
                                 <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-[10px] text-slate-500 uppercase tracking-wider leading-relaxed mt-1">
                                     <span class="font-bold text-slate-600">💡 书写说明：</span>每一行代表一个链接，请使用 <strong class="text-slate-700">英文半角逗号</strong> <code class="bg-white px-1 py-0.5 rounded border border-slate-100">,</code> 隔开名称和链接。
@@ -421,7 +625,7 @@
 
                             <div class="flex justify-end pt-4 border-t border-slate-100">
                                 <button onclick="saveSiteConfig()" id="save-config-btn"
-                                    class="bg-slate-900 hover:bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-sm">
+                                    class="semi-admin-button px-5 py-2.5">
                                     更新配置（瞬间生效）
                                 </button>
                             </div>
@@ -435,16 +639,16 @@
 
     <!-- Password Modal Dialog -->
     <div id="password-modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50">
-        <div class="bg-white p-6 border border-slate-100 rounded-3xl w-80 shadow-xl space-y-4">
+        <div class="semi-admin-card p-6 w-80 space-y-4">
             <h3 class="text-sm font-display font-bold text-slate-900 uppercase tracking-wider">修改后台密码</h3>
             <input type="password" id="new-password"
-                class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs focus:outline-none placeholder-slate-400"
+                class="semi-admin-input px-3 py-2 text-xs placeholder-slate-400"
                 placeholder="请输入新密码">
             <div class="flex justify-end gap-2 text-[10px] font-bold uppercase tracking-wider">
                 <button onclick="closePasswordModal()"
-                    class="text-slate-400 hover:text-slate-900 px-3 py-1">取消</button>
+                    class="semi-admin-button-secondary px-3 py-1">取消</button>
                 <button onclick="submitChangePassword()"
-                    class="bg-slate-900 hover:bg-indigo-600 text-white px-4 py-1.5 rounded-lg transition-colors">确定修改</button>
+                    class="semi-admin-button px-4 py-1.5">确定修改</button>
             </div>
         </div>
     </div>
@@ -500,7 +704,7 @@
             document.getElementById(tabId).classList.remove('hidden');
 
             document.querySelectorAll('nav button').forEach(btn => {
-                btn.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all text-slate-500 hover:bg-slate-50 hover:text-slate-900 border border-transparent";
+                btn.className = "semi-admin-nav-btn";
             });
 
             const activeBtnMap = {
@@ -510,7 +714,7 @@
             };
             const activeBtn = document.getElementById(activeBtnMap[tabId]);
             if (activeBtn) {
-                activeBtn.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border border-indigo-100 bg-indigo-50/50 text-indigo-650";
+                activeBtn.className = "semi-admin-nav-btn is-active";
             }
 
             if (mobileSidebarOpen) {
@@ -813,7 +1017,7 @@
         async function refreshAdminTable() {
             const tbody = document.getElementById('admin-posts-table');
             if (!tbody) return;
-            tbody.innerHTML = '<tr><td colspan="4" class="py-6 text-center text-slate-400 text-xs font-sans">正在读取数据库...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="4" class="py-8 text-center text-slate-400 text-xs font-sans">正在读取数据库...</td></tr>';
 
             try {
                 const password = getActivePassword();
@@ -824,7 +1028,7 @@
                 window.allPosts = posts.results || posts;
                 renderAdminTableRows(window.allPosts);
             } catch (err) {
-                tbody.innerHTML = '<tr><td colspan="4" class="py-6 text-center text-red-500 text-xs font-sans">列表加载失败。</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="py-8 text-center text-red-500 text-xs font-sans">列表加载失败。</td></tr>';
             }
         }
 
@@ -834,33 +1038,33 @@
             tbody.innerHTML = '';
 
             if (postsArray.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="py-6 text-center text-slate-400 text-xs font-sans">无符合筛选条件的文章</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="py-8 text-center text-slate-400 text-xs font-sans">无符合筛选条件的文章</td></tr>';
                 return;
             }
 
             postsArray.forEach((post) => {
                 const originalIndex = window.allPosts.findIndex(p => p.id === post.id);
                 const statusBadge = post.status === 'draft'
-                    ? `<span class="bg-red-50 text-red-650 px-2 py-0.5 rounded-md text-[10px] font-bold font-sans">隐藏 (Draft)</span>`
-                    : `<span class="bg-emerald-50 text-emerald-650 px-2 py-0.5 rounded-md text-[10px] font-bold font-sans">公开 (Publish)</span>`;
+                    ? `<span class="semi-admin-tag semi-admin-tag-danger">隐藏</span>`
+                    : `<span class="semi-admin-tag semi-admin-tag-success">公开</span>`;
 
                 tbody.innerHTML += `
-                    <tr class="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+                    <tr class="border-b border-slate-100">
                         <td class="px-6 py-4 font-semibold text-slate-900 text-xs">${post.title}</td>
                         <td class="px-6 py-4">
-                            <span class="bg-indigo-50/50 border border-indigo-100/50 text-indigo-650 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider font-sans">
+                            <span class="semi-admin-tag">
                                 ${post.series || '默认'} ➔ ${post.category || '未分类'}
                             </span>
                         </td>
                         <td class="px-6 py-4 text-[10px] font-semibold text-slate-500 font-sans">
-                            <span class="text-indigo-650">⚓ ${post.weight || 0}</span> • 
-                            <span>👁️ ${post.views}</span> • 
+                            <span class="text-[var(--semi-blue)]">权重 ${post.weight || 0}</span> ·
+                            <span>${post.views} 阅读</span> ·
                             ${statusBadge}
                         </td>
-                        <td class="px-6 py-4 text-right space-x-3 text-[10px] font-bold uppercase tracking-wider font-sans">
-                            <a href="./index.html#/post/${post.id}" target="_blank" class="text-indigo-650 hover:text-indigo-500 transition-colors">查看 ↗</a>
-                            <button onclick="editPost(${originalIndex})" class="text-slate-600 hover:text-slate-900 transition-colors">编辑</button>
-                            <button onclick="deletePost('${post.id}')" class="text-red-650 hover:text-red-500 transition-colors">删除</button>
+                        <td class="px-6 py-4 text-right space-x-2 text-[10px] font-bold uppercase tracking-wider font-sans whitespace-nowrap">
+                            <a href="./index.html#/post/${post.id}" target="_blank" class="semi-admin-button-secondary inline-flex px-2.5 py-1">查看</a>
+                            <button onclick="editPost(${originalIndex})" class="semi-admin-button-secondary px-2.5 py-1">编辑</button>
+                            <button onclick="deletePost('${post.id}')" class="semi-admin-button-danger px-2.5 py-1">删除</button>
                         </td>
                     </tr>
                 `;

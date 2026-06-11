@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>首页 | 编程技术｜运维技术｜建站技巧｜后端开发｜前端开发｜知识库｜免费资源</title>
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-    <link rel="canonical" href="https://miai.de5.net/">
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -555,23 +554,13 @@
             langPrefix: 'hljs language-'
         });
 
-        redirectLegacyPostHash();
         window.addEventListener('hashchange', handleRouting);
         window.addEventListener('load', async () => {
-            redirectLegacyPostHash();
             await loadSiteConfig();
             await fetchNavMeta();
             initBackToTop();
             handleRouting();
         });
-
-        function redirectLegacyPostHash() {
-            if (!window.location.hash.startsWith('#/post/')) return;
-            const postId = window.location.hash.replace('#/post/', '');
-            if (postId) {
-                window.location.replace(`/post/${encodeURIComponent(decodeURIComponent(postId))}`);
-            }
-        }
 
         function initBackToTop() {
             const button = document.getElementById('back-to-top');
@@ -795,13 +784,13 @@
                     container.innerHTML += `
                         <div class="group semi-card semi-post-card">
                             <div>
-                                <a href="/post/${encodeURIComponent(post.id)}" class="block aspect-video w-full overflow-hidden relative bg-slate-50 border-b border-slate-100 transform translate-z-0 isolate">
+                                <a href="#/post/${post.id}" class="block aspect-video w-full overflow-hidden relative bg-slate-50 border-b border-slate-100 transform translate-z-0 isolate">
                                     ${coverHtml}
                                     <span class="absolute top-3 left-3 semi-tag bg-white/90 backdrop-blur-sm z-10">${post.category || '未分类'}</span>
                                 </a>
                                 <div class="p-5">
                                     <h3 class="${titleClass}">
-                                        <a href="/post/${encodeURIComponent(post.id)}" title="${post.title}">${post.title}</a>
+                                        <a href="#/post/${post.id}" title="${post.title}">${post.title}</a>
                                     </h3>
                                     ${summaryHtml}
                                 </div>
@@ -893,7 +882,7 @@
                         : `<div class="semi-cover-fallback w-full h-full" style="--cover-start:${visual.start};--cover-end:${visual.end};"></div>`;
 
                     container.innerHTML += `
-                        <a href="/post/${encodeURIComponent(post.id)}" class="flex items-start gap-3 py-2.5 px-2 rounded-xl hover:bg-[var(--semi-blue-light)] transition-colors group">
+                        <a href="#/post/${post.id}" class="flex items-start gap-3 py-2.5 px-2 rounded-xl hover:bg-[var(--semi-blue-light)] transition-colors group">
                             <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-100">
                                 ${thumbHtml}
                             </div>
@@ -937,7 +926,6 @@
         function updatePostMeta(post) {
             const title = post.title || '未命名文章';
             document.title = title;
-            updateCanonical(`/post/${encodeURIComponent(post.id || '')}`);
             document.getElementById('post-title').innerText = title;
             document.getElementById('post-date').innerText = post.date ? `发布于 ${post.date}` : '';
             document.getElementById('post-category').innerText = post.category || '未分类';
@@ -1004,16 +992,6 @@
                 document.getElementById('post-toc').innerHTML = '<p class="text-zinc-300">暂无目录</p>';
                 postContent.innerHTML = '<p class="text-red-500 text-xs font-sans">无法从 R2 载入文章，请确保跨域策略配置成功。</p>';
             }
-        }
-
-        function updateCanonical(path) {
-            let canonical = document.querySelector('link[rel="canonical"]');
-            if (!canonical) {
-                canonical = document.createElement('link');
-                canonical.rel = 'canonical';
-                document.head.appendChild(canonical);
-            }
-            canonical.href = `${window.location.origin}${path}`;
         }
 
         function buildPostToc() {

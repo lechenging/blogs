@@ -10,7 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
     
-    <!-- Modern sans-serif fonts -->
+    <!-- 现代无衬线字体 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
@@ -28,41 +28,270 @@
         }
     </script>
     <style>
+        :root {
+            --semi-blue: #0064fa;
+            --semi-blue-hover: #0052d9;
+            --semi-blue-light: #e8f3ff;
+            --semi-green: #00a870;
+            --semi-orange: #ff7d00;
+            --semi-red: #f93920;
+            --semi-text-0: #1c1f23;
+            --semi-text-1: #4e5969;
+            --semi-text-2: #86909c;
+            --semi-border: #e5e6eb;
+            --semi-fill: #f7f8fa;
+            --semi-surface: rgba(255, 255, 255, 0.92);
+            --semi-shadow: 0 18px 48px rgba(28, 31, 35, 0.08);
+            --semi-radius: 18px;
+        }
+
         html {
             scroll-behavior: smooth;
         }
 
         body {
-            background-color: #f8fafc; /* Slate 50 ultra clean background */
+            background:
+                radial-gradient(circle at 12% 10%, rgba(0, 100, 250, 0.13), transparent 26rem),
+                radial-gradient(circle at 85% 4%, rgba(0, 168, 112, 0.10), transparent 24rem),
+                linear-gradient(180deg, #f7f8fa 0%, #ffffff 48%, #f7f8fa 100%);
+            color: var(--semi-text-0);
+        }
+
+        .semi-shell {
+            position: relative;
+        }
+
+        .semi-shell::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(28, 31, 35, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(28, 31, 35, 0.035) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 70%);
+        }
+
+        .semi-nav {
+            background: rgba(255, 255, 255, 0.78);
+            border-bottom: 1px solid rgba(229, 230, 235, 0.86);
+            box-shadow: 0 1px 0 rgba(28, 31, 35, 0.03);
+        }
+
+        .semi-logo-mark {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--semi-blue), #00a1ff);
+            box-shadow: 0 8px 18px rgba(0, 100, 250, 0.22);
+            font-weight: 800;
+        }
+
+        .semi-link {
+            color: var(--semi-text-1);
+            border-radius: 999px;
+            padding: 6px 10px;
+            transition: color 0.2s ease, background 0.2s ease;
+        }
+
+        .semi-link:hover,
+        .semi-link.active {
+            color: var(--semi-blue);
+            background: var(--semi-blue-light);
+        }
+
+        .semi-hero {
+            min-height: 260px;
+            border: 1px solid rgba(229, 230, 235, 0.95);
+            border-radius: 28px;
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(247, 248, 250, 0.9)),
+                radial-gradient(circle at 90% 16%, rgba(0, 100, 250, 0.18), transparent 16rem);
+            box-shadow: var(--semi-shadow);
+            overflow: hidden;
+        }
+
+        .semi-hero-orbit {
+            position: absolute;
+            right: clamp(16px, 6vw, 80px);
+            top: 28px;
+            width: clamp(160px, 20vw, 260px);
+            height: clamp(160px, 20vw, 260px);
+            border: 1px solid rgba(0, 100, 250, 0.14);
+            border-radius: 999px;
+        }
+
+        .semi-hero-orbit::before,
+        .semi-hero-orbit::after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            background: var(--semi-blue);
+            box-shadow: 0 16px 28px rgba(0, 100, 250, 0.22);
+        }
+
+        .semi-hero-orbit::before {
+            width: 44px;
+            height: 44px;
+            right: 24px;
+            top: 18px;
+        }
+
+        .semi-hero-orbit::after {
+            width: 14px;
+            height: 14px;
+            left: 28px;
+            bottom: 46px;
+            background: var(--semi-green);
+        }
+
+        .semi-surface,
+        .semi-card {
+            background: var(--semi-surface);
+            border: 1px solid rgba(229, 230, 235, 0.95);
+            border-radius: var(--semi-radius);
+            box-shadow: 0 10px 32px rgba(28, 31, 35, 0.055);
+        }
+
+        .semi-card {
+            transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.24s ease, box-shadow 0.24s ease;
+        }
+
+        .semi-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(0, 100, 250, 0.34);
+            box-shadow: 0 20px 44px rgba(28, 31, 35, 0.10);
+        }
+
+        .semi-input {
+            background: #ffffff;
+            border: 1px solid var(--semi-border);
+            border-radius: 12px;
+            color: var(--semi-text-0);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .semi-input:hover {
+            border-color: #c9cdd4;
+            background: #fbfcff;
+        }
+
+        .semi-input:focus {
+            border-color: var(--semi-blue);
+            box-shadow: 0 0 0 3px rgba(0, 100, 250, 0.12);
+            outline: none;
+        }
+
+        .semi-button,
+        .semi-button-secondary {
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+        }
+
+        .semi-button {
+            background: var(--semi-blue);
+            color: #ffffff;
+            box-shadow: 0 10px 24px rgba(0, 100, 250, 0.22);
+        }
+
+        .semi-button:hover {
+            background: var(--semi-blue-hover);
+            transform: translateY(-1px);
+        }
+
+        .semi-button-secondary {
+            background: #ffffff;
+            color: var(--semi-text-1);
+            border: 1px solid var(--semi-border);
+        }
+
+        .semi-button-secondary:hover,
+        .semi-button-secondary.active {
+            color: var(--semi-blue);
+            border-color: rgba(0, 100, 250, 0.28);
+            background: var(--semi-blue-light);
+        }
+
+        .semi-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            border-radius: 999px;
+            background: var(--semi-blue-light);
+            color: var(--semi-blue);
+            padding: 4px 9px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+        }
+
+        .semi-post-card {
+            display: flex;
+            min-height: 100%;
+            flex-direction: column;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .semi-cover-fallback {
+            background:
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.28), transparent 9rem),
+                linear-gradient(135deg, var(--cover-start), var(--cover-end));
+        }
+
+        .semi-meta-dot::before {
+            content: "";
+            width: 5px;
+            height: 5px;
+            border-radius: 999px;
+            background: currentColor;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .semi-sidebar-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--semi-border);
+        }
+
+        .semi-prose {
+            --tw-prose-links: var(--semi-blue);
+        }
+
+        .semi-prose :where(h2, h3):not(:where([class~="not-prose"] *)) {
+            scroll-margin-top: 96px;
+        }
+
+        .semi-prose :where(blockquote):not(:where([class~="not-prose"] *)) {
+            border-left-color: var(--semi-blue);
+            background: var(--semi-blue-light);
+            border-radius: 0 12px 12px 0;
+        }
+
+        .semi-footer {
+            background: rgba(255, 255, 255, 0.78);
+            border-top: 1px solid var(--semi-border);
         }
 
         .code-block-wrapper {
             position: relative;
         }
 
-        .copy-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            color: #94a3b8;
-            border: 1px solid rgba(148, 163, 184, 0.1);
-            border-radius: 6px;
-            padding: 4px 10px;
-            font-size: 11px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .copy-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #f1f5f9;
-        }
-
         .post-toc button.active {
-            color: #6366f1; /* Indigo 500 active text */
-            border-left-color: #6366f1;
-            background-color: #f1f5f9;
+            color: var(--semi-blue);
+            border-left-color: var(--semi-blue);
+            background-color: var(--semi-blue-light);
             font-weight: 600;
         }
 
@@ -140,57 +369,76 @@
         }
 
         .back-to-top:hover {
-            background: #0f172a;
+            background: var(--semi-blue);
             color: #ffffff;
-            border-color: #0f172a;
+            border-color: var(--semi-blue);
             transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .semi-hero-orbit {
+                opacity: 0.35;
+                transform: translateX(35%);
+            }
         }
     </style>
 </head>
 
-<body class="text-slate-800 min-h-screen flex flex-col antialiased bg-slate-50">
+<body class="semi-shell min-h-screen flex flex-col antialiased font-sans">
 
-    <nav class="bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 sm:px-8 min-h-16 py-4 md:py-0 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <nav class="semi-nav backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-5 sm:px-8 min-h-16 py-4 md:py-0 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div class="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 w-full md:w-auto">
-                <a href="#/" class="flex items-center space-x-2 shrink-0 group">
-                    <span id="nav-site-title" class="text-sm font-display font-bold tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors">miai.de5.net</span>
+                <a href="#/" class="flex items-center gap-3 shrink-0 group" aria-label="返回首页">
+                    <span class="semi-logo-mark">S</span>
+                    <span id="nav-site-title" class="text-sm font-display font-bold tracking-tight text-slate-950 group-hover:text-[var(--semi-blue)] transition-colors">miai.de5.net</span>
                 </a>
 
-                <div id="series-navbar-container" class="flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-slate-500">
+                <div id="series-navbar-container" class="flex flex-wrap gap-1.5 text-xs font-semibold">
                 </div>
             </div>
 
             <div class="flex items-center space-x-6 shrink-0">
-                <div id="custom-navbar-links" class="hidden md:flex items-center space-x-6 text-xs font-semibold text-slate-600"></div>
+                <div id="custom-navbar-links" class="hidden md:flex items-center gap-1.5 text-xs font-semibold"></div>
             </div>
         </div>
     </nav>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto px-6 sm:px-8 py-12">
+    <main class="flex-grow max-w-7xl w-full mx-auto px-5 sm:px-8 py-10 sm:py-12">
 
         <div id="home-view" class="space-y-8">
-            <!-- Hero and Search Grid (Equal Heights) -->
+            <!-- 首页主视觉和搜索区保持同一视觉系统。 -->
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-stretch">
-                <!-- Hero Section -->
-                <div class="lg:col-span-3 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
-                    <h1 id="site-title-display" class="text-2xl font-bold tracking-tight text-slate-900">正在加载...</h1>
-                    <p id="site-subtitle-display" class="text-slate-500 text-xs mt-1.5 leading-relaxed"></p>
+                <div class="semi-hero relative lg:col-span-3 p-7 sm:p-10 flex flex-col justify-center">
+                    <div class="semi-hero-orbit" aria-hidden="true"></div>
+                    <div class="relative max-w-2xl space-y-5">
+                        <span class="semi-tag w-fit">SEMI DESIGN BLOG</span>
+                        <h1 id="site-title-display" class="text-3xl sm:text-5xl font-display font-extrabold tracking-tight text-slate-950 leading-tight">正在加载...</h1>
+                        <p id="site-subtitle-display" class="text-slate-500 text-sm sm:text-base leading-7"></p>
+                        <div class="flex flex-wrap gap-3 pt-2 text-xs font-semibold text-slate-500">
+                            <span class="semi-meta-dot">Cloudflare Pages</span>
+                            <span class="semi-meta-dot text-[var(--semi-blue)]">R2 Markdown</span>
+                            <span class="semi-meta-dot text-[var(--semi-green)]">D1 动态索引</span>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Search Box -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center space-y-4">
-                    <h3 class="text-xs font-display font-bold uppercase tracking-wider text-slate-555">文章检索</h3>
+                <div class="semi-surface p-6 flex flex-col justify-center space-y-5">
+                    <div class="space-y-1">
+                        <span class="semi-tag w-fit">Search</span>
+                        <h3 class="text-lg font-display font-bold tracking-tight text-slate-950">文章检索</h3>
+                        <p class="text-xs leading-5 text-slate-500">输入关键字，快速定位教程、随笔或资源。</p>
+                    </div>
                     <div class="relative">
                         <input type="text" id="search-input" onkeydown="handleSearch(event)"
-                            class="w-full bg-slate-50 border border-slate-100 hover:border-slate-200 focus:border-indigo-550 rounded-xl pl-4 pr-10 py-2.5 text-xs font-sans focus:outline-none transition-all placeholder-slate-400"
+                            class="semi-input w-full pl-4 pr-12 py-3 text-sm placeholder-slate-400"
                             placeholder="输入关键字并按回车搜索...">
-                        <button onclick="triggerSearch()" class="absolute right-3.5 top-3 text-slate-400 hover:text-slate-655 transition-colors text-xs">🔍</button>
+                        <button onclick="triggerSearch()" class="absolute right-2 top-2 semi-button px-3 py-1.5" aria-label="搜索文章">搜索</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Content Grid (Posts & Popular Ranking) -->
+            <!-- 内容区包含文章列表和热门排行。 -->
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 <div class="lg:col-span-3 space-y-8 flex flex-col justify-between">
                     <div class="space-y-8">
@@ -202,13 +450,11 @@
                     <div id="pagination-container" class="flex justify-center items-center gap-1.5 pt-12"></div>
                 </div>
 
-                <!-- Sidebar -->
                 <div class="space-y-6">
-                    <!-- Popular Posts -->
-                    <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-                        <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
-                            <h3 class="text-sm font-bold text-slate-500">🔥 热门文章</h3>
-                            <span id="popular-top-badge" class="text-[11px] bg-orange-50 text-orange-500 px-2.5 py-1 rounded-md font-bold">TOP 5</span>
+                    <div class="semi-surface p-5 space-y-4 sticky top-24">
+                        <div class="semi-sidebar-title">
+                            <h3 class="text-sm font-bold text-slate-950">热门文章</h3>
+                            <span id="popular-top-badge" class="text-[11px] bg-orange-50 text-orange-500 px-2.5 py-1 rounded-full font-bold">TOP 5</span>
                         </div>
                         <div id="popular-posts-container" class="space-y-4"></div>
                     </div>
@@ -216,20 +462,20 @@
             </div>
         </div>
 
-        <!-- Detail View -->
+        <!-- 文章详情页 -->
         <div id="post-view" class="hidden max-w-7xl mx-auto">
-            <a href="#/" class="mb-8 inline-block text-xs font-semibold text-slate-550 hover:text-indigo-600 flex items-center gap-2 transition-colors">
+            <a href="#/" class="mb-8 inline-flex text-xs font-semibold semi-button-secondary px-4 py-2 items-center gap-2">
                 ← 返回首页
             </a>
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-                <article class="lg:col-span-3 bg-white p-6 sm:p-10 rounded-2xl border border-slate-100 shadow-sm">
-                    <header class="mb-10 border-b border-slate-100 pb-8 space-y-4">
+                <article class="lg:col-span-3 semi-surface p-6 sm:p-10">
+                    <header class="mb-10 border-b border-slate-100 pb-8 space-y-5">
                         <div class="flex flex-wrap gap-2 text-[10px] font-bold tracking-wider uppercase font-display">
-                            <span id="post-category" class="bg-indigo-50 text-indigo-650 px-2.5 py-1 rounded-md">未分类</span>
-                            <span id="post-series" class="bg-slate-50 text-slate-600 px-2.5 py-1 rounded-md">默认系列</span>
+                            <span id="post-category" class="semi-tag">未分类</span>
+                            <span id="post-series" class="semi-tag bg-slate-100 text-slate-600">默认系列</span>
                         </div>
                         <h1 id="post-title" class="text-2xl sm:text-4xl font-display font-extrabold tracking-tight text-slate-900 leading-tight">正在加载...</h1>
-                        <p id="post-summary" class="hidden text-slate-500 text-sm border-l-2 border-indigo-550 pl-4 py-1.5 leading-relaxed bg-slate-50 rounded-r-lg"></p>
+                        <p id="post-summary" class="hidden text-slate-500 text-sm border-l-4 border-[var(--semi-blue)] pl-4 py-3 leading-relaxed bg-[var(--semi-blue-light)] rounded-r-xl"></p>
                         
                         <div class="text-xs text-slate-500 flex flex-wrap gap-x-4 gap-y-2 font-medium">
                             <span id="post-date"></span>
@@ -239,15 +485,15 @@
                             <img id="post-cover" class="w-full max-h-[460px] object-cover" alt="">
                         </div>
                     </header>
-                    <section id="post-content" class="prose prose-slate prose-indigo max-w-none text-slate-800 text-[15px] leading-relaxed
+                    <section id="post-content" class="semi-prose prose prose-slate prose-indigo max-w-none text-slate-800 text-[15px] leading-relaxed
                         prose-headings:font-display prose-headings:font-bold prose-headings:text-slate-900 prose-headings:tracking-tight
-                        prose-a:text-indigo-600 hover:prose-a:text-indigo-500 hover:prose-a:underline
-                        prose-blockquote:border-l-4 prose-blockquote:border-indigo-500 prose-blockquote:bg-slate-50 prose-blockquote:py-2 prose-blockquote:pr-4 prose-blockquote:text-slate-600
+                        prose-a:text-[var(--semi-blue)] hover:prose-a:text-[var(--semi-blue-hover)] hover:prose-a:underline
+                        prose-blockquote:border-l-4 prose-blockquote:py-2 prose-blockquote:pr-4 prose-blockquote:text-slate-600
                         prose-img:rounded-xl prose-img:border prose-img:border-slate-100 prose-img:cursor-zoom-in
                         prose-pre:bg-slate-900 prose-pre:border prose-pre:border-slate-800 prose-pre:rounded-xl prose-pre:p-0">
                     </section>
                 </article>
-                <aside class="hidden lg:block sticky top-24 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <aside class="hidden lg:block sticky top-24 semi-surface p-5">
                     <h2 class="text-xs font-display font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 pb-2 mb-4">文章目录</h2>
                     <nav id="post-toc" class="post-toc text-xs space-y-1.5 text-slate-500">
                         <p class="text-zinc-300">暂无目录</p>
@@ -268,15 +514,15 @@
 
     </main>
 
-    <footer class="bg-white border-t border-slate-100 py-10 mt-auto text-xs text-slate-400 tracking-wide">
+    <footer class="semi-footer py-10 mt-auto text-xs text-slate-400 tracking-wide">
         <div class="max-w-7xl mx-auto px-6 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center space-x-2">
-                <span class="w-2 h-2 bg-indigo-600 rounded-full inline-block"></span>
-                <span>自适应 • 极速前端版</span>
+                <span class="w-2 h-2 bg-[var(--semi-blue)] rounded-full inline-block"></span>
+                <span>Semi Design 风格 • 极速前台版</span>
             </div>
             <div class="text-[11px] text-slate-400">
                 Powered by <a href="https://pages.cloudflare.com" target="_blank"
-                    class="hover:underline text-indigo-600 transition-colors">Cloudflare Pages</a>
+                    class="hover:underline text-[var(--semi-blue)] transition-colors">Cloudflare Pages</a>
             </div>
         </div>
     </footer>
@@ -383,7 +629,7 @@
             container.innerHTML = '';
             linksArray.forEach(item => {
                 container.innerHTML += `
-                    <a href="${item.url}" target="_blank" class="hover:text-slate-900 transition-colors">${item.name}</a>
+                    <a href="${item.url}" target="_blank" class="semi-link">${item.name}</a>
                 `;
             });
         }
@@ -401,7 +647,7 @@
                 finalSeriesList.forEach(series => {
                     const isSelected = currentFilterSeries === series;
                     navContainer.innerHTML += `
-                        <a href="#/series/${encodeURIComponent(series)}" class="hover:text-slate-900 transition-colors py-1 ${isSelected ? 'text-indigo-650 font-bold border-b-2 border-indigo-600' : 'text-slate-500'}">${series}</a>
+                        <a href="#/series/${encodeURIComponent(series)}" class="semi-link ${isSelected ? 'active font-bold' : ''}">${series}</a>
                     `;
                 });
             } catch (e) {
@@ -420,14 +666,14 @@
             }
 
             container.innerHTML = `
-                <button onclick="filterByCategory('')" class="px-4 py-2 rounded-full text-xs font-semibold transition-all ${!currentFilterCategory ? 'bg-slate-900 text-white shadow-sm' : 'bg-white text-slate-500 border border-slate-100 hover:bg-slate-50'}">
+                <button onclick="filterByCategory('')" class="px-4 py-2 ${!currentFilterCategory ? 'semi-button' : 'semi-button-secondary'}">
                     全部
                 </button>
             `;
             allowedCategories.forEach(cat => {
                 const isSelected = currentFilterCategory === cat;
                 container.innerHTML += `
-                    <button onclick="filterByCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold transition-all ${isSelected ? 'bg-slate-900 text-white shadow-sm' : 'bg-white text-slate-500 border border-slate-100 hover:bg-slate-50'}">
+                    <button onclick="filterByCategory('${cat}')" class="px-4 py-2 ${isSelected ? 'semi-button' : 'semi-button-secondary'}">
                         ${cat}
                     </button>
                 `;
@@ -493,7 +739,7 @@
             currentPageNum = page;
             const container = document.getElementById('posts-list-container');
             if (!container) return;
-            container.innerHTML = '<p class="text-slate-400 text-xs font-sans">正在加载中...</p>';
+            container.innerHTML = '<div class="col-span-full semi-surface p-8 text-center text-slate-400 text-sm">正在加载文章...</div>';
 
             try {
                 let url = `./api/posts?page=${page}&limit=12&_t=${Date.now()}`;
@@ -511,15 +757,16 @@
                 container.innerHTML = '';
 
                 if (posts.length === 0) {
-                    container.innerHTML = '<div class="col-span-full text-slate-400 text-xs py-16 text-center font-sans">暂无发布内容。</div>';
+                    container.innerHTML = '<div class="col-span-full semi-surface text-slate-400 text-sm py-16 text-center font-sans">暂无发布内容。调整筛选条件后再试试。</div>';
                     document.getElementById('pagination-container').innerHTML = '';
                     return;
                 }
 
                 posts.forEach((post, index) => {
+                    const visual = getPostVisual(index);
                     const coverHtml = post.cover
-                        ? `<img src="${post.cover}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-550" alt="${post.title}">`
-                        : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)} flex items-center justify-center text-white/10 font-bold text-3xl select-none">MIAI</div>`;
+                        ? `<img src="${post.cover}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="${post.title}">`
+                        : `<div class="semi-cover-fallback w-full h-full flex items-center justify-center text-white/80 font-display font-extrabold text-3xl select-none" style="--cover-start:${visual.start};--cover-end:${visual.end};">${visual.label}</div>`;
 
                     const summaryHtml = (globalLayoutMode !== 'simple')
                         ? `<p class="text-slate-400 text-xs leading-relaxed line-clamp-2 mt-2 font-sans">${post.summary}</p>`
@@ -530,11 +777,11 @@
                         : "text-[13px] sm:text-sm font-semibold text-slate-900 line-clamp-2 group-hover:text-indigo-600 transition-colors leading-snug";
 
                     container.innerHTML += `
-                        <div class="group bg-white rounded-2xl border border-slate-100 hover:border-slate-200 transition-all duration-300 overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-md">
+                        <div class="group semi-card semi-post-card">
                             <div>
                                 <a href="#/post/${post.id}" class="block aspect-video w-full overflow-hidden relative bg-slate-50 border-b border-slate-100 transform translate-z-0 isolate">
                                     ${coverHtml}
-                                    <span class="absolute top-3 left-3 bg-slate-950/80 text-white text-[9px] font-bold tracking-wider uppercase font-sans px-2 py-0.5 rounded backdrop-blur-sm z-10">${post.category || '未分类'}</span>
+                                    <span class="absolute top-3 left-3 semi-tag bg-white/90 backdrop-blur-sm z-10">${post.category || '未分类'}</span>
                                 </a>
                                 <div class="p-5">
                                     <h3 class="${titleClass}">
@@ -543,9 +790,9 @@
                                     ${summaryHtml}
                                 </div>
                             </div>
-                            <div class="px-5 pb-5 pt-2 border-t border-slate-50 flex items-center justify-between text-[10px] text-slate-400 font-semibold font-sans">
-                                <span>📅 ${post.date}</span>
-                                <span>👁️ ${post.views}</span>
+                            <div class="px-5 pb-5 pt-3 border-t border-slate-50 flex items-center justify-between text-[10px] text-slate-400 font-semibold font-sans">
+                                <span class="semi-meta-dot">${post.date}</span>
+                                <span class="semi-meta-dot text-[var(--semi-blue)]">${post.views} 阅读</span>
                             </div>
                         </div>
                     `;
@@ -554,7 +801,7 @@
                 renderPagination(total, limit, page);
 
             } catch (err) {
-                container.innerHTML = `<div class="col-span-full text-red-500 text-xs text-center font-sans">获取文章数据失败，请确认配置。</div>`;
+                container.innerHTML = `<div class="col-span-full semi-surface text-red-500 text-sm py-12 text-center font-sans">获取文章数据失败，请确认配置。</div>`;
             }
         }
 
@@ -569,8 +816,8 @@
             }
 
             let pageHtml = "";
-            const btnClass = "px-3.5 py-1.5 text-xs font-semibold bg-white border border-slate-150 hover:bg-slate-50 text-slate-650 active:scale-95 rounded-lg transition-all shadow-sm";
-            const activeClass = "px-3.5 py-1.5 text-xs font-bold border border-slate-950 bg-slate-950 text-white rounded-lg shadow-sm";
+            const btnClass = "px-3.5 py-1.5 semi-button-secondary";
+            const activeClass = "px-3.5 py-1.5 semi-button";
 
             if (currentPage > 1) {
                 pageHtml += `<button onclick="fetchPostsAndRender(${currentPage - 1})" class="${btnClass} mr-1">« 上一页</button>`;
@@ -611,7 +858,7 @@
         async function fetchPopularPosts() {
             const container = document.getElementById('popular-posts-container');
             if (!container) return;
-            container.innerHTML = '<p class="text-slate-400 text-xs font-sans">读取中...</p>';
+            container.innerHTML = '<p class="text-slate-400 text-xs font-sans">正在读取排行...</p>';
 
             try {
                 const response = await fetch(`./api/posts?popular=${globalPopularLimit}&_t=${Date.now()}`);
@@ -624,20 +871,21 @@
                 }
 
                 posts.forEach((post, index) => {
+                    const visual = getPostVisual(index);
                     const thumbHtml = post.cover
                         ? `<img src="${post.cover}" class="w-full h-full object-cover" alt="">`
-                        : `<div class="w-full h-full bg-gradient-to-tr ${getGradient(index)}"></div>`;
+                        : `<div class="semi-cover-fallback w-full h-full" style="--cover-start:${visual.start};--cover-end:${visual.end};"></div>`;
 
                     container.innerHTML += `
-                        <a href="#/post/${post.id}" class="flex items-start gap-3 py-2.5 px-1 rounded-xl hover:bg-slate-50 transition-colors group">
-                            <div class="w-12 h-12 rounded-lg overflow-hidden bg-slate-100 shrink-0 border border-slate-100">
+                        <a href="#/post/${post.id}" class="flex items-start gap-3 py-2.5 px-2 rounded-xl hover:bg-[var(--semi-blue-light)] transition-colors group">
+                            <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-100">
                                 ${thumbHtml}
                             </div>
                             <div class="min-w-0 flex-grow pt-0.5">
-                                <h4 class="text-[13px] font-extrabold text-slate-950 line-clamp-2 leading-snug group-hover:text-indigo-600 transition-colors">${post.title}</h4>
+                                <h4 class="text-[13px] font-extrabold text-slate-950 line-clamp-2 leading-snug group-hover:text-[var(--semi-blue)] transition-colors">${post.title}</h4>
                                 <div class="text-[10px] text-slate-400 mt-1 flex items-center justify-between font-semibold">
                                     <span>${post.date}</span>
-                                    <span class="inline-flex items-center gap-1 text-indigo-650 font-bold">👁️ ${post.views}</span>
+                                    <span class="inline-flex items-center gap-1 text-[var(--semi-blue)] font-bold">${post.views} 阅读</span>
                                 </div>
                             </div>
                         </a>
@@ -648,16 +896,16 @@
             }
         }
 
-        const gradients = [
-            "from-indigo-400 to-indigo-500",
-            "from-slate-400 to-slate-500",
-            "from-blue-400 to-blue-500",
-            "from-emerald-400 to-teal-500",
-            "from-indigo-300 to-purple-400",
-            "from-slate-300 to-slate-400"
+        const postVisuals = [
+            { start: '#0064fa', end: '#00a1ff', label: 'Semi' },
+            { start: '#1c1f23', end: '#4e5969', label: 'D1' },
+            { start: '#00a870', end: '#42d392', label: 'R2' },
+            { start: '#ff7d00', end: '#ffb65c', label: 'Docs' },
+            { start: '#7b61ff', end: '#00a1ff', label: 'UI' },
+            { start: '#4e5969', end: '#c9cdd4', label: 'Blog' }
         ];
-        function getGradient(index) {
-            return gradients[index % gradients.length];
+        function getPostVisual(index) {
+            return postVisuals[index % postVisuals.length];
         }
 
         function escapeHtml(value) {
@@ -775,7 +1023,7 @@
                 });
             });
 
-            // Scroll spy
+            // 滚动位置同步目录高亮
             const observerOptions = {
                 root: null,
                 rootMargin: '-100px 0px -70% 0px',
@@ -837,7 +1085,7 @@
                 wrapper.className = 'code-block-wrapper border border-slate-800 rounded-xl my-6 bg-slate-900 overflow-hidden';
                 preElement.parentNode.insertBefore(wrapper, preElement);
                 
-                // Header bar
+                // 代码块顶部操作栏
                 const header = document.createElement('div');
                 header.className = 'flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-slate-950 text-[10px] uppercase tracking-wider text-slate-400 font-semibold font-sans';
                 header.innerHTML = `<span>${lang}</span>`;

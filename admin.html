@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>后台管理 - 极简数字花园控制台</title>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -101,10 +102,15 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, var(--semi-blue), #00a1ff);
-            color: #ffffff;
-            font-weight: 900;
+            background: #ffffff;
             box-shadow: 0 10px 22px rgba(0, 100, 250, 0.22);
+            overflow: hidden;
+        }
+
+        .semi-admin-logo img {
+            width: 100%;
+            height: 100%;
+            display: block;
         }
 
         .semi-admin-nav-btn {
@@ -325,7 +331,7 @@
         <div class="max-w-md w-full semi-admin-card p-8 space-y-6 text-center">
             <div class="space-y-3">
                 <div class="semi-admin-logo mx-auto">
-                    <span>S</span>
+                    <img src="./assets/logo.svg" alt="miai.de5.net 标识">
                 </div>
                 <h2 class="text-xl font-display font-bold tracking-tight text-slate-900">管理后台</h2>
                 <p class="text-xs text-slate-500 leading-relaxed max-w-xs mx-auto">请输入 D1 数据库中初始化的管理密码，进入 Semi 风格控制台。</p>
@@ -353,7 +359,7 @@
             <div class="space-y-8">
                 <div class="flex flex-col border-b border-slate-50 pb-5">
                     <div class="flex items-center space-x-3 mb-4">
-                        <span class="semi-admin-logo shrink-0">S</span>
+                        <span class="semi-admin-logo shrink-0"><img src="./assets/logo.svg" alt="miai.de5.net 标识"></span>
                         <span id="sidebar-site-title"
                             class="text-xs font-display font-bold tracking-wide text-slate-900 uppercase line-clamp-2">控制台</span>
                     </div>

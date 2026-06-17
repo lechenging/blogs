@@ -611,6 +611,7 @@
                 document.getElementById('nav-site-title').innerText = title;
                 document.getElementById('site-title-display').innerText = title;
                 document.getElementById('site-subtitle-display').innerText = subtitle;
+                loadHitokotoSubtitle(subtitle);
 
                 const badge = document.getElementById('popular-top-badge');
                 if (badge) badge.innerText = `TOP ${globalPopularLimit}`;
@@ -625,6 +626,26 @@
                 currentSiteTitle = "miai.de5.net";
                 document.title = "miai.de5.net";
                 renderCategoryFilters();
+            }
+        }
+
+        async function loadHitokotoSubtitle(fallbackText) {
+            const subtitleElement = document.getElementById('site-subtitle-display');
+            if (!subtitleElement) return;
+
+            try {
+                const res = await fetch('https://v1.hitokoto.cn?_t=' + Date.now());
+                if (!res.ok) throw new Error('一言接口请求失败');
+
+                const data = await res.json();
+                const text = typeof data.hitokoto === 'string' ? data.hitokoto.trim() : '';
+                const author = typeof data.from_who === 'string' ? data.from_who.trim() : '';
+                if (!text) throw new Error('一言接口返回正文为空');
+
+                subtitleElement.innerText = author ? `${text} —— ${author}` : text;
+            } catch (err) {
+                console.error('加载一言副标题出错:', err);
+                subtitleElement.innerText = fallbackText;
             }
         }
 

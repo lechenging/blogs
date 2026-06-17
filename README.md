@@ -1,35 +1,69 @@
+# 个人博客系统（无服务器零费用）
 
----
+这是一个部署在 Cloudflare Pages 上的无构建博客系统，前台和后台均为单文件静态页面，数据由 Cloudflare D1 与 R2 驱动。当前界面已按 Semi Design 风格重构，并内置站点 Logo、后台管理、Markdown 编辑、图片上传、文章分类、系列导航和阅读量统计。
 
-# Blogs.nyc.mn 部署教程
+线上版本：<https://miai.de5.net>
 
-## 演示站
-[blogs.nyc.mn 演示站](https://blogs.nyc.mn/)
+基于代码二次修改：<https://github.com/6106757-lab/blogs>
 
----
+## 功能概览
 
-## 🛠️ 第一阶段：一键获取项目代码
+- 前台首页：文章列表、系列导航、分类筛选、搜索、热门文章、分页。
+- 文章详情：Hash 路由 `#/post/:id`，从 D1 读取元数据，从 R2 读取 Markdown 正文。
+- 后台管理：登录、文章列表筛选、发布文章、编辑文章、删除文章、站点配置、修改密码。
+- 媒体存储：正文 Markdown 与图片资源存放在 Cloudflare R2。
+- 数据索引：文章元数据、配置项、阅读量存放在 Cloudflare D1。
+- 视觉系统：前后台采用 Semi Design 风格的蓝绿配色、卡片、按钮、标签和控制台布局。
+- Logo 资源：`assets/logo.svg` 与 `assets/favicon.svg`。
 
-1. 登录您的 [GitHub 账号](https://github.com/)。
-2. 浏览器打开开源仓库地址：[github.com/6106757-lab/blogs](https://github.com/6106757-lab/blogs)。
-3. 点击页面右上角的 **Fork** 按钮。
-4. 保持默认命名，直接点击 **Create fork**。
-   *这会瞬间将整个博客系统的完整代码复制到您的个人仓库中。*
+## 项目结构
 
----
+```text
+.
+├── index.html                 # 前台首页与文章详情入口
+├── admin.html                 # 后台管理入口
+├── assets/
+│   ├── logo.svg               # 站点 Logo
+│   └── favicon.svg            # 浏览器图标
+├── functions/
+│   └── api/
+│       ├── auth.js            # 登录与改密
+│       ├── config.js          # 站点配置读写
+│       ├── delete.js          # 删除文章与关联资源
+│       ├── posts.js           # 文章列表、详情元数据、发布编辑
+│       ├── publish.js         # 发布相关接口
+│       ├── upload.js          # 图片上传到 R2
+│       └── views.js           # 阅读量统计
+└── README.md
+```
 
-## 💾 第二阶段：配置 Cloudflare D1 数据库
+## 技术栈
 
-D1 是 Cloudflare 提供的关系型 SQL 数据库。我们用它来存放文章分类索引、阅读量和站点全局配置。
+- Cloudflare Pages：静态页面托管与 Functions 运行环境。
+- Cloudflare D1：保存文章元数据、站点配置、后台密码、阅读量。
+- Cloudflare R2：保存 Markdown 正文和图片资源。
+- Tailwind CSS CDN：页面样式基础能力。
+- marked：前台 Markdown 渲染。
+- highlight.js：代码高亮。
+- Vditor：后台 Markdown 所见即所得编辑器。
 
-1. 登录 [Cloudflare 控制台](https://dash.cloudflare.com/)。
-2. 点击左侧菜单 **存储与数据库** -> 选择 **D1**。
-3. 点击 **Create database** -> 选择 **Dashboard** 方式。
-4. 数据库命名为：**`blog-db`**，点击 **Create**。
-5. 进入刚刚创建的 `blog-db` -> 点击 **Console（控制台）** 选项卡。
-6. 在输入框中**分步、单句执行**以下三段 SQL 初始化命令（每粘贴完一条，点击一次 Execute 执行）：
+## 部署流程
 
-**第一步（创建文章表）：**
+### 1. Fork 或上传项目
+
+1. 登录 GitHub。
+2. 将本项目代码 Fork 到自己的账号，或直接上传到自己的仓库。
+3. 后续通过 Cloudflare Pages 关联该仓库部署。
+
+### 2. 创建 Cloudflare D1 数据库
+
+1. 进入 Cloudflare 控制台。
+2. 打开 `存储与数据库` -> `D1`。
+3. 创建数据库，例如命名为 `blog-db`。
+4. 进入数据库控制台，依次执行以下 SQL。
+
+创建文章表：
+
 ```sql
 CREATE TABLE IF NOT EXISTS posts (
     id TEXT PRIMARY KEY,
@@ -46,7 +80,8 @@ CREATE TABLE IF NOT EXISTS posts (
 );
 ```
 
-**第二步（创建全局系统配置表）：**
+创建配置表：
+
 ```sql
 CREATE TABLE IF NOT EXISTS config (
     key TEXT PRIMARY KEY,
@@ -54,95 +89,187 @@ CREATE TABLE IF NOT EXISTS config (
 );
 ```
 
-**第三步（一键初始化站点默认配置数据）：**
-> ⚠️ **重要提示**：请将下面最后一行代码中的 `https://images.blogs.nyc.mn` 替换为您在第三阶段中准备绑定的 **R2 自定义二级域名**（需带上 `https://` 协议头，结尾不带斜杠）如果此时你还没创建R2储存桶你可以先不发送最后一段代码，等后面单独执行一次即可。
-以下是数据库初始值，你可以根据自己的情况修改。分别是 默认密码 默认网站名称 默认网站二级介绍 默认标签 默认系列分组 默认外链 
+写入默认配置：
+
 ```sql
 INSERT OR IGNORE INTO config (key, value) VALUES ('admin_password', 'admin123');
-INSERT OR IGNORE INTO config (key, value) VALUES ('site_title', '无服务器数字花园');
-INSERT OR IGNORE INTO config (key, value) VALUES ('site_subtitle', '动态闭环系统，基于 Cloudflare Pages + R2 + D1 强力驱动。');
+INSERT OR IGNORE INTO config (key, value) VALUES ('site_title', 'miai.de5.net');
+INSERT OR IGNORE INTO config (key, value) VALUES ('site_subtitle', 'AI，让思考发声！');
 INSERT OR IGNORE INTO config (key, value) VALUES ('site_categories', '["技术","教程","随笔","思考"]');
 INSERT OR IGNORE INTO config (key, value) VALUES ('site_series', '["科学上网","谷歌系列","NAS系列"]');
-INSERT OR IGNORE INTO config (key, value) VALUES ('site_nav_links', '[{"name": "订阅转换", "url": "https://sub.blogs.nyc.mn"}, {"name": "IP查询", "url": "https://ip.blogs.nyc.mn"}, {"name": "It-Tools工具箱", "url": "https://it.blogs.nyc.mn"}]');
+INSERT OR IGNORE INTO config (key, value) VALUES ('site_nav_links', '[{"name":"CC API","url":"https://napi.mai.us.ci"},{"name":"工具箱","url":"https://tools.example.com"}]');
 INSERT OR IGNORE INTO config (key, value) VALUES ('site_layout_mode', 'standard');
 INSERT OR IGNORE INTO config (key, value) VALUES ('site_popular_limit', '5');
-INSERT OR IGNORE INTO config (key, value) VALUES ('site_r2_domain', 'https://images.blogs.nyc.mn');
+INSERT OR IGNORE INTO config (key, value) VALUES ('site_r2_domain', 'https://images.example.com');
 ```
 
----
+说明：
 
-## 📦 第三阶段：配置 Cloudflare R2 存储桶
+- `admin_password` 是后台初始密码，部署后请尽快在后台修改。
+- `site_r2_domain` 请替换为你的 R2 公开访问域名，必须包含 `https://`，结尾不要带 `/`。
+- `site_categories` 和 `site_series` 是 JSON 字符串，后台也可以后续在线修改。
 
-R2 用于存储文章的 `.md` 源码文件和所有的教程插图，每月享有 **10 GB 完全免费**的读取和存储空间。
+### 3. 创建 Cloudflare R2 存储桶
 
-1. 登录 Cloudflare 控制台 -> 点击左侧菜单 **存储与数据库** -> 选择 **R2**。
-2. 点击 **Create bucket**，命名为 **`blog-images`**，点击创建。
-3. 进入该存储桶 -> 选择 **Settings（设置）** 选项卡。
-4. **绑定自定义域名**：
-   在 **Custom Domains** 下，点击 **Connect Domain**，绑定您的专属二级域名（例如：`images.blogs.nyc.mn`），作为您的 R2 高速资源及图床链接。
-5. **配置跨域 CORS 策略**：
-   在 **CORS Policy** 区域，点击 **Add CORS policy**，粘贴以下规则并点击 **Save**：
-> ⚠️ **重要提示**：请将下面代码中的 `blogs.nyc.mn` 替换为您绑定的 **自定义域名**，请注意是博客访问的域名，不是R2储存库绑定的二级域名。
-   ```json
-   [
-     {
-       "AllowedOrigins": [
-         "https://blogs.nyc.mn",
-         "http://blogs.nyc.mn",
-         "https://*.pages.dev"
-       ],
-       "AllowedMethods": [
-         "GET",
-         "HEAD"
-       ],
-       "AllowedHeaders": [
-         "*"
-       ],
-       "MaxAgeSeconds": 3600
-     }
-   ]
-   ```
+1. 进入 Cloudflare 控制台。
+2. 打开 `存储与数据库` -> `R2`。
+3. 创建存储桶，例如命名为 `blog-images`。
+4. 为 R2 绑定自定义域名，例如 `images.example.com`。
+5. 配置 CORS 策略，允许博客域名读取 Markdown 和图片。
 
----
+示例 CORS：
 
-## 🌐 第四阶段：一键关联 Pages 部署
+```json
+[
+  {
+    "AllowedOrigins": [
+      "https://miai.de5.net",
+      "http://miai.de5.net",
+      "https://*.pages.dev"
+    ],
+    "AllowedMethods": ["GET", "HEAD"],
+    "AllowedHeaders": ["*"],
+    "MaxAgeSeconds": 3600
+  }
+]
+```
 
-1. 在 Cloudflare 控制台点击左侧菜单 **Workers & Pages** -> 点击 **想要部署 Pages？开始使用** 按钮。
-2. ⚠️ **特别注意**：进入创建页面后，**必须点击 Pages 选项卡，不要在当前页就进行连接githut**（请勿选择 Workers 选项卡直接部署），然后点击 **Connect to Git** 关联您的 GitHub 账户。
-3. 在仓库列表中，选择您刚刚 Fork 出来的 **`blogs`** 仓库，点击 **Begin setup**。
-4. 在构建配置页面中，框架、命令、输出目录等所有参数**全部保留为空**，直接点击 **Save and Deploy** 部署。
+### 4. 部署 Cloudflare Pages
 
-### 1. 绑定 D1 与 R2 资源
+1. 进入 Cloudflare 控制台。
+2. 打开 `Workers & Pages`。
+3. 选择 `Pages`，连接 GitHub 仓库。
+4. 构建配置保持为空：
+   - 构建命令：留空
+   - 输出目录：留空
+   - 框架预设：无
+5. 保存并部署。
 
-部署完成后，点击顶部的 **Settings（设置）** 选项卡 -> 选择左侧的 **Functions（函数）**：
+### 5. 绑定 D1 与 R2
 
-* **绑定 D1 数据库**：
-  在 **D1 database bindings** 区域，点击 **Add binding**。
-  * 变量名称（Variable name）填入：`DB`
-  * D1 database 下拉选择：`blog-db`
-* **绑定 R2 存储桶**：
-  在 **R2 bucket bindings** 区域，点击 **Add binding**。
-  * 变量名称（Variable name）填入：`MY_BUCKET`
-  * R2 bucket 下拉选择：`blog-images`
+部署完成后，进入 Pages 项目设置：
 
-### 2. 配置备用环境变量
+1. 打开 `Settings` -> `Functions`。
+2. 添加 D1 绑定：
+   - 变量名：`DB`
+   - 数据库：选择前面创建的 `blog-db`
+3. 添加 R2 绑定：
+   - 变量名：`MY_BUCKET`
+   - 存储桶：选择前面创建的 `blog-images`
 
-由于我们已经实现了系统设置的 D1 数据库动态化读取，您**不再需要**在 Cloudflare 中配置诸如 GitHub 账户、仓库名或 R2 域名等复杂的环境变量。
+可选环境变量：
 
-您只需保留一个**可选配置**作为安全备用：
+```text
+ADMIN_PASSWORD=你的备用后台密码
+R2_PUBLIC_DOMAIN=https://你的R2公开域名
+```
 
-在同一个 **Settings** 页面，点击左侧的 **Environment variables**。在 **Production（生产环境）** 处点击 **Add variables**，填入：
+说明：
 
-* **`ADMIN_PASSWORD`**：您自定的备用管理员密码。
-  * *此密码为底层物理密码。当数据库尚未初始化、D1 连接异常或您不慎忘记了后台密码时，可用于紧急登录后台进行重置。*
+- `ADMIN_PASSWORD` 仅作为 D1 配置读取失败时的备用密码。
+- 正常情况下后台密码读取 D1 的 `admin_password`。
 
-*配置完成后，请返回项目的 **Deployments（部署）** 选项卡，在最新一笔部署记录右侧点击三个点，选择 **Retry deployment（重新部署）** 激活这些绑定和环境变量。*
+## 后台使用
 
----
+后台地址：
 
-## 🎉 第五阶段：进入后台与使用
+```text
+https://你的博客域名/admin.html
+```
 
-1. **进入后台**：在浏览器中直接访问：**`您的博客域名/admin.html`**（例如：`https://blogs.nyc.mn/admin.html`）。
-2. **首次登录**：输入在第二阶段中 D1 初始化的密码 **`admin123`** 登录。
-3. **安全修改密码**：点击左下角的“改密”链接。新密码将直接加密写入 D1 数据库中实时生效。
-4. **在线配置**：直接在管理面板的“站点全局配置”中，在线修改 R2 访问域名、网站标题、副标题、一二级导航菜单并保存，首页即可瞬间完成更新，告别每次修改配置都需要重新部署代码的繁琐流程！
+首次登录：
+
+```text
+admin123
+```
+
+后台能力：
+
+- 文章列表管理：按标题、系列、分类、状态筛选。
+- 撰写新教程：编辑标题、摘要、系列、分类、权重、状态、封面和正文。
+- 图片上传：封面和正文图片会上传到 R2。
+- 站点配置：修改站点标题、副标题、分类、系列、导航链接、R2 域名、热门文章数量。
+- 修改密码：通过左下角“改密”修改后台密码。
+
+## 文章数据说明
+
+每篇文章由两部分组成：
+
+- D1 `posts` 表：保存标题、摘要、分类、系列、封面、状态、权重、阅读量。
+- R2 `posts/{id}.md`：保存 Markdown 正文。
+
+文章状态：
+
+- `publish`：前台可见。
+- `draft`：前台隐藏，后台可管理。
+
+排序规则：
+
+1. `weight` 越大越靠前。
+2. 权重相同时按 `date` 倒序。
+
+## 前台路由说明
+
+当前前台采用 Hash 路由：
+
+```text
+首页：/
+文章详情：/#/post/{id}
+系列页：/#/series/{series}
+```
+
+文章详情由浏览器端加载：
+
+1. 从 `./api/posts?id={id}` 获取文章元数据。
+2. 从 R2 读取 `posts/{id}.md`。
+3. 使用 marked 渲染 Markdown。
+4. 使用 highlight.js 高亮代码。
+5. 调用 `./api/views?id={id}` 累加阅读量。
+
+## Logo 与视觉资源
+
+当前 Logo 文件：
+
+```text
+assets/logo.svg
+assets/favicon.svg
+```
+
+如果需要替换品牌标识，直接替换这两个 SVG 文件即可。前台导航、后台登录页、后台侧栏和浏览器 favicon 都会自动使用这些资源。
+
+## 常见问题
+
+### 文章详情加载失败
+
+检查项：
+
+- D1 中是否存在该文章记录。
+- 文章状态是否为 `publish`。
+- R2 中是否存在 `posts/{id}.md`。
+- R2 CORS 是否允许当前博客域名读取。
+- 后台配置中的 `R2 存储桶公网访问域名` 是否正确。
+
+### 图片无法显示
+
+检查项：
+
+- R2 自定义域名是否可公开访问。
+- 图片 URL 是否使用 `https://`。
+- CORS 是否允许当前博客域名。
+- 后台上传接口是否绑定了 `MY_BUCKET`。
+
+### 后台无法登录
+
+检查项：
+
+- D1 `config` 表中是否存在 `admin_password`。
+- Pages Functions 是否绑定了 `DB`。
+- 如果 D1 异常，是否配置了备用环境变量 `ADMIN_PASSWORD`。
+
+### 修改配置后前台没变化
+
+检查项：
+
+- 配置是否保存成功。
+- 浏览器缓存是否刷新。
+- Cloudflare Pages Functions 是否正常访问 D1。

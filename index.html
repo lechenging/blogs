@@ -524,7 +524,6 @@
                                 <input id="comment-author" class="semi-input px-4 py-2.5 text-sm" maxlength="40" placeholder="昵称 *" required>
                                 <input id="comment-email" class="semi-input px-4 py-2.5 text-sm" maxlength="120" type="email" placeholder="邮箱（不会公开）">
                             </div>
-                            <input id="comment-website" class="semi-input px-4 py-2.5 text-sm" maxlength="160" type="url" placeholder="个人网站（可选）">
                             <textarea id="comment-content" class="semi-input w-full min-h-[120px] px-4 py-3 text-sm resize-y" maxlength="1200" placeholder="写下你的评论..." required></textarea>
                             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                                 <p id="comment-message" class="text-xs text-slate-400">支持两级回复，最长 1200 字。</p>
@@ -1090,7 +1089,7 @@
                 parent_id: currentReplyParentId,
                 author: document.getElementById('comment-author').value.trim(),
                 email: document.getElementById('comment-email').value.trim(),
-                website: document.getElementById('comment-website').value.trim(),
+                website: '',
                 content: document.getElementById('comment-content').value.trim()
             };
 

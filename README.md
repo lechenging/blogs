@@ -103,6 +103,25 @@ INSERT OR IGNORE INTO config (key, value) VALUES ('site_popular_limit', '5');
 INSERT OR IGNORE INTO config (key, value) VALUES ('site_r2_domain', 'https://images.example.com');
 ```
 
+创建评论表：
+
+```sql
+CREATE TABLE IF NOT EXISTS comments (
+    id TEXT PRIMARY KEY,
+    post_id TEXT NOT NULL,
+    parent_id TEXT DEFAULT '',
+    author TEXT NOT NULL,
+    email TEXT DEFAULT '',
+    website TEXT DEFAULT '',
+    content TEXT NOT NULL,
+    status TEXT DEFAULT 'pending',
+    created_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_comments_post_status
+ON comments (post_id, status, created_at);
+```
+
 说明：
 
 - `admin_password` 是后台初始密码，部署后请尽快在后台修改。
@@ -187,6 +206,7 @@ admin123
 
 - 文章列表管理：按标题、系列、分类、状态筛选。
 - 撰写新教程：编辑标题、摘要、系列、分类、权重、状态、封面和正文。
+- 评论审核：查看待审核、已通过、已隐藏评论，并执行通过、隐藏、删除操作。
 - 图片上传：封面和正文图片会上传到 R2。
 - 站点配置：修改站点标题、副标题、分类、系列、导航链接、R2 域名、热门文章数量。
 - 修改密码：通过左下角“改密”修改后台密码。
@@ -225,6 +245,28 @@ admin123
 3. 使用 marked 渲染 Markdown。
 4. 使用 highlight.js 高亮代码。
 5. 调用 `./api/views?id={id}` 累加阅读量。
+6. 调用 `./api/comments?post_id={id}` 加载已审核评论。
+
+## 评论系统说明
+
+评论数据存放在 D1 `comments` 表中，前台文章详情页支持一级评论和二级回复。访客提交评论后默认进入 `pending` 待审核状态，后台“评论审核”面板通过后才会在前台公开显示。
+
+评论状态：
+
+- `pending`：待审核，前台不可见。
+- `approved`：已通过，前台可见。
+- `hidden`：已隐藏，前台不可见。
+
+评论接口：
+
+```text
+GET  /api/comments?post_id={id}              # 前台读取已审核评论
+POST /api/comments                           # 前台提交评论或回复
+GET  /api/comments?admin=true&status=pending # 后台按状态读取评论，需要 Authorization
+POST /api/comments                           # 后台审核、隐藏或删除评论，需要 Authorization
+```
+
+删除文章时，系统会同步删除该文章下的全部评论，避免产生孤立评论数据。
 
 ## Logo 与视觉资源
 

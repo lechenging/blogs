@@ -378,6 +378,10 @@
                         class="semi-admin-nav-btn">
                         <span>✍️</span> <span class="tracking-wide">撰写新教程</span>
                     </button>
+                    <button id="menu-btn-comments" onclick="switchTab('panel-comments')"
+                        class="semi-admin-nav-btn">
+                        <span>💬</span> <span class="tracking-wide">评论审核</span>
+                    </button>
                     <button id="menu-btn-config" onclick="switchTab('panel-config')"
                         class="semi-admin-nav-btn">
                         <span>⚙️</span> <span class="tracking-wide">站点配置</span>
@@ -560,7 +564,32 @@
                         </div>
                     </div>
 
-                    <!-- Tab 3: Config settings panel -->
+                    <!-- Tab 3: Comments moderation panel -->
+                    <div id="panel-comments" class="admin-panel-content space-y-6 hidden">
+                        <div class="semi-admin-section-title">
+                            <h2 class="text-xl font-display font-extrabold text-slate-900 tracking-tight">评论审核</h2>
+                            <p class="text-xs text-slate-500 mt-1">审核访客评论和回复，只有通过后的内容会显示在前台文章详情页。</p>
+                        </div>
+
+                        <div class="semi-admin-surface p-5 flex flex-col sm:flex-row sm:items-end gap-4">
+                            <div class="w-full sm:w-64">
+                                <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">评论状态</label>
+                                <select id="comment-status-filter" onchange="loadAdminComments()"
+                                    class="semi-admin-select px-3 py-2 text-xs">
+                                    <option value="pending">待审核</option>
+                                    <option value="approved">已通过</option>
+                                    <option value="hidden">已隐藏</option>
+                                </select>
+                            </div>
+                            <button onclick="loadAdminComments()" class="semi-admin-button-secondary px-4 py-2 text-xs">刷新列表</button>
+                        </div>
+
+                        <div id="admin-comments-list" class="space-y-4">
+                            <p class="semi-admin-surface p-6 text-center text-xs text-slate-400">切换到本页后会自动加载评论。</p>
+                        </div>
+                    </div>
+
+                    <!-- Tab 4: Config settings panel -->
                     <div id="panel-config" class="admin-panel-content space-y-6 hidden">
                         <div class="semi-admin-section-title">
                             <h2 class="text-xl font-display font-extrabold text-slate-900 tracking-tight">站点全局配置</h2>
@@ -667,6 +696,7 @@
         let dbNavMeta = {};
         let isEditing = false;
         let mobileSidebarOpen = false;
+        let adminComments = [];
 
         window.addEventListener('load', async () => {
             const password = getActivePassword();
@@ -716,6 +746,7 @@
             const activeBtnMap = {
                 'panel-posts': 'menu-btn-posts',
                 'panel-editor': 'menu-btn-editor',
+                'panel-comments': 'menu-btn-comments',
                 'panel-config': 'menu-btn-config'
             };
             const activeBtn = document.getElementById(activeBtnMap[tabId]);
@@ -725,6 +756,10 @@
 
             if (mobileSidebarOpen) {
                 toggleMobileSidebar();
+            }
+
+            if (tabId === 'panel-comments') {
+                loadAdminComments();
             }
         }
 
@@ -867,6 +902,119 @@
                 el.add(opt);
             }
             el.value = val;
+        }
+
+        function escapeHtml(value) {
+            return String(value || '').replace(/[&<>'"]/g, (char) => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[char]));
+        }
+
+        function formatCommentTime(value) {
+            if (!value) return '';
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return value;
+            return date.toLocaleString('zh-CN', { hour12: false });
+        }
+
+        async function loadAdminComments() {
+            const container = document.getElementById('admin-comments-list');
+            if (!container) return;
+            const status = safeGetValue('comment-status-filter') || 'pending';
+            container.innerHTML = '<p class="semi-admin-surface p-6 text-center text-xs text-slate-400">正在读取评论...</p>';
+
+            try {
+                const res = await fetch(`./api/comments?admin=true&status=${encodeURIComponent(status)}&_t=${Date.now()}`, {
+                    headers: { 'Authorization': getActivePassword() }
+                });
+                if (!res.ok) throw new Error(await res.text());
+                adminComments = await res.json();
+                renderAdminComments();
+            } catch (err) {
+                container.innerHTML = '<p class="semi-admin-surface p-6 text-center text-xs text-red-500">评论列表加载失败。</p>';
+            }
+        }
+
+        function renderAdminComments() {
+            const container = document.getElementById('admin-comments-list');
+            if (!container) return;
+
+            if (!Array.isArray(adminComments) || adminComments.length === 0) {
+                container.innerHTML = '<p class="semi-admin-surface p-6 text-center text-xs text-slate-400">当前状态下暂无评论。</p>';
+                return;
+            }
+
+            container.innerHTML = adminComments.map(comment => {
+                const postTitle = comment.post_title || comment.post_id;
+                const parentText = comment.parent_id ? `回复评论：${comment.parent_id}` : '一级评论';
+                const approveButton = comment.status === 'approved' ? '' : `<button onclick="moderateCommentFromButton(this, 'approved')" data-comment-id="${escapeHtml(comment.id)}" class="semi-admin-button px-3 py-1.5">通过</button>`;
+                const hideButton = comment.status === 'hidden' ? '' : `<button onclick="moderateCommentFromButton(this, 'hidden')" data-comment-id="${escapeHtml(comment.id)}" class="semi-admin-button-secondary px-3 py-1.5">隐藏</button>`;
+
+                return `
+                    <div class="semi-admin-surface p-5 space-y-4">
+                        <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3">
+                            <div class="space-y-1">
+                                <div class="text-sm font-bold text-slate-900">${escapeHtml(comment.author)}</div>
+                                <div class="text-[10px] text-slate-500 uppercase tracking-wider">
+                                    <span>${escapeHtml(formatCommentTime(comment.created_at))}</span>
+                                    <span> · ${escapeHtml(parentText)}</span>
+                                </div>
+                            </div>
+                            <a href="./index.html#/post/${encodeURIComponent(comment.post_id)}" target="_blank" class="text-xs font-bold text-[var(--semi-blue)] hover:underline">${escapeHtml(postTitle)}</a>
+                        </div>
+                        <p class="whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-xs leading-6 text-slate-600">${escapeHtml(comment.content)}</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px] text-slate-400">
+                            <div>邮箱：${escapeHtml(comment.email || '未填写')}</div>
+                            <div>网站：${escapeHtml(comment.website || '未填写')}</div>
+                        </div>
+                        <div class="flex flex-wrap justify-end gap-2 text-xs font-bold">
+                            ${approveButton}
+                            ${hideButton}
+                            <button onclick="deleteCommentFromButton(this)" data-comment-id="${escapeHtml(comment.id)}" class="semi-admin-button-danger px-3 py-1.5">删除</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function moderateCommentFromButton(button, status) {
+            await updateCommentStatus(button.dataset.commentId || '', status);
+        }
+
+        async function updateCommentStatus(id, status) {
+            if (!id) return;
+            try {
+                const res = await fetch('./api/comments', {
+                    method: 'POST',
+                    headers: { 'Authorization': getActivePassword(), 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'moderate', id, status })
+                });
+                if (!res.ok) throw new Error(await res.text());
+                await loadAdminComments();
+            } catch (err) {
+                alert('评论状态更新失败: ' + err.message);
+            }
+        }
+
+        async function deleteCommentFromButton(button) {
+            const id = button.dataset.commentId || '';
+            if (!id || !confirm('确认删除该评论及其直接回复？')) return;
+
+            try {
+                const res = await fetch('./api/comments', {
+                    method: 'POST',
+                    headers: { 'Authorization': getActivePassword(), 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'delete', id })
+                });
+                if (!res.ok) throw new Error(await res.text());
+                await loadAdminComments();
+            } catch (err) {
+                alert('评论删除失败: ' + err.message);
+            }
         }
 
         function triggerCoverUpload() { document.getElementById('cover-file-input').click(); }

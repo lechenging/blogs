@@ -506,6 +506,32 @@
                         prose-img:rounded-xl prose-img:border prose-img:border-slate-100 prose-img:cursor-zoom-in
                         prose-pre:bg-slate-900 prose-pre:border prose-pre:border-slate-800 prose-pre:rounded-xl prose-pre:p-0">
                     </section>
+                    <section id="comments-section" class="mt-12 border-t border-slate-100 pt-8 space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+                            <div>
+                                <span class="semi-tag w-fit">Comments</span>
+                                <h2 class="mt-3 text-xl font-display font-extrabold tracking-tight text-slate-900">评论交流</h2>
+                                <p class="mt-1 text-xs text-slate-500">评论提交后会进入后台审核，通过后公开展示。</p>
+                            </div>
+                            <button id="comment-cancel-reply" onclick="cancelCommentReply()" class="hidden semi-button-secondary px-4 py-2 text-xs">取消回复</button>
+                        </div>
+                        <div id="comment-reply-tip" class="hidden rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-xs text-blue-700"></div>
+                        <div id="comments-list" class="space-y-4">
+                            <p class="text-xs text-slate-400">评论加载中...</p>
+                        </div>
+                        <form id="comment-form" onsubmit="submitComment(event)" class="semi-surface p-5 space-y-4 shadow-none">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <input id="comment-author" class="semi-input px-4 py-2.5 text-sm" maxlength="40" placeholder="昵称 *" required>
+                                <input id="comment-email" class="semi-input px-4 py-2.5 text-sm" maxlength="120" type="email" placeholder="邮箱（不会公开）">
+                            </div>
+                            <input id="comment-website" class="semi-input px-4 py-2.5 text-sm" maxlength="160" type="url" placeholder="个人网站（可选）">
+                            <textarea id="comment-content" class="semi-input w-full min-h-[120px] px-4 py-3 text-sm resize-y" maxlength="1200" placeholder="写下你的评论..." required></textarea>
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                <p id="comment-message" class="text-xs text-slate-400">支持两级回复，最长 1200 字。</p>
+                                <button id="comment-submit-btn" type="submit" class="semi-button px-5 py-2.5">提交评论</button>
+                            </div>
+                        </form>
+                    </section>
                 </article>
                 <aside class="hidden lg:block sticky top-24 semi-surface p-5">
                     <h2 class="text-xs font-display font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 pb-2 mb-4">文章目录</h2>
@@ -554,6 +580,9 @@
         let globalLayoutMode = "standard";
         let globalPopularLimit = 5;
         let currentSiteTitle = "miai.de5.net";
+        let currentPostId = "";
+        let currentReplyParentId = "";
+        let currentReplyAuthor = "";
 
         marked.setOptions({
             highlight: function (code, lang) {
@@ -953,6 +982,143 @@
             }[char]));
         }
 
+        function formatCommentTime(value) {
+            if (!value) return '';
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return value;
+            return date.toLocaleString('zh-CN', { hour12: false });
+        }
+
+        function normalizeWebsite(value) {
+            const text = String(value || '').trim();
+            if (!text) return '';
+            try {
+                const url = new URL(text);
+                return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
+            } catch (err) {
+                return '';
+            }
+        }
+
+        function buildCommentTree(comments) {
+            const roots = [];
+            const byId = new Map();
+            comments.forEach(comment => byId.set(comment.id, { ...comment, replies: [] }));
+            byId.forEach(comment => {
+                if (comment.parent_id && byId.has(comment.parent_id)) {
+                    byId.get(comment.parent_id).replies.push(comment);
+                } else {
+                    roots.push(comment);
+                }
+            });
+            return roots;
+        }
+
+        function renderCommentItem(comment, isReply = false) {
+            const website = normalizeWebsite(comment.website);
+            const authorHtml = website
+                ? `<a href="${escapeHtml(website)}" target="_blank" rel="noopener noreferrer" class="text-[var(--semi-blue)] hover:underline">${escapeHtml(comment.author)}</a>`
+                : escapeHtml(comment.author);
+            const repliesHtml = !isReply && comment.replies && comment.replies.length > 0
+                ? `<div class="mt-4 ml-4 sm:ml-8 space-y-3 border-l border-slate-100 pl-4">${comment.replies.map(reply => renderCommentItem(reply, true)).join('')}</div>`
+                : '';
+
+            return `
+                <div class="rounded-2xl border border-slate-100 bg-white/80 p-4 ${isReply ? 'shadow-none' : 'shadow-sm'}">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div class="text-sm font-bold text-slate-900">${authorHtml}</div>
+                        <div class="text-[11px] text-slate-400">${escapeHtml(formatCommentTime(comment.created_at))}</div>
+                    </div>
+                    <p class="mt-3 whitespace-pre-wrap text-sm leading-7 text-slate-600">${escapeHtml(comment.content)}</p>
+                    ${isReply ? '' : `<button onclick="startCommentReplyFromButton(this)" data-comment-id="${escapeHtml(comment.id)}" data-comment-author="${escapeHtml(comment.author)}" class="mt-3 text-xs font-bold text-[var(--semi-blue)] hover:underline">回复</button>`}
+                    ${repliesHtml}
+                </div>
+            `;
+        }
+
+        async function loadComments(postId) {
+            const list = document.getElementById('comments-list');
+            if (!list) return;
+            list.innerHTML = '<p class="text-xs text-slate-400">评论加载中...</p>';
+
+            try {
+                const res = await fetch(`./api/comments?post_id=${encodeURIComponent(postId)}&_t=${Date.now()}`);
+                if (!res.ok) throw new Error(await res.text());
+                const comments = await res.json();
+                if (!Array.isArray(comments) || comments.length === 0) {
+                    list.innerHTML = '<p class="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-center text-xs text-slate-400">暂无评论，欢迎留下第一条交流。</p>';
+                    return;
+                }
+                list.innerHTML = buildCommentTree(comments).map(comment => renderCommentItem(comment)).join('');
+            } catch (err) {
+                list.innerHTML = '<p class="text-xs text-red-500">评论加载失败，请稍后重试。</p>';
+            }
+        }
+
+        function startCommentReply(commentId, author) {
+            currentReplyParentId = commentId;
+            currentReplyAuthor = author;
+            const tip = document.getElementById('comment-reply-tip');
+            const cancelBtn = document.getElementById('comment-cancel-reply');
+            if (tip) {
+                tip.innerText = `正在回复 ${author}，提交后同样需要审核。`;
+                tip.classList.remove('hidden');
+            }
+            if (cancelBtn) cancelBtn.classList.remove('hidden');
+            document.getElementById('comment-content').focus();
+        }
+
+        function startCommentReplyFromButton(button) {
+            startCommentReply(button.dataset.commentId || '', button.dataset.commentAuthor || '该评论');
+        }
+
+        function cancelCommentReply() {
+            currentReplyParentId = "";
+            currentReplyAuthor = "";
+            const tip = document.getElementById('comment-reply-tip');
+            const cancelBtn = document.getElementById('comment-cancel-reply');
+            if (tip) tip.classList.add('hidden');
+            if (cancelBtn) cancelBtn.classList.add('hidden');
+        }
+
+        async function submitComment(event) {
+            event.preventDefault();
+            const btn = document.getElementById('comment-submit-btn');
+            const message = document.getElementById('comment-message');
+            const payload = {
+                post_id: currentPostId,
+                parent_id: currentReplyParentId,
+                author: document.getElementById('comment-author').value.trim(),
+                email: document.getElementById('comment-email').value.trim(),
+                website: document.getElementById('comment-website').value.trim(),
+                content: document.getElementById('comment-content').value.trim()
+            };
+
+            if (!payload.post_id || !payload.author || !payload.content) {
+                if (message) message.innerText = '请填写昵称和评论内容。';
+                return;
+            }
+
+            if (btn) { btn.innerText = '提交中...'; btn.disabled = true; }
+            if (message) message.innerText = '正在提交评论...';
+
+            try {
+                const res = await fetch('./api/comments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) throw new Error(await res.text());
+                document.getElementById('comment-form').reset();
+                cancelCommentReply();
+                if (message) message.innerText = '评论已提交，等待后台审核后展示。';
+            } catch (err) {
+                if (message) message.innerText = '评论提交失败，请稍后重试。';
+            } finally {
+                if (btn) { btn.innerText = '提交评论'; btn.disabled = false; }
+            }
+        }
+
         function updatePostMeta(post) {
             const title = post.title || '未命名文章';
             document.title = title;
@@ -984,6 +1150,8 @@
         }
 
         async function loadPost(postId) {
+            currentPostId = decodeURIComponent(postId);
+            cancelCommentReply();
             document.getElementById('home-view').classList.add('hidden');
             document.getElementById('post-view').classList.remove('hidden');
 
@@ -993,19 +1161,19 @@
             document.getElementById('post-title').innerText = '正在加载...';
 
             try {
-                const metaResponse = await fetch(`./api/posts?id=${encodeURIComponent(postId)}&_t=${Date.now()}`);
+                const metaResponse = await fetch(`./api/posts?id=${encodeURIComponent(currentPostId)}&_t=${Date.now()}`);
                 if (!metaResponse.ok) throw new Error('文章元数据不存在');
                 const post = await metaResponse.json();
                 updatePostMeta(post);
 
                 const r2Base = R2_DOMAIN || window.location.origin;
-                const response = await fetch(`${r2Base}/posts/${postId}.md?_t=` + Date.now());
+                const response = await fetch(`${r2Base}/posts/${currentPostId}.md?_t=` + Date.now());
 
                 if (!response.ok) throw new Error();
                 const text = await response.text();
                 postContent.innerHTML = marked.parse(text);
 
-                fetch(`./api/views?id=${postId}`, { method: 'POST' })
+                fetch(`./api/views?id=${encodeURIComponent(currentPostId)}`, { method: 'POST' })
                     .then(r => r.json())
                     .then(data => {
                         document.getElementById('post-views-count').innerText = `阅读量: ${data.views}`;
@@ -1017,10 +1185,12 @@
                 document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
                 buildPostToc();
                 enableImagePreview();
+                loadComments(currentPostId);
             } catch (err) {
                 document.getElementById('post-title').innerText = '文章加载失败';
                 document.getElementById('post-toc').innerHTML = '<p class="text-zinc-300">暂无目录</p>';
                 postContent.innerHTML = '<p class="text-red-500 text-xs font-sans">无法从 R2 载入文章，请确保跨域策略配置成功。</p>';
+                document.getElementById('comments-list').innerHTML = '<p class="text-xs text-slate-400">文章加载成功后显示评论。</p>';
             }
         }
 

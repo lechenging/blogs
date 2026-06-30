@@ -68,11 +68,14 @@ export async function onRequestPost(context) {
       }
     }
 
-    // B. 从 R2 删除 Markdown 文章文件本身
-    await env.MY_BUCKET.delete(mdKey);
+    // B. 从 D1 数据库批量删除索引元数据与该文章评论，避免正文已删但索引仍存在。
+    await env.DB.batch([
+      env.DB.prepare("DELETE FROM comments WHERE post_id = ?").bind(id),
+      env.DB.prepare("DELETE FROM posts WHERE id = ?").bind(id)
+    ]);
 
-    // C. 从 D1 数据库删除索引元数据
-    await env.DB.prepare("DELETE FROM posts WHERE id = ?").bind(id).run();
+    // C. 从 R2 删除 Markdown 文章文件本身
+    await env.MY_BUCKET.delete(mdKey);
 
     return new Response(JSON.stringify({ success: true }), { headers: { 'Content-Type': 'application/json' } });
 

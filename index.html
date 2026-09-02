@@ -622,7 +622,8 @@
         }
 
         function handleRouting() {
-            if (window.location.pathname === '/resources') {
+            const currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
+            if (currentPath === '/resources') {
                 loadResourcePage();
                 return;
             }

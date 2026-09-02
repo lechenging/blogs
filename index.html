@@ -478,7 +478,7 @@
 
         <!-- 文章详情页 -->
         <div id="post-view" class="hidden max-w-7xl mx-auto">
-            <a href="#/" class="mb-8 inline-flex text-xs font-semibold semi-button-secondary px-4 py-2 items-center gap-2">
+            <a id="post-back-link" href="#/" class="mb-8 inline-flex text-xs font-semibold semi-button-secondary px-4 py-2 items-center gap-2">
                 ← 返回首页
             </a>
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
@@ -614,7 +614,19 @@
             toggleButton();
         }
 
+        function toggleResourceChrome(isResourcePage) {
+            const nav = document.querySelector('body > nav');
+            const backLink = document.getElementById('post-back-link');
+            if (nav) nav.classList.toggle('hidden', isResourcePage);
+            if (backLink) backLink.classList.toggle('hidden', isResourcePage);
+        }
+
         function handleRouting() {
+            if (window.location.pathname === '/resources') {
+                loadResourcePage();
+                return;
+            }
+
             const hash = window.location.hash;
             if (hash === '#/resources') {
                 loadResourcePage();
@@ -766,6 +778,7 @@
         }
 
         async function showHomeView() {
+            toggleResourceChrome(false);
             currentFilterSeries = "";
             currentFilterCategory = "";
             currentSearchQuery = "";
@@ -784,6 +797,7 @@
         }
 
         async function showSeriesView(seriesName) {
+            toggleResourceChrome(false);
             currentFilterSeries = seriesName;
             currentFilterCategory = "";
             currentSearchQuery = "";
@@ -1155,6 +1169,7 @@
             currentPostId = "";
             cancelCommentReply();
             await fetchNavMeta();
+            toggleResourceChrome(true);
 
             document.getElementById('home-view').classList.add('hidden');
             document.getElementById('post-view').classList.remove('hidden');
@@ -1201,6 +1216,7 @@
         async function loadPost(postId) {
             currentPostId = decodeURIComponent(postId);
             cancelCommentReply();
+            toggleResourceChrome(false);
             document.getElementById('home-view').classList.add('hidden');
             document.getElementById('post-view').classList.remove('hidden');
             document.getElementById('comments-section').classList.remove('hidden');

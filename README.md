@@ -10,6 +10,7 @@
 
 - 前台首页：文章列表、系列导航、分类筛选、搜索、热门文章、分页。
 - 文章详情：Hash 路由 `#/post/:id`，从 D1 读取元数据，从 R2 读取 Markdown 正文。
+- 资源目录：Hash 路由 `#/resources`，直接渲染项目根目录下的 `resources.md`。
 - 后台管理：登录、文章列表筛选、发布文章、编辑文章、删除文章、站点配置、修改密码。
 - 媒体存储：正文 Markdown 与图片资源存放在 Cloudflare R2。
 - 数据索引：文章元数据、配置项、阅读量存放在 Cloudflare D1。
@@ -22,6 +23,7 @@
 .
 ├── index.html                 # 前台首页与文章详情入口
 ├── admin.html                 # 后台管理入口
+├── resources.md               # 网盘链接资源目录内容
 ├── assets/
 │   ├── logo.svg               # 站点 Logo
 │   └── favicon.svg            # 浏览器图标
@@ -236,7 +238,10 @@ admin123
 首页：/
 文章详情：/#/post/{id}
 系列页：/#/series/{series}
+资源目录页：/#/resources
 ```
+
+资源目录页由浏览器端直接加载项目根目录的 `resources.md`，适合维护网盘链接、资源合集和固定分类目录，不依赖 D1 或 R2。
 
 文章详情由浏览器端加载：
 

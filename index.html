@@ -616,7 +616,9 @@
 
         function handleRouting() {
             const hash = window.location.hash;
-            if (hash.startsWith('#/post/')) {
+            if (hash === '#/resources') {
+                loadResourcePage();
+            } else if (hash.startsWith('#/post/')) {
                 const postId = hash.replace('#/post/', '');
                 loadPost(postId);
             } else if (hash.startsWith('#/series/')) {
@@ -713,6 +715,7 @@
                         <a href="#/series/${encodeURIComponent(series)}" class="semi-link ${isSelected ? 'active font-bold' : ''}">${series}</a>
                     `;
                 });
+
             } catch (e) {
                 console.error("生成导航元数据出错:", e);
             }
@@ -1148,11 +1151,59 @@
             }
         }
 
+        async function loadResourcePage() {
+            currentPostId = "";
+            cancelCommentReply();
+            await fetchNavMeta();
+
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('post-view').classList.remove('hidden');
+            document.getElementById('comments-section').classList.add('hidden');
+
+            document.title = `资源目录 - ${currentSiteTitle}`;
+            document.getElementById('post-title').innerText = '资源目录';
+            document.getElementById('post-date').innerText = '';
+            document.getElementById('post-views-count').innerText = '';
+            document.getElementById('post-category').innerText = 'Resources';
+            document.getElementById('post-series').innerText = '网盘分享';
+
+            const summary = document.getElementById('post-summary');
+            summary.innerText = '按分类整理常用网盘链接，内容直接维护 resources.md 文件即可。';
+            summary.classList.remove('hidden');
+
+            const coverWrap = document.getElementById('post-cover-wrap');
+            const cover = document.getElementById('post-cover');
+            cover.removeAttribute('src');
+            cover.alt = '';
+            coverWrap.classList.add('hidden');
+
+            const postContent = document.getElementById('post-content');
+            postContent.innerHTML = '<p class="text-slate-400 text-xs font-sans">正在加载资源目录...</p>';
+            document.getElementById('post-toc').innerHTML = '<p class="text-zinc-300">正在生成目录...</p>';
+
+            try {
+                const response = await fetch('./resources.md?_t=' + Date.now());
+                if (!response.ok) throw new Error('资源目录文件不存在');
+                const text = await response.text();
+                postContent.innerHTML = marked.parse(text);
+
+                addCopyButtons();
+                document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+                buildPostToc();
+                enableImagePreview();
+            } catch (err) {
+                document.getElementById('post-title').innerText = '资源目录加载失败';
+                document.getElementById('post-toc').innerHTML = '<p class="text-zinc-300">暂无目录</p>';
+                postContent.innerHTML = '<p class="text-red-500 text-xs font-sans">无法读取 resources.md，请确认文件已存在并已部署。</p>';
+            }
+        }
+
         async function loadPost(postId) {
             currentPostId = decodeURIComponent(postId);
             cancelCommentReply();
             document.getElementById('home-view').classList.add('hidden');
             document.getElementById('post-view').classList.remove('hidden');
+            document.getElementById('comments-section').classList.remove('hidden');
 
             const postContent = document.getElementById('post-content');
             postContent.innerHTML = '<p class="text-slate-400 text-xs font-sans">正在加载...</p>';

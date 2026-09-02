@@ -24,6 +24,8 @@
 ├── index.html                 # 前台首页与文章详情入口
 ├── admin.html                 # 后台管理入口
 ├── resources.md               # 网盘链接资源目录内容
+├── resources/
+│   └── index.html             # 资源目录独立页面
 ├── assets/
 │   ├── logo.svg               # 站点 Logo
 │   └── favicon.svg            # 浏览器图标

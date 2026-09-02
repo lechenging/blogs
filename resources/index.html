@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资源目录</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        display: ['Space Grotesk', 'Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --semi-blue: #0064fa;
+            --semi-blue-hover: #0052d9;
+            --semi-blue-light: #e8f3ff;
+            --semi-text-0: #1c1f23;
+            --semi-text-1: #4e5969;
+            --semi-text-2: #86909c;
+            --semi-border: #e5e6eb;
+            --semi-surface: rgba(255, 255, 255, 0.92);
+            --semi-shadow: 0 18px 48px rgba(28, 31, 35, 0.08);
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 12% 10%, rgba(0, 100, 250, 0.13), transparent 26rem),
+                radial-gradient(circle at 85% 4%, rgba(0, 168, 112, 0.10), transparent 24rem),
+                linear-gradient(180deg, #f7f8fa 0%, #ffffff 48%, #f7f8fa 100%);
+            color: var(--semi-text-0);
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(28, 31, 35, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(28, 31, 35, 0.035) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 70%);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen antialiased font-sans">
+    <main class="max-w-7xl mx-auto px-5 sm:px-8 py-10 sm:py-14">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+            <article class="lg:col-span-3 bg-white/90 border border-slate-200 rounded-[18px] shadow-[0_18px_48px_rgba(28,31,35,0.08)] p-6 sm:p-10">
+                <header class="mb-10 border-b border-slate-100 pb-8 space-y-4">
+                    <div class="inline-flex items-center rounded-full bg-blue-50 text-[var(--semi-blue)] px-3 py-1 text-[10px] font-extrabold tracking-wider uppercase">Resources</div>
+                    <h1 class="text-2xl sm:text-4xl font-display font-extrabold tracking-tight text-slate-900 leading-tight">资源目录</h1>
+                    <p class="text-slate-500 text-sm border-l-4 border-[var(--semi-blue)] pl-4 py-3 leading-relaxed bg-[var(--semi-blue-light)] rounded-r-xl">按分类整理常用网盘链接，内容直接维护根目录 resources.md 文件即可。</p>
+                </header>
+                <section id="resource-content" class="prose prose-slate prose-indigo max-w-none text-slate-800 text-[15px] leading-relaxed prose-headings:font-display prose-headings:font-bold prose-headings:text-slate-900 prose-a:text-[var(--semi-blue)] hover:prose-a:text-[var(--semi-blue-hover)] hover:prose-a:underline">
+                    <p class="text-slate-400 text-xs font-sans">正在加载资源目录...</p>
+                </section>
+            </article>
+            <aside class="hidden lg:block sticky top-8 bg-white/90 border border-slate-200 rounded-[18px] p-5 shadow-[0_10px_32px_rgba(28,31,35,0.055)]">
+                <h2 class="text-xs font-display font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 pb-2 mb-4">页面目录</h2>
+                <nav id="resource-toc" class="text-xs space-y-1.5 text-slate-500">
+                    <p class="text-zinc-300">暂无目录</p>
+                </nav>
+            </aside>
+        </div>
+    </main>
+
+    <script>
+        function escapeHtml(value) {
+            return String(value || '').replace(/[&<>'"]/g, (char) => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[char]));
+        }
+
+        function buildResourceToc() {
+            const toc = document.getElementById('resource-toc');
+            const headings = Array.from(document.querySelectorAll('#resource-content h2, #resource-content h3'));
+            if (!toc || headings.length === 0) {
+                toc.innerHTML = '<p class="text-zinc-300">暂无目录</p>';
+                return;
+            }
+
+            toc.innerHTML = headings.map((heading, index) => {
+                const finalId = heading.id || `section-${index + 1}`;
+                heading.id = finalId;
+                const indentClass = heading.tagName === 'H3' ? 'pl-5' : 'pl-3';
+                return `<button type="button" data-target="${finalId}" class="block w-full text-left border-l-2 border-slate-100 ${indentClass} py-1.5 hover:text-indigo-600 hover:border-indigo-600 transition-colors line-clamp-2">${escapeHtml(heading.innerText)}</button>`;
+            }).join('');
+
+            toc.querySelectorAll('button[data-target]').forEach((button) => {
+                button.addEventListener('click', () => {
+                    const target = document.getElementById(button.dataset.target);
+                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+        }
+
+        async function loadResources() {
+            const content = document.getElementById('resource-content');
+            try {
+                const response = await fetch('../resources.md?_t=' + Date.now());
+                if (!response.ok) throw new Error('资源目录文件不存在');
+                const text = await response.text();
+                content.innerHTML = marked.parse(text);
+                buildResourceToc();
+            } catch (err) {
+                content.innerHTML = '<p class="text-red-500 text-xs font-sans">无法读取 resources.md，请确认文件已存在并已部署。</p>';
+                document.getElementById('resource-toc').innerHTML = '<p class="text-zinc-300">暂无目录</p>';
+            }
+        }
+
+        window.addEventListener('load', loadResources);
+    </script>
+</body>
+
+</html>
